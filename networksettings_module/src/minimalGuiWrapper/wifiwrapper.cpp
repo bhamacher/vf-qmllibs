@@ -20,8 +20,8 @@ void WifiWrapper::init()
     setAppState(AppletStatus::Initalize);
 
     // Get wifi devices from device list
-    Q_FOREACH (NetworkManager::Device::Ptr dev, m_list) {
-        if(NM_DEVICE_TYPE_WIFI == dev->type()){
+    for(NetworkManager::Device::Ptr dev : m_list) {
+        if(NM_DEVICE_TYPE_WIFI == static_cast<NMDeviceType>(dev->type())){
             m_techList.append(dev);
         }
     }
@@ -51,7 +51,7 @@ void WifiWrapper::reinit()
         QString clientPath="";
 
         //search for wireless client connection Template in NM
-        Q_FOREACH(NetworkManager::Connection::Ptr connection, NetworkManager::listConnections()){
+        for(NetworkManager::Connection::Ptr connection : NetworkManager::listConnections()){
             if(connection->name() == getExpectedClientName()){
                 clientPath=connection->path();
             }
@@ -70,7 +70,7 @@ void WifiWrapper::reinit()
 
         //search for access point connection template in NM
         QString accessPointPath="";
-        Q_FOREACH(NetworkManager::Connection::Ptr connection, NetworkManager::listConnections()){
+        for(NetworkManager::Connection::Ptr connection : NetworkManager::listConnections()){
             if(connection->name() == getExpectedAccessPointName()){
                 accessPointPath=connection->path();
             }
@@ -119,12 +119,12 @@ void WifiWrapper::reconnectSignals()
     // check if there is a device and connection to connect to
     if(m_currentDevice!=nullptr && m_currentConnection!=nullptr){
         // remove all signal/slot connection froom the old devcice
-        Q_FOREACH(QMetaObject::Connection qtcon, qtConnections){
+        for(QMetaObject::Connection qtcon : qtConnections){
             disconnect(qtcon);
         }
         //clear signal/slot connection list
         qtConnections.clear();
-        //etablish new onnection sand store them in list.
+        //etablish new connections and store them in list.
         qtConnections.push_back(connect(m_currentConnection.data(),&NetworkManager::Connection::updated,this,&AbstractNetworkWrapper::updated));
         qtConnections.push_back(connect(m_currentDevice.data(),&NetworkManager::Device::stateChanged,this,&AbstractNetworkWrapper::DeviceConStateChanged));
         qtConnections.push_back(connect(getWifiDevice().data(),&NetworkManager::WirelessDevice::accessPointAppeared,this,&WifiWrapper::AccessPointAppeared));
@@ -196,7 +196,7 @@ QStringList WifiWrapper::getAvailableNetworks()
 {
     QStringList ssidList;
     if(nullptr==m_currentDevice)return QStringList("empty");
-    Q_FOREACH(QString ap, getWifiDevice()->accessPoints()){
+    for(QString ap : getWifiDevice()->accessPoints()){
         NetworkManager::AccessPoint accessPoint(ap);
         ssidList.append(accessPoint.ssid());
     }
