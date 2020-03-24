@@ -23,7 +23,7 @@ For example use:
 CMAKE_PREFIX_PATH=/usr;/${some}/${folder}/usr
 CMAKE_INSTALL_PREFIX=/${some}/${folder}/usr
 CMAKE_INSTALL_SYSCONFDIR=/${some}/${folder}/etc
-QML_IMPORT_PATH=${CMAKE_INSTALL_PREFIX}/usr/lib64/zera-qml-modules
+QML_IMPORT_PATH=${CMAKE_INSTALL_LIBDIR}/zera-qml-modules
 
 ### in Terminal 
 
@@ -31,7 +31,7 @@ To setup the Project in your terminal go to your desired build location and call
 
 ```
 cmake -DCMAKE_PREFIX_PATH="/usr;${install_dir}" -DCMAKE_INSTALL_PREFIX="${install_dir}"  
--DCMAKE_INSTALL_SYSCONFDIR="${config_dir}" -DQML_IMPORT_PATH=${CMAKE_INSTALL_PREFIX}/usr/lib64/zera-qml-modules -S /<path>/<to>/<repo> 
+-DCMAKE_INSTALL_SYSCONFDIR="${config_dir}" -DQML_IMPORT_PATH=${CMAKE_INSTALL_LIBDIR}/zera-qml-modules -S /<path>/<to>/<repo>
 ```
 
 To build the project call 
