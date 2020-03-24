@@ -70,7 +70,7 @@ QDBusPendingReply< QDBusObjectPath >  AbstractNetworkWrapper::addConnection(NMVa
 QStringList AbstractNetworkWrapper::getDeviceList()
 {
     QStringList names;
-    Q_FOREACH(NetworkManager::Device::Ptr dev, m_techList){
+    for(NetworkManager::Device::Ptr dev : m_techList){
         names.append(dev->interfaceName());
     }
     return names;
@@ -79,8 +79,7 @@ QStringList AbstractNetworkWrapper::getDeviceList()
 
 void AbstractNetworkWrapper::setCurrentDevice(QString p_currentDevice)
 {
-
-    Q_FOREACH (NetworkManager::Device::Ptr dev, m_techList) {
+    for(NetworkManager::Device::Ptr dev : m_techList) {
         if(p_currentDevice == dev->interfaceName()){
             m_currentDevice=dev;
             reinit();
@@ -243,7 +242,7 @@ void AbstractNetworkWrapper::activateCurrentConnection()
     m_currentDevice->setAutoconnect(false);
     bool good=true;
     /*
-    Q_FOREACH(NetworkManager::Connection::Ptr con, m_currentDevice->availableConnections()){
+    for(NetworkManager::Connection::Ptr con : m_currentDevice->availableConnections()){
         if(con->path()==m_currentConnection->path()){
             good=true;
             break;
@@ -252,7 +251,7 @@ void AbstractNetworkWrapper::activateCurrentConnection()
         }
     }
 */
-    Q_FOREACH(NetworkManager::ActiveConnection::Ptr acon,NetworkManager::activeConnections()){
+    for(NetworkManager::ActiveConnection::Ptr acon : NetworkManager::activeConnections()){
         if(m_currentConnection->path()==acon->connection()->path()){
             good=false;
             break;

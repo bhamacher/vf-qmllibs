@@ -13,8 +13,8 @@ void WiredWrapper::init()
     setAppState(AppletStatus::Initalize);
 
     m_techList.clear();
-    Q_FOREACH (NetworkManager::Device::Ptr dev, m_list) {
-        if(NM_DEVICE_TYPE_ETHERNET == dev->type()){
+    for(NetworkManager::Device::Ptr dev : m_list) {
+        if(NM_DEVICE_TYPE_ETHERNET == static_cast<NMDeviceType>(dev->type())){
             m_techList.append(dev);
         }
     }
@@ -36,7 +36,7 @@ void WiredWrapper::reinit()
         activeCon=m_currentDevice->activeConnection();
 
         QString autoPath="";
-        Q_FOREACH(NetworkManager::Connection::Ptr connection, NetworkManager::listConnections()){
+        for(NetworkManager::Connection::Ptr connection : NetworkManager::listConnections()){
             if(connection->name() == getExpectedNameAuto()){
                 autoPath=connection->path();
             }
@@ -49,7 +49,7 @@ void WiredWrapper::reinit()
 
         //check manualConnection and create if not avialable
         QString manualPath="";
-        Q_FOREACH(NetworkManager::Connection::Ptr connection, NetworkManager::listConnections()){
+        for(NetworkManager::Connection::Ptr connection : NetworkManager::listConnections()){
             if(connection->name() == getExpectedNameManual()){
                 manualPath=connection->path();
             }
@@ -84,7 +84,7 @@ void WiredWrapper::reconnectSignals()
 {
     if(m_currentDevice==nullptr)return;
     if(m_currentConnection==nullptr)return;
-    Q_FOREACH(QMetaObject::Connection qtcon, qtConnections){
+    for(QMetaObject::Connection qtcon : qtConnections){
         disconnect(qtcon);
     }
     qtConnections.clear();
