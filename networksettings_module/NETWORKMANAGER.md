@@ -8,6 +8,10 @@ The applet communicates via DBUS with the networkmanager.
 Release History:
 * 1.0  25.03.2020
 
+## Prerequisites
+* networkmanager-qt devel libs (Fedora: kf5-networkmanager-qt-devel)
+* modemmanager-qt devel libs (Fedora: kf5-modemmanager-qt-devel)
+
 ## Features
 
 ## Tabs
