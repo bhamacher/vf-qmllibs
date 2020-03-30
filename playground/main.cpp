@@ -9,24 +9,25 @@
 #include <QFont>
 
 
-#include <NetworkManagerQt/Device>
+#include <QQmlDebuggingEnabler>
 
 
-#include <NetworkManagerQt/Manager>
-#include <NetworkManagerQt/Device>
-#include <NetworkManagerQt/ActiveConnection>
-#include <NetworkManagerQt/Connection>
+#define QT_QML_DEBUG
 
 int main(int argc, char *argv[]) {
 #if defined(Q_OS_WIN)
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 #endif
 
+
+
+
     qDebug() << "Starting vf-qmllibs playground";
 
     QGuiApplication app(argc, argv);
     QFont fon("Helvetica");
 
+     QQmlDebuggingEnabler enabler;
 
     QQmlApplicationEngine engine;
 
