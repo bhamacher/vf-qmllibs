@@ -7,7 +7,10 @@ import QtQuick.Controls.Material 2.12
 import QtQuick.Layouts 1.12
 
 // Load our plugin from filesystem
-import networksettings 1.0
+//import networksettings 1.0
+
+import "qrc:/src/qml/ethernet"
+import "qrc:/src/qml/wifi"
 
 
 
@@ -80,73 +83,35 @@ ApplicationWindow {
             //SwipeView
             {
                 id: stack
-                Layout.minimumWidth: contentWidth
-                //width: parent.width
-                //height: parent.height - bar.height
                 currentIndex: bar.currentIndex
                 anchors.top: bar.bottom
-                //anchors.top: parent.top
                 anchors.bottom: parent.bottom
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.margins: 0
 
 
-                //                Flickable{
-                //                    id: flick1
-                //                    anchors.fill: parent
-                //                    anchors.margins: 0
-                //                    contentHeight: ethTab.contentHeight
-                //                    z:-1
-
                 EthernetTab{
                     id: ethTab
-                    width: parent.width
+                    Layout.fillWidth: true
                     Layout.fillHeight: true
-                    height: flick1.height
                     fontPixelSize: mainWindow.globPixelSize
                 }
 
-                //                    ScrollBar.vertical: ScrollBar {
-                //                        active:{if((ethTab.contentHeight-43)>flick1.height){
-                //                                return true;
-                //                            }else{
-                //                                return false;
-                //                            }
-                //                        }
-                //                    }
-                //                }
 
-                //                Flickable{
-                //                    id: flick2
-                //                    anchors.fill: parent
-                //                    anchors.margins: 0
-                //                    contentHeight: wifiTab.contentHeight
-                //                    z:-1
+                WifiTab{
+                    id: wifiTab
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    fontPixelSize: mainWindow.globPixelSize
 
-                                    WifiTab{
-                                        id: wifiTab
-                                        width: parent.width
-                                        height: flick2.height
-                                        fontPixelSize: mainWindow.globPixelSize
-                                    }
-                //                    ScrollBar.vertical: ScrollBar {
-                //                        active:{if((ethTab.contentHeight-43)>flick1.height){
-                //                                return true;
-                //                            }else{
-                //                                return false;
-                //                            }
-                //                        }
-                //                    }
-                //                }
+
+                }
 
 
             }
-
-
         }
+
     }
 
 }
-
-

@@ -140,7 +140,7 @@ public:
      * @brief set current device by name
      * @param [IN] the device name as String. (eth0 for example)
      */
-    virtual void setCurrentDevice(QString p_currentDevice);
+    virtual Q_INVOKABLE void setCurrentDevice(QString p_currentDevice);
     /**
      * @brief get the Name of the current device
      *
@@ -174,7 +174,7 @@ public:
      * only possible in state ConnectionStatus::idle
      * @param p_type
      */
-    virtual void setCurrentIpv4ConType(ConMethod p_type);
+    virtual Q_INVOKABLE void setCurrentIpv4ConType(ConMethod p_type);
 
     /**
      * @brief returns the active connections ip address
@@ -204,7 +204,7 @@ public:
      *
      * @param [IN] ip address as string
      */
-    virtual void setIpV4Address(QString p_ipv4Address);   
+    virtual Q_INVOKABLE void setIpV4Address(QString p_ipv4Address);
     /**
      * @brief returns the active connections subnetmask
      *
@@ -233,7 +233,7 @@ public:
      *
      * @param [IN] subnetmask as string
      */
-    virtual void setSubnetMask(QString p_subnetmask);
+    virtual Q_INVOKABLE void setSubnetMask(QString p_subnetmask);
     /**
      * @brief returns the ipv6 connection method as string
      *
@@ -258,7 +258,7 @@ public:
      *
      * @param p_type
      */
-    virtual void setCurrentIpv6ConType(ConMethod p_type);
+    virtual Q_INVOKABLE void setCurrentIpv6ConType(ConMethod p_type);
     /**
      * @brief returns the active connections ipv6 address
      *
@@ -287,7 +287,7 @@ public:
      *
      * @param [IN] ipv6 address as string
      */
-    virtual void setIpV6Address(QString p_ipv6Address);
+    virtual Q_INVOKABLE void setIpV6Address(QString p_ipv6Address);
     /**
      * @brief returns the active connections ipv6 prefix
      *
@@ -316,7 +316,7 @@ public:
      *
      * @param [in] ipv6 prefix as string
      */
-    virtual void setPrefix(QString p_prefix);
+    virtual Q_INVOKABLE void setPrefix(QString p_prefix);
     /**
      * @brief activates the connection
      *
@@ -331,7 +331,7 @@ public:
      *
      * @param [in] wished outcome as bool
      */
-    virtual void setConnect(bool p_active);
+    virtual Q_INVOKABLE void setConnect(bool p_active);
 
     /**
      * @brief update settings over DBUS
@@ -390,19 +390,19 @@ protected:
      *        set false when update was done
      * @param status as bool
      */
-    void setNewSettings(bool newSettings);
+    Q_INVOKABLE void setNewSettings(bool newSettings);
     /**
      * @brief set the current autmomat status
      * @param [IN] state as ConnectionStatus
      */
-    void setAppState(AppletStatus p_state);
+    Q_INVOKABLE void setAppState(AppletStatus p_state);
     /**
      * @brief setConState
      * @param p_state
      */
-    void setConState(ConnectionStatus p_state);
+    Q_INVOKABLE void setConState(ConnectionStatus p_state);
 
-    void setPopUpMsg(QString p_msg);
+    Q_INVOKABLE void setPopUpMsg(QString p_msg);
 
     QVector<QMetaObject::Connection> qtConnections; /*! list qt qt connection handles */
     /**

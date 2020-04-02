@@ -24,6 +24,7 @@ void WiredWrapper::init()
 
     //check autoConnection and create if not available
     reinit();
+    emit DeviceListChanged();
     activateCurrentConnection();
     setAppState(AppletStatus::Input);
 
@@ -102,7 +103,7 @@ void WiredWrapper::refresh()
     emit Ipv6AddressChanged();
     emit SubnetmaskChanged();
     emit PrefixChanged();
-    emit DeviceListChanged();
+//    emit DeviceListChanged();
     emit CurrentDeviceChanged();
     emit CurrentIpv4ConTypeChanged();
     emit IsConnectedChanged();

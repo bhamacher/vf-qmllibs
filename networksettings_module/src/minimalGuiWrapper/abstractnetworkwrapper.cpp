@@ -527,12 +527,13 @@ void AbstractNetworkWrapper::updated()
 {
     switch(getAppState()){
     case AppletStatus::Updating:
+        std::cout << "updated" << std::endl;
         //activateCurrentConnection();
         if(m_nmReply.isError()){
             setPopUpMsg(QLatin1String("Apply failed \n Please try again"));
             setNewSettings(true);
         }
-        m_currentDevice->setAutoconnect(true);
+        //m_currentDevice->setAutoconnect(true);
         setAppState(AppletStatus::Input);
         break;
     default:
