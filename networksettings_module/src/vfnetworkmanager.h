@@ -13,6 +13,18 @@ class VfNetworkManager: public QQmlExtensionPlugin {
 public:
 
     /**
+     * @brief init library
+     *
+     * Call this in main before any qml handled.
+     * This will register the qml backend and make
+     * it available for the qml parts in this lib.
+     *
+     * In Detail it creates an object of this class and
+     * calls registerTypes() with uri "networksettings"
+     *
+     */
+    static void init();
+    /**
      * @brief registerTypes Overrided function that should register all
      * C++ classes exported by this plugin.
      * @param uri           Plugin uri.
