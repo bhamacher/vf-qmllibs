@@ -22,12 +22,12 @@ public:
      * @brief setCurrentIpv4ConType
      * @param p_type
      */
-    void setCurrentIpv4ConType(ConMethod p_type);
+    Q_INVOKABLE void setCurrentIpv4ConType(ConMethod p_type);
     /**
      * @brief setCurrentIpv6ConType
      * @param p_type
      */
-    void setCurrentIpv6ConType(ConMethod p_type);
+    Q_INVOKABLE void setCurrentIpv6ConType(ConMethod p_type);
 
     /**
      * @brief getIpv4DualUse

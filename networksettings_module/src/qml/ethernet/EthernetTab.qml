@@ -10,17 +10,14 @@ import "qrc:/src/qml/network"
 
 Pane{
     id: rootItm
-    Layout.minimumHeight: contentHeigh
-    Layout.minimumWidth: contentWidth
-    width: contentWidth
-    height: contentHeight
     property int fontPixelSize
-
-
 
     WiredWrapper{
         id: backend
     }
+
+
+
 
     GridLayout{
         id: ethTabGrids
@@ -29,7 +26,6 @@ Pane{
         columnSpacing: 0
         rowSpacing: 0
         columns: 1
-        Layout.fillWidth: true
 
 
 
@@ -49,7 +45,7 @@ Pane{
         }
 
         Ipv6Input{
-            id: ipv42
+            id: ipv6
             Layout.fillWidth: true
             backend: backend
             Layout.margins: 0
@@ -66,13 +62,15 @@ Pane{
                 backend: backend
                 anchors.right: parent.right
                 anchors.verticalCenter: parent.verticalCenter
-                fontPixelSize: parent.fontPixelSize
+                fontPixelSize: rootItm.fontPixelSize
             }
 
         }
 
     }
 
-
-
 }
+
+
+
+

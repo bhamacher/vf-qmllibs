@@ -34,6 +34,7 @@ void WifiWrapper::init()
 
     //Do rest of init
     reinit();
+    emit DeviceListChanged();
 
 
     //set state to Input
@@ -108,6 +109,7 @@ void WifiWrapper::reinit()
     }
 
     //refresh gui
+
     refresh();
     emit AvailableNetworksChanged();
 }
@@ -141,7 +143,7 @@ void WifiWrapper::refresh()
     emit OperationModeChanged();
     emit ApLoginPasswordChanged();
     emit IsConnectedChanged();
-    emit DeviceListChanged();
+    //emit DeviceListChanged();
     emit ConnectedNetworkChanged();
 }
 
@@ -169,13 +171,14 @@ NMVariantMapMap WifiWrapper::getDefaultAccessPointConnection()
     connection["connection"]["uuid"] = QUuid::createUuid().toString().remove('{').remove('}');
     connection["connection"]["id"] = getExpectedAccessPointName();
     connection["connection"]["type"] = "802-11-wireless";
-    connection["ipv4"]["method"] = "auto";
-    connection["ipv6"]["method"] = "auto";
+    connection["ipv4"]["method"] = "shared";
+    connection["ipv6"]["method"] = "ignore";
     connection["802-11-wireless"]["ssid"] = QByteArray(QString("ZeraDevice").toUtf8());
     connection["802-11-wireless"]["mode"] = "ap";
-    connection["802-11-wireless"]["security"]="802-11-wireless-security";
+    connection["802-11-wireless"]["band"] = "bg";
+    connection["802-11-wireless"]["channel"] = uint32_t(1);
     connection["802-11-wireless-security"]["key-mgmt"]= "wpa-psk";
-    connection["802-11-wireless-security"]["psk"]= "abcd1234";
+    connection["802-11-wireless-security"]["psk"]= "Zera Device";
     return connection;
 }
 
@@ -357,7 +360,7 @@ void WifiWrapper::setConnect(bool p_active)
             }
         }
     }
-    emit ConStateChanged();
+    //emit ConStateChanged();
 }
 
 void WifiWrapper::refreshNetworks()

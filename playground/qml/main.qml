@@ -34,6 +34,14 @@ ApplicationWindow {
         anchors.top: mainWindow.top
     } //Networksettings Loader
 
+
+    Loader {
+        id: compLoader
+        anchors.left: mainWindow.right
+        anchors.top: mainWindow.top
+    } //Networksettings Loader
+
+
     //Next Loader here
 
     GridLayout{
@@ -62,6 +70,31 @@ ApplicationWindow {
                 }
             }
         }
+
+
+        CheckBox{
+            id: showzeracomps
+            checked: false;
+            Layout.fillWidth: true;
+            text: "Load zeraComp"
+            Component.onCompleted: {
+                if(checked){
+                    compLoader.active=true;
+                    compLoader.source = "zeracomps.qml";
+                }else{
+                    compLoader.active=false;
+                }
+            }
+            onCheckStateChanged: {
+                if(checked){
+                    compLoader.active=true;
+                    compLoader.source = "zeracomps.qml";
+                }else{
+                    compLoader.active=false;
+                }
+            }
+        }
+
 
         // Next CheckBox here
 

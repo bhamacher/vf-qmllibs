@@ -10,7 +10,6 @@ Popup {
     readonly property real tfratio: 1.9
     property int fontPixelSize
     anchors.centerIn: parent
-    Layout.fillWidth:true
     height: 200
     modal: true
     focus: true

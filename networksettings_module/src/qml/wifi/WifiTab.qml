@@ -9,15 +9,17 @@ import "qrc:/src/qml/network"
 
 Pane{
     id: rootItm
-    Layout.minimumHeight: contentHeigh
-    Layout.minimumWidth: contentWidth
-    width: contentWidth
-    height: contentHeight
     property int fontPixelSize
+
+
 
     WifiWrapper{
         id: backend
+
     }
+
+
+
 
     GridLayout{
         id: wifiTabGrid
@@ -28,7 +30,7 @@ Pane{
         DeviceList{
             id: devL
             Layout.fillWidth: true
-            backend: backend;
+            backend: backend
             fontPixelSize: rootItm.fontPixelSize
         }
 
@@ -81,8 +83,8 @@ Pane{
             backend: backend
         }
 
-    }
 
+}
 }
 
 

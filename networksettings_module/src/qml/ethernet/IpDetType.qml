@@ -6,45 +6,54 @@ import networksettings 1.0
 
 //Do not add minimum height
 ComboBox {
-    id: box
+    id: root
     property WiredWrapper backend
     property int fontPixelSize
     property string ipType //: "ipv4"
     font.pixelSize: fontPixelSize
-    Layout.minimumWidth: model[currentIndex].length*fontPixelSize
-    Layout.minimumHeight: model[currentIndex].height*fontPixelSize
+//    Layout.minimumWidth: model[currentIndex].length*fontPixelSize
+//    Layout.minimumHeight: model[currentIndex].height*fontPixelSize
     model: ["AUTOMATIC", "MANUAL"]
-    currentIndex: {
+//    currentIndex:
+     Component.onCompleted: {
+        var ret=0;
         if(ipType==="ipv4"){
 
             if(WiredWrapper.Automatic===backend.currentIpv4ConType){
-                return 0;
+                ret= 0;
             }else if(WiredWrapper.Manual===backend.currentIpv4ConType){
-                return 1;
+                 ret= 1;
             }
 
         }else if(ipType==="ipv6"){
             if(WiredWrapper.Automatic===backend.currentIpv6ConType){
-                return 0;
+                 ret= 0;
             }else if(WiredWrapper.Manual===backend.currentIpv6ConType){
-                return 1;
+                 ret= 1;
             }
 
         }
+        currentIndex =  ret;
     }
+
+
     onCurrentIndexChanged: {
         if(ipType==="ipv4"){
 
             if('MANUAL'===model[currentIndex]){
-                box.backend.currentIpv4ConType = WiredWrapper.Manual
+//                backend.setCurrentIpv4ConType(WiredWrapper.Manual)
+                backend.currentIpv4ConType = WiredWrapper.Manual
             }else{
-                box.backend.currentIpv4ConType = WiredWrapper.Automatic
+//                backend.setCurrentIpv4ConType(WiredWrapper.Automatic)
+                backend.currentIpv4ConType = WiredWrapper.Automatic
             }
         }else if(ipType==="ipv6"){
             if('MANUAL'===model[currentIndex]){
-                box.backend.currentIpv6ConType = WiredWrapper.Manual
+//                backend.setCurrentIpv6ConType(WiredWrapper.Manual)
+                backend.currentIpv6ConType = WiredWrapper.Manual
             }else{
-                box.backend.currentIpv6ConType = WiredWrapper.Automatic
+//                backend.setCurrentIpv6ConType(WiredWrapper.Automatic)
+                backend.currentIpv6ConType = WiredWrapper.Automatic
             }
         }
 

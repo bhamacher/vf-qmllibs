@@ -42,57 +42,67 @@ Pane{
             }
         }
 
-        GridLayout{
-            Layout.leftMargin: parent.width/8
-            columnSpacing :2
-            rowSpacing :2
-            Layout.margins: 0
-            columns:3
+        Grid{
+            id: indentation
+            columns: 2
+            Layout.fillWidth: true
 
-            Label {
-                id: networkLabel
-                text: qsTr("NETWORKS")+":"
-                font.pixelSize: rootItm.fontPixelSize
-                verticalAlignment: Text.AlignVCenter
-                //Layout.fillHeight: true
-//                Layout.fillWidth: true
-
+            Item{
+                id: spacer
+                width: parent.width/8
+                height:1
             }
 
-            ComboBox {
-                id: box
-                Layout.fillWidth: true
-                model: backend.availableNetworks
-                currentIndex: indexOfValue(backend.currentNetwork)
-                font.pixelSize: rootItm.fontPixelSize
-                Layout.preferredHeight: refreshButton.height
-                onCurrentIndexChanged: {
-                    backend.currentNetwork=model[currentIndex];
-                    if(model[currentIndex]===backend.currentNetwork){
+            GridLayout{
+                width: parent.width-spacer.width-10
+                columnSpacing :2
+                rowSpacing :2
+                Layout.margins: 0
+                columns:3
 
+
+                Label {
+                    id: networkLabel
+                    text: qsTr("NETWORKS")+":"
+                    font.pixelSize: rootItm.fontPixelSize
+                    verticalAlignment: Text.AlignVCenter
+                    //Layout.fillHeight: true
+                    //                Layout.fillWidth: true
+
+                }
+
+                ComboBox {
+                    id: box
+                    Layout.fillWidth: true
+                    model: backend.availableNetworks
+                    font.pixelSize: rootItm.fontPixelSize
+                    Layout.preferredHeight: refreshButton.height
+                    onCurrentIndexChanged: {
+                        if(currentIndex<count && currentIndex>=0){
+                            backend.currentNetwork=model[currentIndex];
+                        }
+                    }
+                    onCountChanged: {
+                        if(currentIndex<count && currentIndex>=0){
+                            backend.currentNetwork=model[currentIndex];
+                        }
                     }
                 }
-                onCountChanged: {
-                    backend.currentNetwork=model[currentIndex];
-                }
-            }
 
 
-            Button{
-                id: refreshButton
-                text: FontAwesome.icon(FontAwesome.fa_refresh,null)
-//                anchors.left: box.right
-//                anchors.verticalCenter: box.verticalCenter
-                font.pixelSize: rootItm.fontPixelSize
-                background: Rectangle{
-                    color: "transparent"
-                }
+                Button{
+                    id: refreshButton
+                    text: FontAwesome.icon(FontAwesome.fa_refresh,null)
+                    font.pixelSize: rootItm.fontPixelSize
+                    background: Rectangle{
+                        color: "transparent"
+                    }
 
-                onClicked: {
-                    backend.refreshNetworks();
-                    animation.running=true;
-                }
-                SequentialAnimation on text {
+                    onClicked: {
+                        backend.refreshNetworks();
+                        animation.running=true;
+                    }
+                    SequentialAnimation on text {
                         id: animation
                         loops: 5
                         running: false;
@@ -100,58 +110,52 @@ Pane{
                         PropertyAnimation { to: FontAwesome.icon(FontAwesome.fa_refresh,null); duration: 1000}
 
                     }
-            }
+                }
 
-            Label {
-                id: pwLabel
-                text: qsTr("PASSWORD")+":"
-                font.pixelSize: rootItm.fontPixelSize
-                verticalAlignment: Text.AlignVCenter
-                //Layout.fillHeight: true
-//                Layout.fillWidth: true
-            }
+                Label {
+                    id: pwLabel
+                    text: qsTr("PASSWORD")+":"
+                    font.pixelSize: rootItm.fontPixelSize
+                    verticalAlignment: Text.AlignVCenter
+                }
 
-            TextField {
-                id: pw
-                placeholderText: qsTr("PASSWORD")
-                //validator: RegExpValidator { regExp: /^[a-zA-Z1-9]{8,63}$/}
-                Layout.fillWidth: true
-                //Layout.fillHeight: true
-                font.pixelSize: rootItm.fontPixelSize
-                text: {
-                      if(!focus){
+                TextField {
+                    id: pw
+                    placeholderText: qsTr("PASSWORD")
+                    Layout.fillWidth: true
+                    font.pixelSize: rootItm.fontPixelSize
+                    text: {
                         backend.apLoginPassword;
-                      }
+                    }
+                    Layout.minimumHeight: rootItm.tfratio*contentHeight
+                    echoMode: TextInput.Password
+                    onEditingFinished: {
+                        backend.apLoginPassword = text;
+                    }
+
                 }
-                Layout.minimumHeight: rootItm.tfratio*contentHeight
-                echoMode: TextInput.Password
-                onEditingFinished: {
-                    backend.apLoginPassword = text;
+
+                Button{
+                    id: pwvisible
+                    text: FontAwesome.icon(FontAwesome.fa_eye_slash,null)
+                    font.pixelSize: rootItm.fontPixelSize
+                    background: Rectangle{
+                        color: "transparent"
+                    }
+
+                    onPressed: {
+                        pw.echoMode = TextInput.Normal
+                        pwvisible.text= FontAwesome.icon(FontAwesome.fa_eye,null)
+                    }
+                    onReleased: {
+                        pw.echoMode = TextInput.Password
+                        pwvisible.text= FontAwesome.icon(FontAwesome.fa_eye_slash,null)
+                    }
                 }
+
 
             }
-
-            Button{
-                id: pwvisible
-                text: FontAwesome.icon(FontAwesome.fa_eye_slash,null)
-                font.pixelSize: rootItm.fontPixelSize
-                background: Rectangle{
-                    color: "transparent"
-                }
-
-                onPressed: {
-                    pw.echoMode = TextInput.Normal
-                    pwvisible.text= FontAwesome.icon(FontAwesome.fa_eye,null)
-                }
-                onReleased: {
-                    pw.echoMode = TextInput.Password
-                    pwvisible.text= FontAwesome.icon(FontAwesome.fa_eye_slash,null)
-                }
-            }
-
-
         }
-
 
 
     }

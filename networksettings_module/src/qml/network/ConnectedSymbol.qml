@@ -20,9 +20,15 @@ Switch{
     property int fontPixelSize
     font.pixelSize: fontPixelSize
     enabled: true;
-    onCheckedChanged: {
-        backend.connect = checked;
+
+    onClicked: {
+        if(checked){
+            backend.connect = true;
+        }else{
+            backend.connect = false;
+        }
     }
+
     text: {
         if(backend.conState===AbstractNetworkWrapper.Connecting || backend.conState===AbstractNetworkWrapper.Disconnecting){
             animation.running = true;

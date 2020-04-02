@@ -12,8 +12,6 @@ ComboBox {
     property int fontPixelSize
     font.pixelSize: fontPixelSize
     model: backend.deviceList
-    Layout.minimumWidth: model[currentIndex].length*fontPixelSize
-    Layout.minimumHeight: model[currentIndex].height*fontPixelSize
     visible : {
         if(count >= 0){
             return true;
@@ -22,10 +20,12 @@ ComboBox {
         }
     }
     onCurrentIndexChanged: {
-        backend.currentDevice=model[currentIndex];
+        if(currentIndex!=-1){
+            backend.setCurrentDevice(model[currentIndex])
+        }
     }
     Component.onCompleted: {
-       // m_guiEthernetInterface.setCurrentDevice(currentText)
+        backend.setCurrentDevice(currentText)
     }
 
 }

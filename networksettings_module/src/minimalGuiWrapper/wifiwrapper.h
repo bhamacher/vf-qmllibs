@@ -80,7 +80,7 @@ public:
      *
      * @param [IN] wifi network by name as string
      */
-    void setCurrentNetwork(QString p_currentNetwork);
+    Q_INVOKABLE Q_INVOKABLE void setCurrentNetwork(QString p_currentNetwork);
     /**
      * @brief returns the connected network.
      *
@@ -106,7 +106,7 @@ public:
      *
      * @param [IN] password as string
      */
-    void setApLoginPassword(QString ApPassword);
+    Q_INVOKABLE Q_INVOKABLE void setApLoginPassword(QString ApPassword);
     /**
      * @brief returns accesspoint name
      *
@@ -120,7 +120,7 @@ public:
      * @brief set name used for accesspoint
      * @param [IN] name as string
      */
-    void setApName(QString ApName);
+    Q_INVOKABLE void setApName(QString ApName);
     /**
      * @brief returns the accesspoint password
      *
@@ -134,7 +134,7 @@ public:
      * @brief set the accesspoint password
      * @param [IN] password as string
      */
-    void setApPassword(QString ApPassword);
+    Q_INVOKABLE void setApPassword(QString ApPassword);
     /**
      * @brief returns operation mode
      * Modes: infrastructure: "client"
@@ -152,13 +152,13 @@ public:
      *
      * @param [IN] mode as string
      */
-    void setOperationMode(WifiMode p_operationMode);
+    Q_INVOKABLE void setOperationMode(WifiMode p_operationMode);
 
     /**
      * @brief setConnect
      * @param p_active
      */
-    void setConnect(bool p_active);
+    Q_INVOKABLE void setConnect(bool p_active);
     /**
      * @brief refresh avialable networks
      *
