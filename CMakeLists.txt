@@ -5,7 +5,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DQT_QML_DEBUG -DQT_DECLARATIVE_DEBUG")
 
 add_subdirectory(networksettings_module)
 add_subdirectory(zeracomponents_lib)
-#include_directories(networkcomponents/src)
+include_directories(networksettings_module/src)
 
 
 
