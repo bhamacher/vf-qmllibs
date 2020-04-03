@@ -23,6 +23,7 @@ void WifiWrapper::init()
     for(NetworkManager::Device::Ptr dev : m_list) {
         if(NM_DEVICE_TYPE_WIFI == static_cast<NMDeviceType>(dev->type())){
             m_techList.append(dev);
+            dev->setAutoconnect(false);
         }
     }
 
@@ -160,7 +161,7 @@ NMVariantMapMap WifiWrapper::getDefaultClientConnection()
     connection["802-11-wireless"]["mode"] = "infrastructure";
     connection["802-11-wireless"]["security"]="802-11-wireless-security";
     connection["802-11-wireless-security"]["key-mgmt"]= "wpa-psk";
-    connection["802-11-wireless-security"]["psk"]= "abcd1234";
+    connection["802-11-wireless-security"]["psk"]= "abcd1234##";
     return connection;
 }
 
@@ -178,7 +179,7 @@ NMVariantMapMap WifiWrapper::getDefaultAccessPointConnection()
     connection["802-11-wireless"]["band"] = "bg";
     connection["802-11-wireless"]["channel"] = uint32_t(1);
     connection["802-11-wireless-security"]["key-mgmt"]= "wpa-psk";
-    connection["802-11-wireless-security"]["psk"]= "Zera Device";
+    connection["802-11-wireless-security"]["psk"]= "abcd1234##";
     return connection;
 }
 
@@ -212,6 +213,7 @@ QString WifiWrapper::getCurrentNetwork()
 {
     if(nullptr==m_currentDevice)return noAccess;
     if(nullptr==getCurrentWirelessClientSettings())return noAccess;
+    if(getCurrentWirelessClientSettings()->ssid()=="dummy") return "";
     return getCurrentWirelessClientSettings()->ssid();
 }
 
@@ -270,6 +272,7 @@ QString WifiWrapper::getApLoginPassword()
 {
     //    return m_password;
     if(m_clientCon==nullptr)return "";
+    if(m_password=="abcd1234##") return "";
     return m_password;
 }
 
@@ -291,6 +294,7 @@ QString WifiWrapper::getApPassword()
 {
     // return password from local memory.
     // NM will not give it to us
+    if(m_apPassword=="abcd1234##") return "";
     return m_apPassword;
 }
 
@@ -349,7 +353,20 @@ void WifiWrapper::setOperationMode(WifiWrapper::WifiMode p_operationMode)
 void WifiWrapper::setConnect(bool p_active)
 {
     if(itemsAccessable()){
-        m_currentDevice->setAutoconnect(p_active);
+
+        getAvailableNetworks();
+
+        if(!getAvailableNetworks().contains(getCurrentNetwork())){
+            setPopUpMsg("Networkerror:\nPlease choose and apply a valid network");
+            emit ConStateChanged();
+            return;
+        }
+        if(getOperationMode()==WifiMode::Client){
+            m_currentDevice->setAutoconnect(p_active);
+        }else{
+            m_currentDevice->setAutoconnect(false);
+        }
+        //m_currentDevice->setAutoconnect(false);
         if(!p_active){
             if(m_currentDevice->activeConnection()!=nullptr){
                 NetworkManager::deactivateConnection(m_currentDevice->activeConnection()->path());
@@ -360,7 +377,7 @@ void WifiWrapper::setConnect(bool p_active)
             }
         }
     }
-    //emit ConStateChanged();
+    emit ConStateChanged();
 }
 
 void WifiWrapper::refreshNetworks()

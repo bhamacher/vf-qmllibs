@@ -75,13 +75,12 @@ target_compile_features(
 
 target_link_libraries(
     vfnetworkmanager
-    PRIVATE
+    PUBLIC
     Qt5::Core
     Qt5::Quick
     Qt5::Qml
     Qt5::DBus
     Qt5::Xml
-    PUBLIC
     KF5::NetworkManagerQt
     KF5::ModemManagerQt
     )

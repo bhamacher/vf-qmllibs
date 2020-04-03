@@ -427,7 +427,7 @@ protected:
      * of the device in focus and the active connection
      * information.
      */
-    void assumeConState();
+    void assumeConState(NetworkManager::Device::State state = NetworkManager::Device::UnknownState);
 
 protected:
     /**
