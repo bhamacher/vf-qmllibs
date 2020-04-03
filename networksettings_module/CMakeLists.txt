@@ -75,12 +75,14 @@ target_compile_features(
 
 target_link_libraries(
     vfnetworkmanager
+
     PUBLIC
     Qt5::Core
     Qt5::Quick
     Qt5::Qml
     Qt5::DBus
     Qt5::Xml
+
     KF5::NetworkManagerQt
     KF5::ModemManagerQt
     )
@@ -93,6 +95,7 @@ target_include_directories(vfnetworkmanager
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${header_dir_list}
+
     )
 
 #set target Version
@@ -108,7 +111,6 @@ install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/vfnetworkmanager_export.h
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/vfnetworkmanager
     )
-
 
 # install library
 install(TARGETS vfnetworkmanager

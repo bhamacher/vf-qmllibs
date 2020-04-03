@@ -83,17 +83,13 @@ Pane{
                         }
                     }
 
+
                     onPressedChanged: {
                         if(currentIndex<count && currentIndex>=0){
                             backend.currentNetwork=model[currentIndex];
                         }
                     }
 
-//                    onCountChanged: {
-//                        if(currentIndex<count && currentIndex>=0){
-//                            backend.currentNetwork=model[currentIndex];
-//                        }
-//                    }
                 }
 
 

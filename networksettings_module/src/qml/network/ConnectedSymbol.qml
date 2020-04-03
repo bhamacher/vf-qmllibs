@@ -19,6 +19,7 @@ Switch{
     property AbstractNetworkWrapper backend
     property int fontPixelSize
     font.pixelSize: fontPixelSize
+
     enabled: !backend.newSettings || checked;
 
     onClicked: {
@@ -29,6 +30,7 @@ Switch{
 
         }else{
             backend.connect = false;
+
 
         }
     }

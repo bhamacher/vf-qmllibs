@@ -180,6 +180,7 @@ NMVariantMapMap WifiWrapper::getDefaultAccessPointConnection()
     connection["802-11-wireless"]["channel"] = uint32_t(1);
     connection["802-11-wireless-security"]["key-mgmt"]= "wpa-psk";
     connection["802-11-wireless-security"]["psk"]= "abcd1234##";
+
     return connection;
 }
 
@@ -377,7 +378,7 @@ void WifiWrapper::setConnect(bool p_active)
             }
         }
     }
-    emit ConStateChanged();
+    //emit ConStateChanged();
 }
 
 void WifiWrapper::refreshNetworks()
