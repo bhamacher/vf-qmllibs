@@ -19,13 +19,19 @@ Switch{
     property AbstractNetworkWrapper backend
     property int fontPixelSize
     font.pixelSize: fontPixelSize
-    enabled: true;
+
+    enabled: !backend.newSettings || checked;
 
     onClicked: {
-        if(checked){
+        if(checked && !backend.newSettings){
             backend.connect = true;
+        }else if(checked && backend.newSettings){
+            backend.setPopUpMsg("data inconsistent: \nPlease apply your settings before you connect")
+
         }else{
             backend.connect = false;
+
+
         }
     }
 

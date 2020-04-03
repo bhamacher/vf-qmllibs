@@ -35,7 +35,7 @@ void AbstractNetworkWrapper::init()
 
 void AbstractNetworkWrapper::reinit()
 {
-
+//no default  available
 }
 
 void AbstractNetworkWrapper::checkNetworkmanager()
@@ -184,7 +184,7 @@ void AbstractNetworkWrapper::saveCurrentSetting()
         return;
     }
     setAppState(AppletStatus::Updating);
-    m_currentDevice->setAutoconnect(false);
+    //m_currentDevice->setAutoconnect(false);
     if(m_currentDevice->activeConnection()!=nullptr){
         NetworkManager::deactivateConnection(m_currentDevice->activeConnection()->path());
     }
@@ -239,7 +239,7 @@ void AbstractNetworkWrapper::activateCurrentConnection()
 {
     if(nullptr==m_currentDevice)return;
     if(nullptr==m_currentConnection)return;
-    m_currentDevice->setAutoconnect(false);
+    //m_currentDevice->setAutoconnect(false);
     bool good=true;
     /*
     for(NetworkManager::Connection::Ptr con : m_currentDevice->availableConnections()){
@@ -263,7 +263,8 @@ void AbstractNetworkWrapper::activateCurrentConnection()
         if(result.isError()){
         }
     }
-    m_currentDevice->setAutoconnect(true);
+//    m_currentDevice->setAutoconnect(true);
+  //  m_currentDevice->setAutoconnect(false);
 }
 
 
@@ -393,7 +394,7 @@ void AbstractNetworkWrapper::setPrefix(QString p_Prefix)
 void AbstractNetworkWrapper::setConnect(bool p_active)
 {
     if(itemsAccessable()){
-        m_currentDevice->setAutoconnect(false);
+        m_currentDevice->setAutoconnect(p_active);
         if(!p_active){
             if(m_currentDevice->activeConnection()!=nullptr){
                 NetworkManager::deactivateConnection(m_currentDevice->activeConnection()->path());
@@ -428,12 +429,19 @@ NetworkManager::Ipv6Setting::Ptr AbstractNetworkWrapper::getCurrentIpv6Settings(
     return getCurrentSetting()->setting(NetworkManager::Setting::Ipv6).staticCast<NetworkManager::Ipv6Setting>();
 }
 
-void AbstractNetworkWrapper::assumeConState()
+void AbstractNetworkWrapper::assumeConState(NetworkManager::Device::State state)
 {
+    NetworkManager::Device::State mstate=NetworkManager::Device::UnknownState;
+
+    if(state==NetworkManager::Device::UnknownState){
+        mstate=m_currentDevice->state();
+    }else{
+        mstate=state;
+    }
 
     // store app state to go back to later
     NetworkManager::ActiveConnection::Ptr activeCon=m_currentDevice->activeConnection();
-    switch (m_currentDevice->state()) {
+    switch (mstate) {
     case NetworkManager::Device::UnknownState:
         setConState(ConnectionStatus::Disconnected);
         break;
@@ -512,6 +520,7 @@ void AbstractNetworkWrapper::setAppState(AppletStatus p_state)
 void AbstractNetworkWrapper::setConState(ConnectionStatus p_state)
 {
     m_conState=p_state;
+    std::cout << "constate:" << (int)p_state << std::endl;
     emit ConStateChanged();
 }
 
@@ -530,7 +539,7 @@ void AbstractNetworkWrapper::updated()
         std::cout << "updated" << std::endl;
         //activateCurrentConnection();
         if(m_nmReply.isError()){
-            setPopUpMsg(QLatin1String("Apply failed \n Please try again"));
+            setPopUpMsg(QLatin1String("Apply failed \nPlease try again"));
             setNewSettings(true);
         }
         //m_currentDevice->setAutoconnect(true);
@@ -558,13 +567,13 @@ void AbstractNetworkWrapper::newDevice(QString device)
 void AbstractNetworkWrapper::DeviceConStateChanged(NetworkManager::Device::State newstate, NetworkManager::Device::State oldstate, NetworkManager::Device::StateChangeReason reason)
 {
     if(newstate==NetworkManager::Device::NeedAuth && (reason>7 && reason < 12)){
-        setPopUpMsg(QLatin1String("Password Wrong"));
+        setPopUpMsg(QLatin1String("Connection Failed: \nPassword Wrong"));
     }
     if(newstate==NetworkManager::Device::Failed){
-        setPopUpMsg(QLatin1String("Connection Failed"));
+        setPopUpMsg(QLatin1String("Connection Failed:\nPlease check your network and password.\n If they are correct reapply your settings and try again"));
     }
-
-    assumeConState();
+    std::cout << "con state changed to" << newstate << std::endl;
+    assumeConState(newstate);
     refresh();
 }
 

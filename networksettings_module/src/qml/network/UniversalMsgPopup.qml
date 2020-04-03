@@ -22,5 +22,16 @@ Popup {
     onMsgChanged: {
         open();
     }
+
+    Button{
+        text: "ok"
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        onClicked: {
+            popup.close();
+        }
+    }
+
 }
 

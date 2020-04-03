@@ -4,7 +4,7 @@ include(CMakeFindDependencyMacro)
 #set(my-config-var @my-config-var@)
 
 # dependencies
-find_dependency(Qt5 COMPONENTS Core Quick REQUIRED)
+find_dependency(Qt5 REQUIRED COMPONENTS Quick Core Qml Widgets DBus Xml)
 find_dependency(KF5NetworkManagerQt REQUIRED)
 find_dependency(KF5ModemManagerQt REQUIRED)
 find_dependency(PkgConfig)

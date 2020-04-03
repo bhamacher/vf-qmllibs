@@ -16,6 +16,7 @@ void WiredWrapper::init()
     for(NetworkManager::Device::Ptr dev : m_list) {
         if(NM_DEVICE_TYPE_ETHERNET == static_cast<NMDeviceType>(dev->type())){
             m_techList.append(dev);
+            dev->setAutoconnect(true);
         }
     }
     if(m_techList.size()>0){
