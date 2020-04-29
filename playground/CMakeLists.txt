@@ -49,6 +49,9 @@ target_link_libraries(
         Qt5::Xml
         Qt5::Widgets
         vfnetworkmanager
+        zeracomplib
+        anmlib
+        notificationmanager
 )
 
 install(TARGETS vf-qmllibs-examples

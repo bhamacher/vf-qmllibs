@@ -1,6 +1,6 @@
 #include "abstractconnectionsettingsinterface.h"
 
-AbstractConnectionSettingsInterface::AbstractConnectionSettingsInterface()
+AbstractConnectionSettingsInterface::AbstractConnectionSettingsInterface(QObject* parent) : QObject(parent)
 {
 
 }

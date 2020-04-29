@@ -1,5 +1,50 @@
 import QtQuick 2.0
-
-Item {
-
+import QtQuick.Controls 2.5
+import QtQuick.Layouts 1.12
+Item{
+    id: rootItm
+    property int signals : 0
+    Row{
+        anchors.fill: parent
+        spacing: 2
+        Rectangle{
+            width: parent.width/3-2
+            height: parent.height/3
+            anchors.bottom: parent.bottom
+            border.color: "white"
+            color: {
+                if(rootItm.signals > 40){
+                    return "white"
+                }else{
+                    return "transparent"
+                }
+            }
+        }
+        Rectangle{
+            width: parent.width/3-2
+            height: parent.height/3*2
+            anchors.bottom: parent.bottom
+            border.color: "white"
+            color: {
+                if(rootItm.signals > 60){
+                    return "white"
+                }else{
+                    return "transparent"
+                }
+            }
+        }
+        Rectangle{
+            width: parent.width/3-2
+            height: parent.height
+            anchors.bottom: parent.bottom
+            border.color: "white"
+            color: {
+                if(rootItm.signals > 85){
+                    return "white"
+                }else{
+                    return "transparent"
+                }
+            }
+        }
+    }
 }

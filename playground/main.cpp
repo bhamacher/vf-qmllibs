@@ -12,7 +12,7 @@
 #include <QQmlDebuggingEnabler>
 
 
-#include "vfnetworkmanager.h"
+//#include "vfnetworkmanager.h"
 
 
 
@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 
      QQmlDebuggingEnabler enabler;
 
-     VfNetworkManager::init();
+     //VfNetworkManager::init();
 
     QQmlApplicationEngine engine;
 

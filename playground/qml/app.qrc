@@ -5,5 +5,7 @@
         <file>../qtquickcontrols2.conf</file>
         <file>../../networksettings_module/src/qml/FontAwesome.js</file>
         <file>zeracomps.qml</file>
+        <file>anmsettings.qml</file>
+        <file>notifiManager.qml</file>
     </qresource>
 </RCC>

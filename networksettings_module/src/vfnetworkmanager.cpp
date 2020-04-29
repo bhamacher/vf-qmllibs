@@ -16,6 +16,8 @@ void VfNetworkManager::init()
     obj->registerTypes("networksettings");
 }
 
+
+
 void VfNetworkManager::registerTypes(const char* uri) {
     qDebug() << "networksettings loaded";
     // Register types for use in qml
@@ -23,3 +25,9 @@ void VfNetworkManager::registerTypes(const char* uri) {
     qmlRegisterType<WiredWrapper>(uri, 1, 0, "WiredWrapper");
     qmlRegisterType<WifiWrapper>(uri, 1, 0, "WifiWrapper");
 }
+
+
+static void init(){
+    VfNetworkManager::init();
+}
+Q_COREAPP_STARTUP_FUNCTION(init)

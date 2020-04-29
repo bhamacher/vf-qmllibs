@@ -1,8 +1,9 @@
 #ifndef ETHERNETNETWORKS_H
 #define ETHERNETNETWORKS_H
 
+#include "abstractnetwork.h"
 
-class EthernetNetworks
+class EthernetNetworks: : public AbstractNetwork
 {
 public:
     EthernetNetworks();

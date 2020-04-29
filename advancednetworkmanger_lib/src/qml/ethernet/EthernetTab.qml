@@ -66,6 +66,11 @@ Pane{
             }
 
         }
+        Button{
+            text: "ABORT"
+            onClicked: rootItm.visible = false
+        }
+
 
     }
 

@@ -16,6 +16,7 @@ Pane{
     WifiWrapper{
         id: backend
 
+
     }
 
 
@@ -75,6 +76,11 @@ Pane{
                 anchors.right: connect.left
                 font.pixelSize: rootItm.fontPixelSize
             }
+        }
+
+        Button{
+            text: "ABORT"
+            onClicked: rootItm.visible = false
         }
 
         UniversalMsgPopup{

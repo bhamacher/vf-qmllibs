@@ -1,8 +1,9 @@
 #ifndef BLUETOOTHNETWORKS_H
 #define BLUETOOTHNETWORKS_H
 
+#include "abstractnetwork.h"
 
-class BluetoothNetworks
+class BluetoothNetworks : public AbstractNetwork
 {
 public:
     BluetoothNetworks();

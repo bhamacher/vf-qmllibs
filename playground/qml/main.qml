@@ -41,11 +41,23 @@ ApplicationWindow {
         anchors.top: mainWindow.top
     } //Networksettings Loader
 
+    Loader {
+        id: anmLoader
+        anchors.left: mainWindow.right
+        anchors.top: mainWindow.top
+    } //anmsettings Loader
+
+    Loader {
+        id: notifiLoader
+        anchors.left: mainWindow.right
+        anchors.top: mainWindow.top
+    } //anmsettings Loader
 
     //Next Loader here
 
     GridLayout{
         anchors.fill: parent
+        columns: 2
 
         //Networkcomponents checkbox
         CheckBox{
@@ -95,6 +107,51 @@ ApplicationWindow {
             }
         }
 
+        CheckBox{
+            id: showanmsettings
+            checked: false;
+            Layout.fillWidth: true;
+            text: "Load anmsettings"
+            Component.onCompleted: {
+                if(checked){
+                    anmLoader.active=true;
+                    anmLoader.source = "anmsettings.qml";
+                }else{
+                    anmLoader.active=false;
+                }
+            }
+            onCheckStateChanged: {
+                if(checked){
+                    anmLoader.active=true;
+                    anmLoader.source = "anmsettings.qml";
+                }else{
+                    anmLoader.active=false;
+                }
+            }
+        }
+
+        CheckBox{
+            id: shownotifmanager
+            checked: false;
+            Layout.fillWidth: true;
+            text: "Load notifiManager"
+            Component.onCompleted: {
+                if(checked){
+                    notifiLoader.active=true;
+                    notifiLoader.source = "notifiManager.qml";
+                }else{
+                    notifiLoader.active=false;
+                }
+            }
+            onCheckStateChanged: {
+                if(checked){
+                    notifiLoader.active=true;
+                    notifiLoader.source = "notifiManager.qml";
+                }else{
+                    notifiLoader.active=false;
+                }
+            }
+        }
 
         // Next CheckBox here
 
