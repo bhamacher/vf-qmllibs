@@ -16,6 +16,7 @@
 #include <NetworkManagerQt/ConnectionSettings>
 #include <NetworkManagerQt/Manager>
 #include <NetworkManagerQt/Settings>
+#include <NetworkManagerQt/Manager>
 
 
 #include <NetworkManagerQt/Setting>
@@ -30,13 +31,14 @@
 #include <globalDefines.h>
 #include <connectionmodel.h>
 #include <QStandardItemModel>
-#include <QVector>
+#include <QList>
 
 #include "abstractnetwork.h"
 
 class ConModelItem;
 class StoredNetworks;
 class ActiveNetworks;
+class DeviceManager;
 
 class ConnectionTreeInterface : public QObject
 {
@@ -49,9 +51,13 @@ public:
     void init();
     void reinit();
 
-    void addStoredConnection(QString p_uni, NetworkManager::Connection::Ptr p_connection, ConSource p_source);
-    void addActiveConnection(QString name);
-    void removeConnection(QString p_uni);
+
+    Q_INVOKABLE void removeConnection(QString path);
+
+    Q_INVOKABLE QList<QString> getDevices(int p_type);
+
+    Q_INVOKABLE void connect(QString p_conPath, QString p_devPath);
+    Q_INVOKABLE void disconnect(QString p_conPath);
 
 
 
@@ -61,8 +67,9 @@ public:
 
 
 private:
-    QVector<AbstractNetwork*> m_networkTypeList;
+    QList<AbstractNetwork*> m_networkTypeList;
 
+    DeviceManager* m_devManager;
     ConnectionModel* m_model;
 signals:
     void dataListChanged();

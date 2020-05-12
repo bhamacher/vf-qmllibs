@@ -16,6 +16,7 @@ QHash<int, QByteArray> ConnectionModel::roleNames() const
     roles[SignalStrengthRole] = "signalStrength";
     roles[TypeRole] = "type";
     roles[ConnectedRole] = "connected";
+    roles[StoredRole] = "stored";
     return roles;
 }
 
@@ -53,6 +54,9 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
     case ConnectedRole:
         return itm.Connected;
         break;
+    case StoredRole:
+        return itm.Stored;
+        break;
     default:
         return QVariant();
     }
@@ -85,6 +89,9 @@ bool ConnectionModel::setData(const QModelIndex &index, const QVariant &value, i
         case ConnectedRole:
             itm.Connected= value.toBool();
             break;
+        case StoredRole:
+            itm.Stored= value.toBool();
+            break;
         }
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
@@ -106,6 +113,26 @@ ConnectionList *ConnectionModel::getList() const
 void ConnectionModel::setList(ConnectionList *list)
 {
     m_list = list;
+
+    connect(m_list, &ConnectionList::preItemAppended, this, [=]() {
+               const int index = m_list->items().size();
+               beginInsertRows(QModelIndex(), index, index);
+           });
+           connect(m_list, &ConnectionList::postItemAppended, this, [=]() {
+               endInsertRows();
+           });
+
+           connect(m_list, &ConnectionList::preItemRemoved, this, [=](int index) {
+               beginRemoveRows(QModelIndex(), index, index);
+           });
+           connect(m_list, &ConnectionList::postItemRemoved, this, [=]() {
+               endRemoveRows();
+           });
+
+
+           connect(m_list, &ConnectionList::dataChanged, this, [=](int p_row) {
+               emit dataChanged(this->index(p_row),this->index(p_row));
+           });
 }
 
 

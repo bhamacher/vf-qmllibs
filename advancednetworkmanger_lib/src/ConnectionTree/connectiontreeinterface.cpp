@@ -1,7 +1,9 @@
 #include "connectiontreeinterface.h"
-#include "activenetworks.h"
-#include "storednetworks.h"
-#include "conmodelitem.h"
+#include "bluetoothnetworks.h"
+#include "vpnnetworks.h"
+#include "wifinetworks.h"
+#include "ethernetnetworks.h"
+#include "devicemanager.h"
 
 #include <iostream>
 
@@ -12,102 +14,56 @@ ConnectionTreeInterface::ConnectionTreeInterface(QObject* parent) : QObject(pare
 
 void ConnectionTreeInterface::init()
 {
+    m_devManager=new DeviceManager();
     m_model = new ConnectionModel();
-    m_storedNetworks = new StoredNetworks();
-    m_activeNetworks = new ActiveNetworks();
-    m_activeNetworks->setConTreeInt(this);
-    m_storedNetworks->setConTreeInt(this);
-    m_storedNetworks->init();
-    m_activeNetworks->init();
+    ConnectionList* list =new ConnectionList();
+    m_model->setList(list);
+    m_networkTypeList.append(new EthernetNetworks());
+    m_networkTypeList.append(new WifiNetworks());
+
+    m_devManager->init();
+
+    for(auto it=m_networkTypeList.begin(); it != m_networkTypeList.end(); ++it){
+        (*it)->init(*list,*m_devManager);
+    }
+
 }
 
-void ConnectionTreeInterface::addStoredConnection(QString p_uni, NetworkManager::Connection::Ptr p_connection, ConSource p_source)
+void ConnectionTreeInterface::removeConnection(QString p_path)
 {
-    if(p_connection->name() != "generic"){
-    ConModelItem* dataobj= new ConModelItem();
-    dataobj->setName(p_connection->name());
-    dataobj->setNmPath(p_connection->path());
+    NetworkManager::Connection::Ptr con = NetworkManager::findConnection(p_path);
+    if(con != NULL){
+        con->remove();
+    }
+}
 
-    p_connection->settings()->settings();
-    dataobj->setGroupe("ETHERNET");
-    bool fin = false;
-    for (NetworkManager::Setting::Ptr set : p_connection->settings()->settings()){
-        if(fin)break;
-        NetworkManager::Setting::SettingType t =set->type();
-        switch(t){
-        case NetworkManager::Setting::SettingType::Wired:
-            dataobj->setGroupe("ETHERNET");
-            dataobj->setType(ConModelItem::TransType::Cable);
-            fin = true;
+QList<QString> ConnectionTreeInterface::getDevices(int p_type)
+{
+    if(p_type==(int)ConType::Wifi){
+        return m_devManager->getDevices(NetworkManager::Device::Type::Wifi);
+    }else if(p_type==(int)ConType::Cable){
+        return m_devManager->getDevices(NetworkManager::Device::Type::Ethernet);
+    }
+    return m_devManager->getDevices(NetworkManager::Device::Type::UnknownType);
+}
+
+void ConnectionTreeInterface::connect(QString p_conPath, QString p_devPath)
+{
+    NetworkManager::activateConnection(p_conPath,p_devPath,"");
+}
+
+void ConnectionTreeInterface::disconnect(QString p_conPath)
+{
+    for(NetworkManager::ActiveConnection::Ptr acon : NetworkManager::activeConnections()){
+        if(acon->connection()->path() == p_conPath){
+            NetworkManager::deactivateConnection(acon->path());
             break;
-        case NetworkManager::Setting::SettingType::Wireless:
-
-
-            dataobj->setName(set.dynamicCast<NetworkManager::WirelessSetting>()->ssid());
-            if(set.dynamicCast<NetworkManager::WirelessSetting>()->mode() == NetworkManager::WirelessSetting::NetworkMode::Infrastructure){
-                dataobj->setGroupe("WIFI");
-            }else if(set.dynamicCast<NetworkManager::WirelessSetting>()->mode() == NetworkManager::WirelessSetting::NetworkMode::Ap){
-                dataobj->setGroupe("HOTSPOT");
-            }else{
-                dataobj->setGroupe("UNKNOWN");
-            }
-
-            p_uni=dataobj->getName();
-            dataobj->setType(ConModelItem::TransType::Wireless);
-            fin = true;
-            break;
-        case NetworkManager::Setting::SettingType::Vpn:
-            dataobj->setGroupe("VPN");
-            dataobj->setType(ConModelItem::TransType::Cable);
-            fin = true;
-            break;
-        default:
-            dataobj->setGroupe("UNKNOWN");
         }
     }
 
-    if(p_source == ConSource::available){
-        dataobj->setAvailable(true);
-    }else{
-        dataobj->setAvailable(false);
-    }
-    //dataobj->setAvailable(false);
-    dataobj->setConnected(false);
-    dataobj->setSignalStrength(100);
-
-    //if(dataobj->getGroupe() != "UNKNOWN"){
-    m_model->addData(p_uni,dataobj);
-    emit dataListChanged();
-    //}else{
-       // delete  dataobj;
-    }
-    }
-
-void ConnectionTreeInterface::addActiveConnection(QString name)
-{
-    ConModelItem* dataobj= new ConModelItem();
-    dataobj->setName(name);
-    dataobj->setNmPath("");
-    dataobj->setGroupe("WIFI");
-    dataobj->setAvailable(true);
-    dataobj->setConnected(false);
-    dataobj->setSignalStrength(100);
-    m_model->addData(name,dataobj);
-    emit dataListChanged();
 }
 
 
-
-void ConnectionTreeInterface::removeConnection(QString p_uni)
-{
-
-}
-
-//QList<QObject *> ConnectionTreeInterface::getDataList() const
-//{
-//    return m_dataList.values();
-
-//}
 QAbstractListModel* ConnectionTreeInterface::getDataListQml() const
 {
 

@@ -9,8 +9,8 @@ import QtQuick.Controls.Material 2.12
 import QtQuick.Layouts 1.12
 
 import "qrc:/"
-
-import "qrc:/src/qml"
+import "qrc:/src/qml/"
+import "qrc:/src/qml/tree"
 
 ApplicationWindow {
     id: mainWindow
@@ -64,6 +64,7 @@ ApplicationWindow {
         ConnectionTree{
             Layout.fillWidth: true
             Layout.fillHeight: true
+            Layout.margins: 0
             onNotification: {
                 notificationManager.notify(title,msg);
             }

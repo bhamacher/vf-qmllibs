@@ -1,21 +1,15 @@
 <RCC>
     <qresource prefix="/">
-        <file>src/qml/ConnectionTree.qml</file>
-        <file>src/qml/ConnectionQuickView.qml</file>
+        <file>src/qml/tree/ConnectionTree.qml</file>
         <file>src/qml/DummyModel.qml</file>
-        <file>src/qml/Tree.qml</file>
-        <file>src/qml/ConnectionRowAdvanced.qml</file>
+        <file>src/qml/tree/ConnectionRowAdvanced.qml</file>
         <file>../3rdparty/font-awesome-4.6.1/fonts/fontawesome-webfont.ttf</file>
         <file>src/qml/FontAwesome.js</file>
-        <file>src/qml/SignalIcon.qml</file>
-        <file>src/qml/wifi/AvailableNetworks.qml</file>
-        <file>src/qml/wifi/Networkname.qml</file>
-        <file>src/qml/wifi/WifiTab.qml</file>
-        <file>src/qml/network/DeviceList.qml</file>
-        <file>src/qml/ethernet/EthernetTab.qml</file>
-        <file>src/qml/ethernet/IpDetType.qml</file>
-        <file>src/qml/ethernet/Ipv4Input.qml</file>
-        <file>src/qml/ethernet/Ipv6Input.qml</file>
-        <file>src/qml/PasswordDialog.qml</file>
+        <file>src/qml/tree/SignalIcon.qml</file>
+        <file>src/qml/settings/WifiSettings.qml</file>
+        <file>src/qml/tree/PasswordDialog.qml</file>
+        <file>src/qml/settings/AvailableApDialog.qml</file>
+        <file>src/qml/settings/EthernetSettings.qml</file>
+        <file>src/qml/tree/ConnectionInfo.qml</file>
     </qresource>
 </RCC>

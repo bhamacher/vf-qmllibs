@@ -11,7 +11,7 @@ Item{
     property int type_
     property string groupe_
     property string name_
-    property bool active_
+    property bool available_
     property int signals_
     property bool stored_ : {
         if(nmPath === ""){
@@ -24,9 +24,10 @@ Item{
     property bool connected_
     property string nmPath_
 
-    signal edit(string p_name)
-    signal remove(string p_name)
-    signal activate(string p_name)
+    signal edit(string p_path)
+    signal remove(string p_path)
+    signal activate(string p_path)
+    signal deactivate(string p_path)
 
      signal notification(string title,string msg);
 
@@ -58,7 +59,7 @@ Item{
             Layout.alignment: Qt.AlignVCenter
             Switch {
                 anchors.verticalCenter: parent.verticalCenter
-                enabled: rootItm.active_
+                enabled: rootItm.available_
                 id: actswitch
                 position: {
                     if (rootItm.connected_ === true){
@@ -70,10 +71,11 @@ Item{
 
                 onClicked: {
                     if(position === 1){
-                        activate(rootItm.name_)
-                        notification("NM   " + FS.icon(FS.fa_chain,null), "connection with network etablished")
+                        activate(rootItm.nmPath_);
+                        notification("NM   " + FS.icon(FS.fa_chain,null), "connection with network etablished");
                     }else{
-                        notification("NM   " + FS.icon(FS.fa_chain_broken,null), "disconnected from network")
+                        deactivate(rootItm.nmPath_);
+                        notification("NM   " + FS.icon(FS.fa_chain_broken,null), "disconnected from network");
                     }
                 }
             }
@@ -89,7 +91,7 @@ Item{
                 width: 20
                 height: 20
                 visible: {
-                    if(type_ === 2 && active_){
+                    if(type_ === 1 && available_){
                         return true;
                     }else{
                         return false;
@@ -104,7 +106,7 @@ Item{
                 height: 20
                 color: "transparent"
                 visible: {
-                    if(type_ !== 2 || !active_){
+                    if(type_ !== 1 || !available_){
                         return true;
                     }else{
                         return false;
@@ -128,7 +130,9 @@ Item{
                 background: Rectangle{
                     color: "transparent"
                 }
-
+                onClicked: {
+                    edit(rootItm.nmPath_)
+                }
             }
         }
 
@@ -142,6 +146,9 @@ Item{
                 text: FS.icon(FS.fa_trash,null)
                 background: Rectangle{
                     color: "transparent"
+                }
+                onClicked: {
+                    remove(rootItm.nmPath_)
                 }
             }
         }

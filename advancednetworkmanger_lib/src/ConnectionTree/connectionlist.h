@@ -7,42 +7,61 @@
 
 #include "globalDefines.h"
 
+class ConnectionList;
 
 class connectionItem{
+private:
+    int uid;
 public:
     QString Groupe;
+    bool Stored;
     QString Name;
     QString NmPath;
-    QString Available;
+    bool Available;
     int SignalStrength;
     ConType Type;
     bool Connected;
+
+    friend class ConnectionList;
 };
 
 
 
 class ConnectionList : public QObject
 {
+    Q_OBJECT
 public:
     ConnectionList();
-    int addItem(connectionItem &Item);
-    bool removeItem(int id);
+    int addItem(connectionItem Item);
+    bool removeItem(int p_index);
+    bool removeByKey(int p_key);
+    bool removeByPath(const QString &p_path);
+
     QList<connectionItem> items() const;
+    connectionItem itemByKey(int p_key);
+    connectionItem itemByPath(QString p_path);
     bool setItemAt(int index, const connectionItem &p_item);
+    bool setItemByKey(int p_key,const connectionItem &p_item);
+    bool setItemByPath(QString p_key,const connectionItem &p_item);
 private:
-    QMap<int,connectionItem> m_idMap;
-    int m_uidCounter;
+    int findKeyPos(int p_key);
+    int findPathPos(const QString &Path);
+
+    QList<connectionItem> m_list;
+    uint m_uidCounter;
 
 public slots:
-    void appendItem();
-    void removeItem();
+//    void appendItem();
+//    void removeItem();
 
 signals:
-    void preItemRemoved();
-    void postItemRemoved();
+    void preItemRemoved(int i);
+    void postItemRemoved(int i);
 
     void preItemAppended();
-    void postItemAppendend();
+    void postItemAppended();
+
+    void dataChanged(int p_row);
 
 };
 

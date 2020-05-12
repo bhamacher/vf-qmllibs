@@ -5,36 +5,97 @@ import QtQuick.Layouts 1.12
 
 import anmsettings 1.0
 
-import "qrc:/src/qml/ethernet"
-import "qrc:/src/qml/wifi"
+import "qrc:/src/qml/settings"
 
 Pane{
     id: rootItm
-
+    padding: 0
 
     signal notification(string title,string msg);
 
     ConnectionTreeInterface{
-        id: tree;
+        id: backend;
     }
 
-    DummyModel {
-        id: test
-    }
 
-    EthernetTab{
+
+
+
+    Component{
         id: ethtab
-        anchors.fill: parent
-        visible: false
-        z: 10
+
+        EthernetSettings{
+            anchors.fill: parent
+            anchors.margins: 0
+            visible: true
+            z: 10
+
+
+            onVisibleChanged: {
+                if(!visible){
+                    ethLoader.active = false;
+                }
+            }
+
+        }
     }
 
-    WifiTab{
+    Component{
         id: wifitab
-        anchors.fill: parent
-        visible: false
-        z: 10
+
+        WifiSettings{
+
+            anchors.fill: parent
+            anchors.margins: 0
+            visible: true
+            z: 10
+
+            onVisibleChanged: {
+                if(!visible){
+                    wifiLoader.active = false;
+                }
+            }
+
+        }
     }
+
+    Loader {
+        id: ethLoader
+        anchors.fill: parent
+        anchors.margins: 0
+        active : false
+        z: 10
+        sourceComponent: ethtab
+        property string path: ""
+        onLoaded: {
+            item.path = ethLoader.path
+        }
+        onActiveChanged: {
+            if(!active){
+                path = "";
+            }
+        }
+    }
+
+    Loader{
+        id: wifiLoader
+        anchors.fill: parent
+        anchors.margins: 0
+        visible: true
+        active : false
+        z: 10
+        sourceComponent: wifitab
+        property string path: ""
+        onLoaded: {
+            item.path = wifiLoader.path
+        }
+        onActiveChanged: {
+            if(!active){
+                path = "";
+            }
+        }
+    }
+
 
 
     Component {
@@ -94,8 +155,8 @@ Pane{
         anchors.right: parent.right
         clip: true
 
-         model: SortFilterProxyModel{
-            sourceModel: tree.dataList
+        model: SortFilterProxyModel{
+            sourceModel: backend.dataList
             filters:[
                 RegExpFilter{
                     enabled: showall.checked
@@ -144,20 +205,52 @@ Pane{
         }
         delegate: ConnectionRowAdvanced{
             name_: name
-            active_: available
-            type_: 1
+            available_: available
+            type_: type
             signals_: signalStrength
             groupe_: groupe
             connected_: connected
             nmPath_: nmPath
+            stored_: stored
 
             anchors.left: parent.left
             anchors.right: parent.right
-            anchors.leftMargin: parent.width/16
+            anchors.leftMargin: parent.width/30
 
             height: 30
 
-            onActivate: pwDialog.visible = true
+
+            onEdit: {
+                if(groupe_ == "ETHERNET"){
+                    ethLoader.path = p_path;
+                    ethLoader.active = true;
+                }else if(groupe_ === "WIFI"){
+                    wifiLoader.path = p_path;
+                    wifiLoader.active = true;
+
+                }else if(groupe_ === "HOTSPOT"){
+                    wifiLoader.path = p_path;
+                    wifiLoader.active = true;
+                }
+            }
+
+            onRemove: {
+                backend.removeConnection(p_path)
+            }
+
+            onActivate: {
+                var Devices = backend.getDevices(type_)
+                if(Devices.length > 1){
+                    rootItm.notification("Devices", "more then 1:\n" + Devices[0]);
+                }else if(Devices.length > 0){
+                    rootItm.notification("Devices",Devices[0]);
+                    backend.connect(p_path,Devices[0]);
+                }
+            }
+            onDeactivate: {
+                backend.disconnect(p_path)
+            }
+
             onNotification: {
                 rootItm.notification(title,msg);
             }
@@ -194,13 +287,15 @@ Pane{
             MenuItem {
                 text: "+ ETHERNET"
                 onClicked: {
-                    ethtab.visible = true;
+
+                    ethLoader.active = true;
                 }
             }
             MenuItem {
                 text: "+ WIFI"
                 onClicked: {
-                    wifitab.visible = true;
+
+                    wifiLoader.active = true;
                 }
             }
         }
@@ -262,5 +357,6 @@ Pane{
 
 
 }
+
 
 

@@ -1,4 +1,4 @@
-#ifndef CONMODELITEM_H
+﻿#ifndef CONMODELITEM_H
 #define CONMODELITEM_H
 
 #include <QAbstractListModel>
@@ -24,6 +24,7 @@ public:
         SignalStrengthRole,
         TypeRole,
         ConnectedRole,
+        StoredRole
     };
 
     QHash<int, QByteArray> roleNames() const override;
@@ -40,6 +41,9 @@ public:
 private:
 
     ConnectionList* m_list;
+signals:
+    void listChanged();
+
 };
 
 #endif // CONMODELITEM_H
