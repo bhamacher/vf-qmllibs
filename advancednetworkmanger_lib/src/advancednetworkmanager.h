@@ -6,6 +6,8 @@
 #include "abstractconnectionsettingsinterface.h"
 #include "wiredconnectionsettingsinterface.h"
 #include "wirelessconnectionsettingsinterface.h"
+#include "infointerface.h"
+#include "networkmanagerabstraction.h"
 
 #include <QtQml/QQmlExtensionPlugin>
 

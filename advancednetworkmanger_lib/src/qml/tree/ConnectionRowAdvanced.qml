@@ -1,8 +1,9 @@
 import QtQuick 2.0
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
+import anmsettings 1.0
 
-import "qrc:/src/qml/FontAwesome.js" as FS
+import "qrc:/src/qml/FontAwesome.js" as FA
 
 
 
@@ -23,6 +24,10 @@ Item{
 
     property bool connected_
     property string nmPath_
+
+    onConnected_Changed: {
+        actswitch.checked = connected_;
+    }
 
     signal edit(string p_path)
     signal remove(string p_path)
@@ -69,13 +74,17 @@ Item{
                     }
                 }
 
+                checked : rootItm.connected_
+
                 onClicked: {
                     if(position === 1){
                         activate(rootItm.nmPath_);
-                        notification("NM   " + FS.icon(FS.fa_chain,null), "connection with network etablished");
+                        //position = 0;
+                        checked = rootItm.connected_
                     }else{
                         deactivate(rootItm.nmPath_);
-                        notification("NM   " + FS.icon(FS.fa_chain_broken,null), "disconnected from network");
+                        //position = 1;
+                        checked = rootItm.connected_
                     }
                 }
             }
@@ -126,7 +135,8 @@ Item{
                 anchors.verticalCenter: parent.verticalCenter
                 id: edbutton
                 enabled: rootItm.stored_
-                text: FS.icon(FS.fa_edit,null)
+                font.pixelSize: 18
+                text: FA.icon(FA.fa_edit,null)
                 background: Rectangle{
                     color: "transparent"
                 }
@@ -143,7 +153,8 @@ Item{
             Button{
                 anchors.verticalCenter: parent.verticalCenter
                 enabled: rootItm.stored_
-                text: FS.icon(FS.fa_trash,null)
+                font.pixelSize: 18
+                text: FA.icon(FA.fa_trash,null)
                 background: Rectangle{
                     color: "transparent"
                 }

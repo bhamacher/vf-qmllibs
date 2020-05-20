@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include "abstractconnectionsettingsinterface.h"
+#include <NetworkManagerQt/WirelessSecuritySetting>
 
 class WirelessConnectionSettingsInterface : public AbstractConnectionSettingsInterface
 {
@@ -10,9 +11,12 @@ class WirelessConnectionSettingsInterface : public AbstractConnectionSettingsInt
 
     Q_PROPERTY(QString ssid READ getSsid WRITE setSsid NOTIFY ssidChanged)
     Q_PROPERTY(QString password READ getPassword WRITE setPassword NOTIFY passwordChanged)
-    Q_PROPERTY(QString Mode READ getMode WRITE setMode NOTIFY modeChanged)
+    Q_PROPERTY(QString mode READ getMode WRITE setMode NOTIFY modeChanged)
 public:
     WirelessConnectionSettingsInterface(QObject *parent = nullptr);
+
+    Q_INVOKABLE void create() override;
+
 
     QString getSsid();
     void setSsid(QString p_ssid);

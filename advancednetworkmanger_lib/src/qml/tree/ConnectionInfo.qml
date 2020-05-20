@@ -1,23 +1,80 @@
-import QtQuick 2.0
-import QtQuick.Controls 2.12
+import QtQuick 2.12
+import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.12
+import QtQuick.Controls.Styles 1.4
 
 import anmsettings 1.0
 
 
 Pane {
-//    InfoInterface{
-//        id: backend
-//    }
+id: rootItm
+    Label{
+        id: header
+        text: "Connection Information"
+        font.bold: true
+        font.pixelSize: 18
+        font.underline: true
+        anchors.top: parent.top
+        anchors.horizontalCenter: parent.horizontalCenter
+    }
 
     ListView{
         id: list
-        anchors.top: parent.top
-        anchors.bottom: showall.top
+        anchors.top: header.bottom
+        anchors.bottom: parent.bottom
         anchors.left: parent.left
         anchors.right: parent.right
+        spacing: 15
         clip: true
-        model: backend.activeConnections
+        model: InfoInterface{
+
+        }
+
+        delegate: Grid{
+                columns: 2
+            Label {
+                text: device
+                font.bold: true
+                font.underline: true
+            }
+
+            Item {
+                id: spacer
+                width: 1
+                height: 1
+            }
+
+
+            Label {
+                text: "ipv4: "
+
+            }
+
+            Label {
+                text: ipv4
+
+            }
+
+            Label {
+                text: "subnetmask: "
+
+            }
+
+            Label {
+                text: subnetmask
+
+            }
+
+            Label {
+                text: "ipv6: "
+
+            }
+
+            Label {
+                text: ipv6
+
+            }
+        }
     }
 
 

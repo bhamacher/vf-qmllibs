@@ -5,12 +5,16 @@ InfoInterface::InfoInterface()
     connect(NetworkManager::notifier(),&NetworkManager::Notifier::activeConnectionAdded, this, &InfoInterface::addActiveConnection);
     connect(NetworkManager::notifier(),&NetworkManager::Notifier::activeConnectionRemoved, this, &InfoInterface::removeActiveConnection);
     for(NetworkManager::ActiveConnection::Ptr acon : NetworkManager::activeConnections()){
-
-
-
-
-
-
+        const int index = m_activeCons.size();
+        emit beginInsertRows(QModelIndex(), index, index);
+        InfoStruct itm;
+        itm.ipv4 = acon->ipV4Config().addresses().at(0).ip().toString();
+        itm.subnetmask = acon->ipV4Config().addresses().at(0).netmask().toString();
+        itm.ipv6= acon->ipV6Config().addresses().at(0).ip().toString();
+        itm.device =  NetworkManager::findNetworkInterface(acon->devices().at(0))->interfaceName();
+        itm.path=acon->path();
+        m_activeCons.append(itm);
+        emit endInsertRows();
     }
 }
 
@@ -31,7 +35,7 @@ QHash<int, QByteArray> InfoInterface::roleNames() const
 
 int InfoInterface::rowCount(const QModelIndex &parent) const
 {
- return m_activeCons.size();
+    return m_activeCons.size();
 }
 
 QVariant InfoInterface::data(const QModelIndex &index, int role) const
@@ -61,10 +65,24 @@ void InfoInterface::addActiveConnection(const QString &p_path)
         const int index = m_activeCons.size();
         emit beginInsertRows(QModelIndex(), index, index);
         InfoStruct itm;
-        itm.ipv4 = acon->ipV4Config().addresses().at(0).ip().toString();
-        itm.subnetmask = acon->ipV4Config().addresses().at(0).netmask().toString();
-        itm.ipv6= acon->ipV6Config().addresses().at(0).ip().toString();
-        itm.device = acon->devices().at(0);
+        if(acon->ipV4Config().addresses().size()>0){
+            itm.ipv4 = acon->ipV4Config().addresses().at(0).ip().toString();
+        }else{
+            itm.ipv4 = "N/A";
+        }
+        if(acon->ipV4Config().addresses().size()>0){
+            itm.subnetmask = acon->ipV4Config().addresses().at(0).netmask().toString();
+        }else{
+            itm.subnetmask = "N/A";
+        }
+        if(acon->ipV6Config().addresses().size()>0){
+            itm.ipv6= acon->ipV6Config().addresses().at(0).ip().toString();
+        }else{
+            itm.ipv6 = "N/A";
+        }
+        if(acon->devices().size()>0){
+            itm.device = NetworkManager::findNetworkInterface(acon->devices().at(0))->interfaceName();
+        }
         itm.path=p_path;
         m_activeCons.append(itm);
         emit endInsertRows();
@@ -77,10 +95,10 @@ void InfoInterface::removeActiveConnection(const QString &p_path)
     int idx = 0;
     for(InfoStruct itm : m_activeCons){
         if(itm.path == p_path){
-           beginRemoveRows(QModelIndex(), idx, idx);
-           m_activeCons.removeAt(idx);
-           endRemoveRows();
-           break;
+            beginRemoveRows(QModelIndex(), idx, idx);
+            m_activeCons.removeAt(idx);
+            endRemoveRows();
+            break;
         }
         idx++;
     }

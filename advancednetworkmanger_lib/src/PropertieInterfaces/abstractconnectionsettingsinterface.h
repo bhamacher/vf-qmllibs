@@ -31,7 +31,9 @@ class AbstractConnectionSettingsInterface : public QObject
 public:
     AbstractConnectionSettingsInterface(QObject *parent = nullptr);
     Q_INVOKABLE void load(QString p_path);
+    Q_INVOKABLE virtual void create();
     Q_INVOKABLE void save();
+    Q_INVOKABLE void saveAndActivate(const QString &p_devUni);
     Q_INVOKABLE void discard();
 
     QString getConName();
@@ -39,6 +41,8 @@ public:
 
 protected:
     NetworkManager::Connection::Ptr m_connection;
+    NetworkManager::ConnectionSettings::Ptr m_settings;
+    NMVariantMapMap m_connectionMap;
 
 signals:
     void conNameChanged();

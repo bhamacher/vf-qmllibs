@@ -15,7 +15,6 @@ public:
     QList<QString> getDevices(NetworkManager::Device::Type p_type);
     QList<QString> getDevices();
     NetworkManager::Device::Ptr getDevice(QString p_devicePath);
-
 private:
     NetworkManager::Device::List m_devList;
 public slots:

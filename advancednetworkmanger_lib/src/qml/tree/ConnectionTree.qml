@@ -6,6 +6,7 @@ import QtQuick.Layouts 1.12
 import anmsettings 1.0
 
 import "qrc:/src/qml/settings"
+import "qrc:/src/qml/FontAwesome.js" as FA
 
 Pane{
     id: rootItm
@@ -19,7 +20,9 @@ Pane{
 
 
 
-
+    FontLoader {
+        source: "qrc:../3rdparty/font-awesome-4.6.1/fonts/fontawesome-webfont.ttf"
+    }
 
     Component{
         id: ethtab
@@ -49,13 +52,42 @@ Pane{
             anchors.margins: 0
             visible: true
             z: 10
-
             onVisibleChanged: {
                 if(!visible){
                     wifiLoader.active = false;
                 }
             }
 
+        }
+    }
+
+
+    Component{
+        id: infotab
+        ConnectionInfo{
+
+            anchors.top: parent.top
+            anchors.bottom: showall.top
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.margins: 0
+            visible: true
+            z: 10
+        }
+    }
+
+    Component{
+        id: pwDialog
+        WifiSmartConnect{
+            width: parent.width
+            anchors.centerIn: parent
+            z: 10
+            visible: true
+            onVisibleChanged: {
+                if(!visible){
+                    smartConnectLoader.active = false;
+                }
+            }
         }
     }
 
@@ -69,6 +101,7 @@ Pane{
         property string path: ""
         onLoaded: {
             item.path = ethLoader.path
+            item.init();
         }
         onActiveChanged: {
             if(!active){
@@ -88,6 +121,7 @@ Pane{
         property string path: ""
         onLoaded: {
             item.path = wifiLoader.path
+            item.init();
         }
         onActiveChanged: {
             if(!active){
@@ -95,6 +129,35 @@ Pane{
             }
         }
     }
+
+    Loader{
+        id: infoLoader
+        anchors.top: parent.top
+        anchors.bottom: showall.top
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.margins: 0
+        visible: true
+        active : false
+        z: 10
+        sourceComponent: infotab
+    }
+
+    Loader {
+        id: smartConnectLoader
+        width: parent.width*0.9
+        anchors.centerIn: parent
+        active : false
+        visible: true
+        z: 10
+        sourceComponent: pwDialog
+        property string ssid: ""
+        property string device: ""
+        onLoaded: {
+            item.init(ssid,device)
+        }
+    }
+
 
 
 
@@ -165,10 +228,16 @@ Pane{
                     caseSensitivity: Qt.CaseInsensitive
                 }
                 ,
+
                 ValueFilter{
                     enabled: !showall.checked
                     roleName: "available"
                     value: 1
+                },
+                RangeFilter{
+                  enabled: !showall.checked
+                  roleName: "signalStrength"
+                  minimumValue: 25
                 },
                 AnyOf{
                     RegExpFilter {
@@ -240,11 +309,13 @@ Pane{
 
             onActivate: {
                 var Devices = backend.getDevices(type_)
-                if(Devices.length > 1){
-                    rootItm.notification("Devices", "more then 1:\n" + Devices[0]);
-                }else if(Devices.length > 0){
-                    rootItm.notification("Devices",Devices[0]);
-                    backend.connect(p_path,Devices[0]);
+                var Device= Devices[0]
+                if(stored_ === true){
+                    backend.connect(p_path,Device);
+                }else{
+                    smartConnectLoader.ssid = name_;
+                    smartConnectLoader.device = Device;
+                    smartConnectLoader.active=true;
                 }
             }
             onDeactivate: {
@@ -304,7 +375,7 @@ Pane{
         id: showall
         anchors.bottom: parent.bottom
         anchors.left: addbutton.right
-        text: "ADVANCED"
+        text: "SHOW ALL"
     }
     CheckBox{
         anchors.right: wifishow.left
@@ -323,7 +394,7 @@ Pane{
     }
 
     CheckBox{
-        anchors.right: vpnshow.left
+        anchors.right: infoButton.left
         anchors.bottom: parent.bottom
         id: apshow
         checked: true
@@ -335,23 +406,39 @@ Pane{
         anchors.bottom: parent.bottom
         id: vpnshow
         checked: false
+        visible: false
         text: "VPN"
     }
 
     CheckBox{
-        anchors.right: parent.right
+        anchors.right: infoButton.left
         anchors.bottom: parent.bottom
         id: blueshow
         checked: false
+        visible: false
         text: "BLUETOOTH"
     }
+    Button{
+        id: infoButton
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        text: FA.icon(FA.fa_info,null);
+        font.pixelSize: 18
+        background: Rectangle{
+            color: "transparent"
+        }
+        onClicked: {
+            if(infoLoader.active === false){
+                infoLoader.active = true;
+            }else{
+                infoLoader.active = false;
+            }
 
-
-    PasswordDialog{
-        id: pwDialog
-        width: parent.width
-        anchors.centerIn: parent
+        }
     }
+
+
+
 
 
 

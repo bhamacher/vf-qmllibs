@@ -20,6 +20,8 @@ class WiredConnectionSettingsInterface : public AbstractConnectionSettingsInterf
 public:
     WiredConnectionSettingsInterface(QObject *parent = nullptr);
 
+    Q_INVOKABLE void create() override;
+
     QString getIpv4Mode();
     void setIpv4Mode(QString p_ipv4Mode);
 

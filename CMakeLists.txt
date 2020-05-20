@@ -8,6 +8,7 @@ add_subdirectory(zeracomponents_lib)
 add_subdirectory(advancednetworkmanger_lib)
 add_subdirectory(notificationmanager)
 include_directories(networksettings_module/src)
+include_directories(advancednetworkmanger_lib/src)
 
 
 

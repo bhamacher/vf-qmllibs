@@ -4,24 +4,40 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls.Styles 1.4
 import anmsettings 1.0
 
-import "qrc:/src/qml/network"
-
 import "qrc:/src/qml/FontAwesome.js" as FA
 
 Pane{
     id: rootItm
     padding: 0
-    property string path: ""
+    property string path : ""
 
 
-    onPathChanged: {
-        backend.load(path);
+    function init() {
+        if(path === ""){
+            backend.create();
+        }else{
+            backend.load(path);
+        }
     }
+
+    NetworkmanagerAbstraction{
+        id: generalbackend
+    }
+
 
     WirelessConnectionSettingsInterface{
         id: backend
         onLoadComplete: {
             name.text = backend.conName;
+            ssid.text = backend.ssid;
+            pw.text = backend.password;
+            if(backend.mode === "CLIENT"){
+                mode.currentIndex = 0
+            }else if(backend.mode === "HOTSPOT"){
+                mode.currentIndex = 1
+            }
+
+
         }
     }
 
@@ -35,6 +51,8 @@ Pane{
             anchors.left: parent.left
             anchors.right: parent.right
             font.bold: true
+            font.pixelSize: 18
+            font.underline: true
             horizontalAlignment: Label.AlignHCenter
 
             text: "WIFI CONNECTION SETTINGS"
@@ -57,6 +75,9 @@ Pane{
             TextField{
                 id: name
                 Layout.fillWidth: true
+                onEditingFinished: {
+                    backend.conName = text;
+                }
             }
 
 
@@ -76,9 +97,15 @@ Pane{
             TextField{
                 id: ssid
                 Layout.fillWidth: true
+                onEditingFinished: {
+                    backend.ssid = text;
+                }
             }
             Button{
                 text: FA.icon(FA.fa_search_plus,null);
+                background: Rectangle{
+                    color: "transparent"
+                }
                 onClicked: {
                     aApDialog.visible = true;
                 }
@@ -97,10 +124,30 @@ Pane{
                 Layout.preferredWidth: clientModel.labelWidth
             }
             TextField{
-                id: password
+                id: pw
                 echoMode: TextInput.Password
                 Layout.fillWidth: true
+                onEditingFinished: {
+                    backend.password = text;
+                }
             }
+            Button{
+                id: pwvisible
+                text: FA.icon(FA.fa_eye_slash,null)
+                font.pixelSize: rootItm.fontPixelSize
+                background: Rectangle{
+                    color: "transparent"
+                }
+                onPressed: {
+                    pw.echoMode = TextInput.Normal
+                    pwvisible.text= FA.icon(FA.fa_eye,null)
+                }
+                onReleased: {
+                    pw.echoMode = TextInput.Password
+                    pwvisible.text= FA.icon(FA.fa_eye_slash,null)
+                }
+            }
+
         }
 
         RowLayout{
@@ -117,6 +164,11 @@ Pane{
                 id: mode
                 Layout.fillWidth: true
                 model: ["CLIENT", "HOTSPOT"]
+                onCurrentIndexChanged: {
+                    if(currentIndex<count && currentIndex>=0){
+                        backend.mode=model[currentIndex];
+                    }
+                }
             }
         }
 
@@ -140,11 +192,13 @@ Pane{
 
     Button{
         id: abort
-        text: "ABORT"
+        text: "CANCEL"
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         onClicked: {
-            rootItm.visible = false
+                backend.discard();
+                rootItm.visible = false
+
         }
     }
 
@@ -153,12 +207,29 @@ Pane{
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         text: "SAVE"
+        onClicked: {
+            var good=true;
+            if(name.text === ""){
+                good = false;
+            }else if(ssid.text === ""){
+                good = false;
+            }else if(pw.text === ""){
+                good = false;
+            }
+            if(good){
+                backend.save();
+                rootItm.visible = false
+            }
+        }
     }
 
     AvailableApDialog{
         id: aApDialog
-        width: parent.width
+        width: parent.width*0.9
         anchors.centerIn: parent
+        onOkPressed: {
+            ssid.text = retSsid
+        }
     }
 
 }

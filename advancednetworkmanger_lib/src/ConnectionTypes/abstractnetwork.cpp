@@ -139,15 +139,15 @@ void AbstractNetwork::addDevice(NetworkManager::Device::Type p_type, QString p_d
         DevStruct device;
         device.dev=dev;
         m_devList[p_device]=device;
-        device.qtCons.append(connect(device.dev.data(),&NetworkManager::Device::availableConnectionAppeared,this,&AbstractNetwork::addConnection));
-        device.qtCons.append(connect(device.dev.data(),&NetworkManager::Device::availableConnectionDisappeared,this,&AbstractNetwork::removeConnection));
         findAvailableConnections(p_device);
     }
 }
 
 void AbstractNetwork::removeDevice(QString p_device)
 {
-
+ if(m_devList.contains(p_device)){
+     m_devList.remove(p_device);
+ }
 }
 
 

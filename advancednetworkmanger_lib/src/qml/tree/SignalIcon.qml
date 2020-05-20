@@ -13,7 +13,7 @@ Item{
             anchors.bottom: parent.bottom
             border.color: "white"
             color: {
-                if(rootItm.signals > 40){
+                if(rootItm.signals > 30){
                     return "white"
                 }else{
                     return "transparent"
@@ -39,7 +39,7 @@ Item{
             anchors.bottom: parent.bottom
             border.color: "white"
             color: {
-                if(rootItm.signals > 85){
+                if(rootItm.signals > 95){
                     return "white"
                 }else{
                     return "transparent"

@@ -61,7 +61,7 @@ ApplicationWindow {
         anchors.right: parent.right
         anchors.margins: 0
 
-        ConnectionTree{
+        NetworkManager{
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.margins: 0
