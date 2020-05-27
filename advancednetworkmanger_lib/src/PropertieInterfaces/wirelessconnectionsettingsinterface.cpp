@@ -17,6 +17,20 @@ void WirelessConnectionSettingsInterface::create()
     NMVariantMapMap map = m_settings->toMap();
     map.remove("802-1x");
     m_settings->fromMap(map);
+    m_settings->setAutoconnect(false);
+    emit loadComplete();
+}
+
+QStringList WirelessConnectionSettingsInterface::getDevices()
+{
+    NetworkManager::Device::List devList = NetworkManager::networkInterfaces();
+    QStringList list;
+    for(NetworkManager::Device::Ptr dev : devList){
+        if(dev->type() == NetworkManager::Device::Type::Wifi){
+            list.append(dev->interfaceName());
+        }
+    }
+    return list;
 }
 
 QString WirelessConnectionSettingsInterface::getSsid()

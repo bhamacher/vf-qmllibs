@@ -7,11 +7,21 @@ import anmsettings 1.0
 
 Dialog {
     id: rootItm
-    title: "Wifi Password"
-    property string groupe: "ALL"
-    property var deviceList: ""
+    title: "CHOOSE YOUR DEVICE"
 
-    signal okPressed(string retSsid)
+    property string name: ""
+    property bool stored: true
+    property int type: 0
+
+
+    signal devChosen(string dev,string name, bool stored);
+
+
+    function init(name,stored,type){
+        rootItm.name = name;
+        rootItm.stored = stored;
+        deviceList.model = backend.getDevices(type);
+    }
 
 
     NetworkmanagerAbstraction{
@@ -21,25 +31,30 @@ Dialog {
 
     RowLayout{
         width: parent.width
-        Label{
-            id: pwLabel
-            text: "NETWORKS: "
-        }
 
-        ComboBox{
-            id: ssidList
-            Layout.fillWidth: true
-            model: backend.deviceList
+        Label{
+            id: deviceLabel
+            text: "Device "
         }
+        ComboBox{
+            id: deviceList
+            Layout.fillWidth: true
+            }
+
     }
+
+
+
 
     standardButtons: Dialog.Ok | Dialog.Cancel
 
     onAccepted: {
-        okPressed(ssidList.currentText)
+        var dev=backend.getDevicePath(deviceList.model[deviceList.currentIndex]);
+        devChosen(dev,rootItm.name,rootItm.stored);
     }
 
 }
+
 
 
 

@@ -24,7 +24,7 @@ void AdvancedNetworkmanager::registerTypes(const char* uri) {
     qmlRegisterType<WirelessConnectionSettingsInterface>(uri, 1, 0, "WirelessConnectionSettingsInterface");
     qmlRegisterType<InfoInterface>(uri, 1, 0, "InfoInterface");
     qmlRegisterType<NetworkmanagerAbstraction>(uri, 1, 0, "NetworkmanagerAbstraction");
-
+    qmlRegisterType<NmCppNotification>(uri,1, 0, "NmCppNotification");
 }
 
 

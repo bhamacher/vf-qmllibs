@@ -10,6 +10,7 @@ void AbstractConnectionSettingsInterface::load(QString p_path)
     m_connection = NetworkManager::findConnection(p_path);
     m_settings = m_connection->settings();
     m_connectionMap = m_connection->settings()->toMap();
+    m_settings->setAutoconnect(false);
     emit loadComplete();
 
 }
@@ -17,7 +18,6 @@ void AbstractConnectionSettingsInterface::load(QString p_path)
 void AbstractConnectionSettingsInterface::create()
 {
     m_settings= NetworkManager::ConnectionSettings::Ptr::create(NetworkManager::ConnectionSettings::ConnectionType::Unknown);
-
 }
 
 void AbstractConnectionSettingsInterface::save()
@@ -47,6 +47,28 @@ void AbstractConnectionSettingsInterface::discard()
     }else{
         NMVariantMapMap map = m_settings->toMap();
         m_settings.clear();
+    }
+}
+
+QStringList AbstractConnectionSettingsInterface::getDevices()
+{
+
+}
+
+QString AbstractConnectionSettingsInterface::getDevice()
+{
+    if(m_connection != NULL){
+        return m_settings->interfaceName();
+    }else{
+        return "";
+    }
+}
+
+void AbstractConnectionSettingsInterface::setDevice(QString &device)
+{
+    if(m_settings != nullptr){
+        m_settings->setInterfaceName(device);
+        emit deviceChanged();
     }
 }
 

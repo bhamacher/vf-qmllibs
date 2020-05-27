@@ -8,6 +8,7 @@
 #include "wirelessconnectionsettingsinterface.h"
 #include "infointerface.h"
 #include "networkmanagerabstraction.h"
+#include "nmcppnotification.h"
 
 #include <QtQml/QQmlExtensionPlugin>
 

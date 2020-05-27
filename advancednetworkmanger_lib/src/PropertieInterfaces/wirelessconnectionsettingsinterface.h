@@ -16,7 +16,7 @@ public:
     WirelessConnectionSettingsInterface(QObject *parent = nullptr);
 
     Q_INVOKABLE void create() override;
-
+    QStringList getDevices() override;
 
     QString getSsid();
     void setSsid(QString p_ssid);
@@ -28,7 +28,6 @@ public:
     void setMode(QString p_mode);
 
 signals:
-
     void ssidChanged();
     void passwordChanged();
     void modeChanged();

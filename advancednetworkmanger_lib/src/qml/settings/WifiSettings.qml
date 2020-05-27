@@ -2,7 +2,9 @@ import QtQuick 2.12
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Styles 1.4
+import SortFilterProxyModel 0.2
 import anmsettings 1.0
+import QtQml.Models 2.11
 
 import "qrc:/src/qml/FontAwesome.js" as FA
 
@@ -37,12 +39,11 @@ Pane{
                 mode.currentIndex = 1
             }
 
-
         }
     }
 
 
-    VisualItemModel{
+    ObjectModel{
         id: clientModel
         property int labelWidth : rootItm.width/4
 
@@ -82,6 +83,8 @@ Pane{
 
 
         }
+
+
 
 
         RowLayout{
@@ -186,7 +189,7 @@ Pane{
         anchors.bottom: save.top
         anchors.left: parent.left
         anchors.right: parent.right
-        model:clientModel
+        model: clientModel
     }
 
 
@@ -196,8 +199,8 @@ Pane{
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         onClicked: {
-                backend.discard();
-                rootItm.visible = false
+            backend.discard();
+            rootItm.visible = false
 
         }
     }
@@ -228,7 +231,8 @@ Pane{
         width: parent.width*0.9
         anchors.centerIn: parent
         onOkPressed: {
-            ssid.text = retSsid
+            ssid.text = retSsid;
+            backend.ssid = retSsid;
         }
     }
 

@@ -27,6 +27,7 @@ Item{
 
     onConnected_Changed: {
         actswitch.checked = connected_;
+
     }
 
     signal edit(string p_path)

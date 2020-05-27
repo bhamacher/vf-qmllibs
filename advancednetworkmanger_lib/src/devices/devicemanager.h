@@ -15,11 +15,14 @@ public:
     QList<QString> getDevices(NetworkManager::Device::Type p_type);
     QList<QString> getDevices();
     NetworkManager::Device::Ptr getDevice(QString p_devicePath);
+    NetworkManager::Device::List getDevicesbyInterface(QString p_interfaceName);
 private:
     NetworkManager::Device::List m_devList;
 public slots:
     void deviceAdded(const QString &p_uni);
     void deviceRemoved(const QString &p_uni);
+    //void StateChanged(QString p_path,NetworkManager::Device::State newstate, NetworkManager::Device::State oldstate, NetworkManager::Device::StateChangeReason reason);
+
 signals:
     void addDevice(NetworkManager::Device::Type p_type, QString p_devicePath);
     void removeDevice(QString p_devicePath);

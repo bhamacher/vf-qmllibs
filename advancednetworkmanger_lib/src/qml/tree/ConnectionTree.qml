@@ -14,6 +14,8 @@ Pane{
 
     signal notification(string title,string msg);
 
+
+
     ConnectionTreeInterface{
         id: backend;
     }
@@ -76,12 +78,16 @@ Pane{
         }
     }
 
+
+
+
+
+
     Component{
         id: pwDialog
-        WifiSmartConnect{
+        SmartConnect{
             width: parent.width
             anchors.centerIn: parent
-            z: 10
             visible: true
             onVisibleChanged: {
                 if(!visible){
@@ -149,7 +155,6 @@ Pane{
         anchors.centerIn: parent
         active : false
         visible: true
-        z: 10
         sourceComponent: pwDialog
         property string ssid: ""
         property string device: ""
@@ -167,9 +172,8 @@ Pane{
 
         Item{
             id: rect
-
             width: list.width
-            height: 30
+            height: 15
             anchors.margins: 0
             RowLayout{
                 anchors.fill: parent
@@ -188,17 +192,17 @@ Pane{
 
 
                 Button{
-                    Layout.fillHeight: true
+                    Layout.preferredHeight: 35
                     Layout.preferredWidth: 35
                     Layout.alignment: Qt.AlignVCenter
                     text: "+"
                     onClicked: {
-                        if(section === "Ethernet"){
-                            ethtab.visible = true;
-                        } else if(section === "Wifi"){
-                            wifitab.visible = true;
-                        } else if(section === "Hotspot"){
-                            wifitab.visible = true;
+                        if(section === "ETHERNET"){
+                            ethLoader.active = true;
+                        } else if(section === "WIFI"){
+                            wifiLoader.active = true;
+                        } else if(section === "HOTSPOT"){
+                            wifiLoader.active = true;
                         }
 
 
@@ -234,11 +238,11 @@ Pane{
                     roleName: "available"
                     value: 1
                 },
-                RangeFilter{
-                  enabled: !showall.checked
-                  roleName: "signalStrength"
-                  minimumValue: 25
-                },
+                //                RangeFilter{
+                //                  enabled: !showall.checked
+                //                  roleName: "signalStrength"
+                //                  minimumValue: 25
+                //                },
                 AnyOf{
                     RegExpFilter {
                         enabled: vpnshow.checked
@@ -309,14 +313,29 @@ Pane{
 
             onActivate: {
                 var Devices = backend.getDevices(type_)
-                var Device= Devices[0]
-                if(stored_ === true){
-                    backend.connect(p_path,Device);
-                }else{
+                var Device;
+                //                if(Devices.length>1){
+                //                    if(stored){
+                //                        deviceDialogLoader.name=p_path;
+                //                    }else{
+                //                        deviceDialogLoader.name=name_;
+                //                    }
+                //                    deviceDialogLoader.stored=stored;
+                //                    deviceDialogLoader.type=type_;
+                //                    deviceDialogLoader.devices=Devices;
+                //                    deviceDialogLoader.active=true;
+                //                }else
+                if(!stored_ && Devices.length>0){
+                    Device= Devices[0]
                     smartConnectLoader.ssid = name_;
                     smartConnectLoader.device = Device;
                     smartConnectLoader.active=true;
+                }else if(Devices.length>0){
+                    //direct connect
+                    Device= Devices[0]
+                    backend.connect(p_path,Device);
                 }
+
             }
             onDeactivate: {
                 backend.disconnect(p_path)

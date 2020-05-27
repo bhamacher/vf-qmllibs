@@ -4,8 +4,14 @@
 #include <NetworkManagerQt/Settings>
 #include <QString>
 #include <QSet>
+#include "globalDefines.h"
 
 NetworkmanagerAbstraction::NetworkmanagerAbstraction(QObject* parent) : QObject(parent)
+{
+
+}
+
+NetworkmanagerAbstraction::~NetworkmanagerAbstraction()
 {
 
 }
@@ -29,3 +35,9 @@ void NetworkmanagerAbstraction::realoadConnections()
 {
     NetworkManager::reloadConnections();
 }
+
+
+
+
+
+

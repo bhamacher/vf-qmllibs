@@ -22,8 +22,8 @@ ApplicationWindow {
     readonly property int defWidth : 800
     readonly property int defHeight : 400
 
-    width: 800
-    height: 480
+    width: 1024
+    height: 600
 
 
     property int count: 0
@@ -34,6 +34,7 @@ ApplicationWindow {
             ySpacing: 20
             notificationWidth: 300
             maxOnScreen: 2
+            ontime: 3000
             Component.onCompleted: {
 
             }

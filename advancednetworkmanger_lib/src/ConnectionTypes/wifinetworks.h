@@ -20,7 +20,7 @@ private:
     connectionItem CreateConItem(NetworkManager::Connection::Ptr) override;
 
 private:
-    QMap<QString,int> aplist;
+    QMap<QString,QString> m_apList;
     QTimer *m_timer;
 public slots:
     void addAccessPoint(const QString &p_uni);

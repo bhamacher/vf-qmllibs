@@ -47,10 +47,36 @@ QList<QString> ConnectionTreeInterface::getDevices(int p_type)
     return m_devManager->getDevices(NetworkManager::Device::Type::UnknownType);
 }
 
-void ConnectionTreeInterface::connect(QString p_conPath, QString p_devPath)
+QString ConnectionTreeInterface::getDevice(QString p_conPath)
 {
+    QString ret = "";
+    NetworkManager::Device::List devList;
+    QString intName;
+
+    NetworkManager::Connection::Ptr con = NetworkManager::findConnection(p_conPath);
+    if(con != nullptr){
+        intName = con->settings()->interfaceName();
+        devList = m_devManager->getDevicesbyInterface(intName);
+        if(devList.length()>0){
+            ret = devList.at(0)->uni();
+        }
+    }
+    return ret;
+}
+
+void ConnectionTreeInterface::connect(QString p_conPath, QString p_devPath, bool force)
+{
+    QString devPath;
+    devPath=getDevice(p_conPath);
+
+    if(devPath == "" || force){
+        devPath = p_devPath;
+    }
+
     NetworkManager::activateConnection(p_conPath,p_devPath,"");
 }
+
+
 
 void ConnectionTreeInterface::disconnect(QString p_conPath)
 {
@@ -67,6 +93,6 @@ void ConnectionTreeInterface::disconnect(QString p_conPath)
 QAbstractListModel* ConnectionTreeInterface::getDataListQml() const
 {
 
-return m_model;
+    return m_model;
 }
 

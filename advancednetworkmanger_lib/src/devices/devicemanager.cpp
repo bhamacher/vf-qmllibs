@@ -1,6 +1,6 @@
 #include "devicemanager.h"
 #include <NetworkManagerQt/Manager>
-
+#include "nmcppnotification.h"
 
 DeviceManager::DeviceManager()
 {
@@ -40,18 +40,33 @@ NetworkManager::Device::Ptr DeviceManager::getDevice(QString p_devicePath)
     return nullptr;
 }
 
+NetworkManager::Device::List DeviceManager::getDevicesbyInterface(QString p_interfaceName)
+{
+    NetworkManager::Device::List devList;
+    for(NetworkManager::Device::Ptr dev : m_devList){
+        if(dev->interfaceName() == p_interfaceName){
+            devList.append(dev);
+        }
+    }
+    return devList;
+}
+
 void DeviceManager::deviceAdded(const QString &p_uni)
 {
     m_devList = NetworkManager::networkInterfaces();
     NetworkManager::Device::Ptr dev = getDevice(p_uni);
     dev->setAutoconnect(false);
+    NmCppNotification::sendNotifiaction("NM", "A network device was added");
     emit addDevice(dev->type(), p_uni);
 }
 
 void DeviceManager::deviceRemoved(const QString &p_uni)
 {
     m_devList = NetworkManager::networkInterfaces();
+    NmCppNotification::sendNotifiaction("NM", "A network device was removed");
     emit removeDevice(p_uni);
 }
+
+
 
 

@@ -38,6 +38,12 @@ public:
     QList<QMetaObject::Connection> qtCons;
 };
 
+class AconStruct{
+public:
+    QString path;
+    QList<QMetaObject::Connection> qtCons;
+};
+
 class AbstractNetwork : public QObject
 {
     Q_OBJECT
@@ -47,7 +53,7 @@ public:
 protected:
     virtual void connectionActivated(const QString &p_path);
     virtual void connectionDeactivate(const QString &p_path);
-    virtual void addConnectionToList(NetworkManager::Connection::Ptr p_con);
+    virtual void addConnectionToList(NetworkManager::Connection::Ptr p_con, connectionItem conItem);
     virtual void findAvailableConnections(QString &p_uni);
     virtual void findStoredConnections();
     virtual connectionItem CreateConItem(NetworkManager::Connection::Ptr p_con);
@@ -55,7 +61,7 @@ protected:
 protected:
     ConnectionList* m_list;
     QMap<QString,ConStruct> m_conList;
-    QMap<QString,QString> m_aConList;
+    QMap<QString,AconStruct> m_aConList;
     QMap<QString,DevStruct> m_devList;
     DeviceManager* m_devManager;
     NetworkManager::Device::Type m_type;
@@ -66,6 +72,8 @@ public slots:
     virtual void removeConnection(const QString &connection);
     virtual void addDevice(NetworkManager::Device::Type p_type, QString p_device);
     virtual void removeDevice(QString p_device);
+    virtual void update(QString path);
+    void stateChangeReason(QString path, NetworkManager::ActiveConnection::State state,NetworkManager::ActiveConnection::Reason reason);
 };
 
 #endif // ABSTRACTNETWORK_H

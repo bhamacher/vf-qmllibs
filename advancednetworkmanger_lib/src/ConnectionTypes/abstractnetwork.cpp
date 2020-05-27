@@ -1,5 +1,5 @@
 #include "abstractnetwork.h"
-
+#include "nmcppnotification.h"
 AbstractNetwork::AbstractNetwork()
 {
 
@@ -10,59 +10,73 @@ AbstractNetwork::AbstractNetwork()
 void AbstractNetwork::connectionActivated(const QString &p_path)
 {
     NetworkManager::ActiveConnection::Ptr acon = NetworkManager::findActiveConnection(p_path);
+    if(acon!=nullptr){
     QString path = acon->connection()->path();
     if(m_conList.contains(path)){
         connectionItem itm = m_list->itemByPath(path);
-        m_aConList[p_path]=path;
-
+        AconStruct acons;
+        acons.path=path;
+        acons.qtCons.append(connect(acon.get(),&NetworkManager::ActiveConnection::stateChangedReason,this,[path,this](NetworkManager::ActiveConnection::State state, NetworkManager::ActiveConnection::Reason reason){
+            emit stateChangeReason(path,state,reason);
+        }));
+        m_aConList[p_path]=acons;
         if(itm.NmPath == path){
             itm.Connected=true;
+            itm.Available=true;
             m_list->setItemByPath(path,itm);
         }
+    }
     }
 }
 
 void AbstractNetwork::connectionDeactivate(const QString &p_path)
 {
     if(m_aConList.contains(p_path)){
-        if(m_conList.contains(m_aConList[p_path])){
-                QString path = m_aConList[p_path];
-                m_aConList.remove(p_path);
-                connectionItem itm = m_list->itemByPath(path);
-                itm.Connected=false;
-                m_list->setItemByPath(path,itm);
+        if(m_conList.contains(m_aConList[p_path].path)){
+            QString path = m_aConList[p_path].path;
+            for(QMetaObject::Connection qtcon : m_aConList[p_path].qtCons){
+                disconnect(qtcon);
+            }
+            m_aConList.remove(p_path);
+            connectionItem itm = m_list->itemByPath(path);
+            itm.Connected=false;
+            m_list->setItemByPath(path,itm);
         }
 
     }
 }
 
-void AbstractNetwork::addConnectionToList(NetworkManager::Connection::Ptr p_con)
+void AbstractNetwork::addConnectionToList(NetworkManager::Connection::Ptr p_con, connectionItem conItem)
 {
-    bool newData=true;
-    QString path=p_con->path();
-    NetworkManager::Setting::Ptr set = p_con->settings()->setting(m_setType);
-    if(m_conList.contains(path)){
-        connectionItem con;
-        con = m_list->itemByPath(path);
-        con.Available=true;
-        m_list->setItemByPath(path,con);
-    }else{
+    QString path = p_con->path();
+    if(!m_conList.contains(path)){
         ConStruct conBuf;
         conBuf.con.setValue(p_con);
-        if(m_conList.contains(p_con->path())){
-            newData = false;
+        m_conList[path]=conBuf;
+        m_conList[path].qtCons.append(connect(p_con.get(),&NetworkManager::Connection::updated,this,[path,this](){
+            update(path);
+        }));
+        m_list->addItem(conItem);
+    }else{
+
+        connectionItem oldItem = m_list->itemByPath(path);
+
+        if(oldItem.Available){
+            conItem.Available=true;
         }
-        m_conList[p_con->path()]=conBuf;
-        if(newData){
-            m_list->addItem(CreateConItem(p_con));
+        if(oldItem.SignalStrength>conItem.SignalStrength){
+            conItem.SignalStrength=oldItem.SignalStrength;
         }
+        m_list->setItemByPath(path,conItem);
     }
 }
 
 void AbstractNetwork::findAvailableConnections(QString &p_uni)
 {
     for(NetworkManager::Connection::Ptr connection : m_devManager->getDevice(p_uni)->availableConnections()){
-        addConnectionToList(connection);
+        connectionItem conItm = CreateConItem(connection);
+        conItm.Available=true;
+        addConnectionToList(connection,conItm);
     }
 }
 
@@ -74,15 +88,7 @@ void AbstractNetwork::findStoredConnections()
 
         NetworkManager::Setting::Ptr set = connection->settings()->setting(m_setType);
         if(set != NULL){
-            ConStruct conBuf;
-            conBuf.con.setValue(connection);
-            if(m_conList.contains(connection->path())){
-                newData = false;
-            }
-            m_conList[connection->path()]=conBuf;
-            if(newData){
-                m_list->addItem(CreateConItem(connection));
-            }
+            addConnectionToList(connection,CreateConItem(connection));
         }
     }
 }
@@ -100,7 +106,7 @@ bool AbstractNetwork::isConnectionActive(QString p_path)
     NetworkManager::ActiveConnection::List aConList = NetworkManager::activeConnections();
     for(NetworkManager::ActiveConnection::Ptr aCon : aConList){
         if(aCon->connection()->path() == p_path){
-            m_aConList[aCon->path()]=p_path;
+            m_aConList[aCon->path()].path=p_path;
             active = true;
             break;
         }
@@ -116,7 +122,7 @@ void AbstractNetwork::addConnection(const QString &p_path)
     if(connection != nullptr){
         NetworkManager::Setting::Ptr set = connection->settings()->setting(m_setType);
         if(set != NULL){
-            addConnectionToList(connection);
+            addConnectionToList(connection,CreateConItem(connection));
         }
     }
 }
@@ -145,9 +151,44 @@ void AbstractNetwork::addDevice(NetworkManager::Device::Type p_type, QString p_d
 
 void AbstractNetwork::removeDevice(QString p_device)
 {
- if(m_devList.contains(p_device)){
-     m_devList.remove(p_device);
- }
+    if(m_devList.contains(p_device)){
+        m_devList.remove(p_device);
+        for(QMetaObject::Connection qtCon : m_devList[p_device].qtCons){
+            disconnect(qtCon);
+        }
+    }
+}
+
+void AbstractNetwork::update(QString p_path)
+{
+    connectionItem con = m_list->itemByPath(p_path);
+    if(con.Name != ""){
+        if(m_conList.contains(p_path)){
+            con.Name=m_conList[p_path].con.value<NetworkManager::Connection::Ptr>()->name();
+            m_list->setItemByPath(p_path,con);
+        }
+    }
+}
+
+void AbstractNetwork::stateChangeReason(QString path, NetworkManager::ActiveConnection::State state, NetworkManager::ActiveConnection::Reason reason)
+{
+    NetworkManager::Connection::Ptr con =NetworkManager::findConnection(path);
+    switch(reason){
+    case NetworkManager::ActiveConnection::Reason::LoginFailed :
+        NmCppNotification::sendNotifiaction("NM","Can not etablish connection. Wrong password!");
+        break;
+    case NetworkManager::ActiveConnection::Reason::DeviceDisconnected :
+       // NmCppNotification::sendNotifiaction("NM","Can not etablish connection. Wrong password!");
+        break;
+    }
+    switch(state){
+    case NetworkManager::ActiveConnection::State::Activated :
+        NmCppNotification::sendNotifiaction("NM",QString("Connection ") + con->name() + QString(" etablished"));
+        break;
+    case NetworkManager::ActiveConnection::State::Deactivated:
+        NmCppNotification::sendNotifiaction("NM",QString("Connection ") + con->name() + QString(" deactivated"));
+        break;
+    }
 }
 
 

@@ -20,9 +20,19 @@ Pane{
     signal notification(string title,string msg);
 
 
+    NmCppNotification{
+        onNotification: {
+            rootItm.notification(p_head,p_text);
+        }
+
+    }
+
     ConnectionTree{
         id: tree
         anchors.fill: parent
+        onNotification: {
+            rootItm.notification(title,msg);
+        }
     }
 
 }

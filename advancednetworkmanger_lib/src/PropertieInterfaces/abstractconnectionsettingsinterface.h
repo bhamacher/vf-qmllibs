@@ -28,6 +28,8 @@ class AbstractConnectionSettingsInterface : public QObject
      Q_OBJECT
 
     Q_PROPERTY(QString conName READ getConName WRITE setConName NOTIFY conNameChanged)
+    Q_PROPERTY(QStringList devices READ getDevices NOTIFY devicesChanged)
+    Q_PROPERTY(QString device READ getDevice WRITE setDevice NOTIFY deviceChanged)
 public:
     AbstractConnectionSettingsInterface(QObject *parent = nullptr);
     Q_INVOKABLE void load(QString p_path);
@@ -35,6 +37,12 @@ public:
     Q_INVOKABLE void save();
     Q_INVOKABLE void saveAndActivate(const QString &p_devUni);
     Q_INVOKABLE void discard();
+
+
+    virtual QStringList getDevices();
+
+    virtual QString getDevice();
+    virtual void setDevice(QString &device);
 
     QString getConName();
     void setConName(QString p_conName);
@@ -47,6 +55,8 @@ protected:
 signals:
     void conNameChanged();
     void loadComplete();
+    void devicesChanged();
+    void deviceChanged();
 
 
 

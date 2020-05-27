@@ -40,6 +40,13 @@ Pane{
             sub4.text = backend.ipv4Sub;
             ipv6.text = backend.ipv6;
             sub6.text = backend.ipv6Sub;
+            var index = devices.find(backend.device,Qt.MatchExactly);
+            if(index >= 0 ){
+                devices.currentIndex = index;
+            }else{
+                devices.currentIndex = 0;
+            }
+            backend.device = devices.model[devices.currentIndex]
 
             if(backend.ipv6Mode === "DHCP"){
                 ipv6Mode.currentIndex = 0
@@ -68,6 +75,7 @@ Pane{
         }
 
 
+
         RowLayout{
             id: conName
             anchors.left: parent.left
@@ -91,6 +99,29 @@ Pane{
 
         }
 
+//        RowLayout{
+//            id: deviceName
+//            anchors.left: parent.left
+//            anchors.right: parent.right
+
+//            Label{
+//                id: deviceLabel
+//                text: "DEVICE"
+//                Layout.preferredWidth: clientModel.labelWidth
+//            }
+
+//            ComboBox{
+//                id: devices
+//                Layout.fillWidth: true
+//                model: backend.devices
+//                onCurrentIndexChanged: {
+//                    backend.device = model[currentIndex]
+//                }
+//            }
+
+//        }
+
+
 
         Label{
             id: ipv4header
@@ -106,7 +137,7 @@ Pane{
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.leftMargin: 20
-
+            spacing: 0
             Label{
                 id: ipv4ModeLabel
                 text: "MODE"
@@ -116,6 +147,9 @@ Pane{
                 id: ipv4Mode
                 Layout.fillWidth: true
                 model: ["DHCP", "MANUAL"]
+                onCurrentIndexChanged: {
+                    backend.ipv4Mode = model[currentIndex]
+                }
             }
         }
 
@@ -125,7 +159,7 @@ Pane{
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.leftMargin: 20
-
+            spacing: 0
             Label{
                 id: ipv4ipLabel
                 text: "IP"
@@ -155,7 +189,7 @@ Pane{
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.leftMargin: 20
-
+            spacing: 0
             Label{
                 id: ipv4SubLabel
                 text: "SUBNETMASK"
@@ -193,7 +227,7 @@ Pane{
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.leftMargin: 20
-
+            spacing: 0
             Label{
                 id: ipv6ModeLabel
                 text: "MODE"
@@ -203,6 +237,9 @@ Pane{
                 id: ipv6Mode
                 Layout.fillWidth: true
                 model: ["DHCP", "MANUAL"]
+                onCurrentIndexChanged: {
+                    backend.ipv6Mode = model[currentIndex]
+                }
             }
         }
 
@@ -213,7 +250,7 @@ Pane{
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.leftMargin: 20
-
+            spacing: 0
             Label{
                 id: ipv6ipLabel
                 text: "IP"
@@ -240,7 +277,7 @@ Pane{
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.leftMargin: 20
-
+            spacing: 0
             Label{
                 id: ipv6SubLabel
                 text: "SUBNETMASK"
@@ -299,11 +336,11 @@ Pane{
         anchors.margins: 0
         text: "SAVE"
         onClicked: {
-        var good = true;
-        if(good){
-            backend.save();
-            rootItm.visible = false
-        }
+            var good = true;
+            if(good){
+                backend.save();
+                rootItm.visible = false
+            }
         }
     }
 

@@ -77,7 +77,17 @@ QList<connectionItem> ConnectionList::items() const
 
 connectionItem ConnectionList::itemByKey(int p_key)
 {
-
+    try {
+        int index=-1;
+        index=findKeyPos(p_key);
+        if(index < 0){
+            throw false;
+        }
+       return  m_list[index];
+        emit dataChanged(index);
+    } catch (bool &e) {
+        return connectionItem();
+    }
 }
 
 connectionItem ConnectionList::itemByPath(QString p_path)

@@ -22,6 +22,8 @@ public:
 
     Q_INVOKABLE void create() override;
 
+    QStringList getDevices() override;
+
     QString getIpv4Mode();
     void setIpv4Mode(QString p_ipv4Mode);
 
