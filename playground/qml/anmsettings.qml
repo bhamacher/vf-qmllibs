@@ -22,8 +22,8 @@ ApplicationWindow {
     readonly property int defWidth : 800
     readonly property int defHeight : 400
 
-    width: 1024
-    height: 600
+    width: 800
+    height: 480
 
 
     property int count: 0
