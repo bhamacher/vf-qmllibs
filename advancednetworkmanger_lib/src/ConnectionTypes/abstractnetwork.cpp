@@ -17,7 +17,7 @@ void AbstractNetwork::connectionActivated(const QString &p_path)
         AconStruct acons;
         acons.path=path;
         acons.qtCons.append(connect(acon.get(),&NetworkManager::ActiveConnection::stateChangedReason,this,[path,this](NetworkManager::ActiveConnection::State state, NetworkManager::ActiveConnection::Reason reason){
-            emit stateChangeReason(path,state,reason);
+            stateChangeReason(path,state,reason);
         }));
         m_aConList[p_path]=acons;
         if(itm.NmPath == path){
@@ -61,6 +61,11 @@ void AbstractNetwork::addConnectionToList(NetworkManager::Connection::Ptr p_con,
 
         connectionItem oldItem = m_list->itemByPath(path);
 
+        for(QString key: oldItem.Devices.keys()){
+            conItem.Devices[key]=oldItem.Devices[key];
+        }
+
+
         if(oldItem.Available){
             conItem.Available=true;
         }
@@ -76,6 +81,7 @@ void AbstractNetwork::findAvailableConnections(QString &p_uni)
     for(NetworkManager::Connection::Ptr connection : m_devManager->getDevice(p_uni)->availableConnections()){
         connectionItem conItm = CreateConItem(connection);
         conItm.Available=true;
+        conItm.Devices[m_devManager->getDevice(p_uni)->interfaceName()]=p_uni;
         addConnectionToList(connection,conItm);
     }
 }
@@ -85,7 +91,6 @@ void AbstractNetwork::findStoredConnections()
     bool newData=true;
     for(NetworkManager::Connection::Ptr connection : NetworkManager::listConnections()){
         newData=true;
-
         NetworkManager::Setting::Ptr set = connection->settings()->setting(m_setType);
         if(set != NULL){
             addConnectionToList(connection,CreateConItem(connection));
@@ -138,6 +143,35 @@ void AbstractNetwork::removeConnection(const QString &p_uni)
     }
 }
 
+void AbstractNetwork::addAvailabelConnection(const QString &p_devPath, const QString &p_connection)
+{
+    NetworkManager::Connection::Ptr connection = NetworkManager::findConnection(p_connection);
+    connectionItem conItm = CreateConItem(connection);
+    conItm.Devices[m_devManager->getDevice(p_devPath)->interfaceName()]=p_devPath;
+    conItm.Available=true;
+    addConnectionToList(connection,conItm);
+}
+
+void AbstractNetwork::removeAvailabelConnection(const QString &p_devPath, const QString &p_connection)
+{
+    connectionItem conItm;
+    conItm=m_list->itemByPath(p_connection);
+    if(conItm.Name != ""){
+        for(QString key : conItm.Devices.keys()){
+            if(conItm.Devices[key] == p_devPath){
+                conItm.Devices.remove(key);
+            }
+            if(conItm.Devices.size() < 1){
+                conItm.Available=false;
+            }
+            m_list->setItemByPath(p_connection,conItm);
+        }
+    }
+
+
+
+}
+
 void AbstractNetwork::addDevice(NetworkManager::Device::Type p_type, QString p_device)
 {
     if(p_type == m_type){
@@ -146,6 +180,10 @@ void AbstractNetwork::addDevice(NetworkManager::Device::Type p_type, QString p_d
         device.dev=dev;
         m_devList[p_device]=device;
         findAvailableConnections(p_device);
+        device.qtCons.append(connect(device.dev.data(),&NetworkManager::Device::availableConnectionDisappeared,this,[p_device,this](const QString &p_apPath){addAvailabelConnection(p_device,p_apPath);
+        }));
+        device.qtCons.append(connect(device.dev.data(),&NetworkManager::Device::availableConnectionDisappeared,this,[p_device,this](const QString &p_apPath){removeAvailabelConnection(p_device,p_apPath);
+        }));
     }
 }
 

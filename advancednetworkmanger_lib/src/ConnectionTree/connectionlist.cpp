@@ -75,6 +75,15 @@ QList<connectionItem> ConnectionList::items() const
     return m_list;
 }
 
+QList<QString> ConnectionList::paths() const
+{
+    QList<QString> keys;
+    for(connectionItem itm: m_list){
+        keys.append(itm.NmPath);
+    }
+    return keys;
+}
+
 connectionItem ConnectionList::itemByKey(int p_key)
 {
     try {

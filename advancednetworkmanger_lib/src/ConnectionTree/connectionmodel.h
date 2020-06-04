@@ -24,7 +24,9 @@ public:
         SignalStrengthRole,
         TypeRole,
         ConnectedRole,
-        StoredRole
+        StoredRole,
+        DeviceMap,
+        DeviceNames
     };
 
     QHash<int, QByteArray> roleNames() const override;

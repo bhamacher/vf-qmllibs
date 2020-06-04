@@ -10,6 +10,7 @@ void AbstractConnectionSettingsInterface::load(QString p_path)
     m_connection = NetworkManager::findConnection(p_path);
     m_settings = m_connection->settings();
     m_connectionMap = m_connection->settings()->toMap();
+    QString iname = m_settings->interfaceName();
     m_settings->setAutoconnect(false);
     emit loadComplete();
 
@@ -22,10 +23,13 @@ void AbstractConnectionSettingsInterface::create()
 
 void AbstractConnectionSettingsInterface::save()
 {
+    NMVariantMapMap map = m_settings->toMap();
+    map["connection"].remove("interface-name");
+
     if(m_connection != NULL){
-        m_connection->update(m_settings->toMap());
+
+        m_connection->update(map);
     }else{
-        NMVariantMapMap map = m_settings->toMap();
         NetworkManager::addConnection(map);
         m_settings.clear();
     }

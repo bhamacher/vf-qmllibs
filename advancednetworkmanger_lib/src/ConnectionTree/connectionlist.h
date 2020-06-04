@@ -4,6 +4,8 @@
 #include <QObject>
 #include <QString>
 #include <QMap>
+#include <QSet>
+#include <QVariant>
 
 #include "globalDefines.h"
 
@@ -21,7 +23,7 @@ public:
     int SignalStrength;
     ConType Type;
     bool Connected;
-
+    QMap<QString,QVariant> Devices;
     friend class ConnectionList;
 };
 
@@ -38,6 +40,7 @@ public:
     bool removeByPath(const QString &p_path);
 
     QList<connectionItem> items() const;
+    QList<QString> paths() const;
     connectionItem itemByKey(int p_key);
     connectionItem itemByPath(QString p_path);
     bool setItemAt(int index, const connectionItem &p_item);
@@ -49,10 +52,6 @@ private:
 
     QList<connectionItem> m_list;
     uint m_uidCounter;
-
-public slots:
-//    void appendItem();
-//    void removeItem();
 
 signals:
     void preItemRemoved(int i);

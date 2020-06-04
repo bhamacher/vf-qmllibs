@@ -70,6 +70,8 @@ protected:
 public slots:
     virtual void addConnection(const QString &connection);
     virtual void removeConnection(const QString &connection);
+    virtual void addAvailabelConnection(const QString &p_devPath, const QString &p_connection);
+    virtual void removeAvailabelConnection(const QString &p_devPath, const QString &p_connection);
     virtual void addDevice(NetworkManager::Device::Type p_type, QString p_device);
     virtual void removeDevice(QString p_device);
     virtual void update(QString path);

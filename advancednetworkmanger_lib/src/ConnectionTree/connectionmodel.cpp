@@ -17,6 +17,8 @@ QHash<int, QByteArray> ConnectionModel::roleNames() const
     roles[TypeRole] = "type";
     roles[ConnectedRole] = "connected";
     roles[StoredRole] = "stored";
+    roles[DeviceMap] = "devices";
+    roles[DeviceNames] = "deviceNames";
     return roles;
 }
 
@@ -57,6 +59,11 @@ QVariant ConnectionModel::data(const QModelIndex &index, int role) const
     case StoredRole:
         return itm.Stored;
         break;
+    case DeviceMap:
+        return itm.Devices;
+    case DeviceNames:
+        return QStringList(itm.Devices.keys());
+        break;
     default:
         return QVariant();
     }
@@ -91,6 +98,9 @@ bool ConnectionModel::setData(const QModelIndex &index, const QVariant &value, i
             break;
         case StoredRole:
             itm.Stored= value.toBool();
+            break;
+        case DeviceMap:
+          //  itm.Devices= value.toMap();
             break;
         }
         emit dataChanged(index, index, QVector<int>() << role);

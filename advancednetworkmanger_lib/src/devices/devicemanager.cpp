@@ -32,6 +32,7 @@ QList<QString> DeviceManager::getDevices(NetworkManager::Device::Type p_type)
 
 NetworkManager::Device::Ptr DeviceManager::getDevice(QString p_devicePath)
 {
+    m_devList = NetworkManager::networkInterfaces();
     for(NetworkManager::Device::Ptr dev : m_devList){
         if(dev->uni() == p_devicePath){
            return dev;
