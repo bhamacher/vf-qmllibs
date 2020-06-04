@@ -14,6 +14,8 @@ Item{
     property string name_
     property bool available_
     property int signals_
+    property var devices_
+    property var deviceNames_
     property bool stored_ : {
         if(nmPath === ""){
             return false;
@@ -32,7 +34,7 @@ Item{
 
     signal edit(string p_path)
     signal remove(string p_path)
-    signal activate(string p_path)
+    signal activate(string p_path, string device)
     signal deactivate(string p_path)
 
      signal notification(string title,string msg);
@@ -59,8 +61,30 @@ Item{
                 text: rootItm.name_
             }
         }
+
+//        Row{
+            ComboBox{
+                id: devices
+                Layout.fillHeight: true
+                property string dev : model[currentIndex]
+                visible: {
+                    if(count < 2){
+                        return false;
+                    }else{
+                        return true;
+                    }
+                }
+
+                Layout.preferredWidth: rootItm.width/5
+                model: rootItm.deviceNames_
+            }
+
+
+
+//        }
+
         Row{
-            Layout.preferredWidth: rootItm.width/8
+            Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
             Switch {
@@ -79,7 +103,7 @@ Item{
 
                 onClicked: {
                     if(position === 1){
-                        activate(rootItm.nmPath_);
+                        activate(rootItm.nmPath_,rootItm.devices_[devices.model[devices.currentIndex]]);
                         //position = 0;
                         checked = rootItm.connected_
                     }else{
@@ -92,7 +116,7 @@ Item{
 
         }
         Row{
-            Layout.preferredWidth: rootItm.width/8
+            Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
             SignalIcon{
@@ -129,7 +153,7 @@ Item{
         }
 
         Row{
-            Layout.preferredWidth: rootItm.width/8
+            Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
             Button{
@@ -148,7 +172,7 @@ Item{
         }
 
         Row{
-            Layout.preferredWidth: rootItm.width/8
+            Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
             Button{

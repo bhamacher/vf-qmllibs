@@ -4,6 +4,7 @@ import QtQuick 2.12
 import QtQuick.Controls 2.0
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Styles 1.4
+import QtQuick.Controls.Material 2.12
 import anmsettings 1.0
 
 import "qrc:/src/qml/FontAwesome.js" as FA
@@ -13,6 +14,7 @@ Pane{
     padding: 0
     property string path : ""
 
+    signal notification(string title,string msg);
 
     function init() {
         if(path === ""){
@@ -90,6 +92,15 @@ Pane{
 
             TextField{
                 id: name
+                validator: RegExpValidator{ regExp: /.{3,}/}
+                Material.accent:  {
+                    if(!acceptableInput){
+                        return Material.Red;
+                    }else{
+                        return Material.Green;
+                    }
+                }
+
                 Layout.fillWidth: true
                 onEditingFinished: {
                     backend.conName = text;
@@ -99,27 +110,6 @@ Pane{
 
         }
 
-//        RowLayout{
-//            id: deviceName
-//            anchors.left: parent.left
-//            anchors.right: parent.right
-
-//            Label{
-//                id: deviceLabel
-//                text: "DEVICE"
-//                Layout.preferredWidth: clientModel.labelWidth
-//            }
-
-//            ComboBox{
-//                id: devices
-//                Layout.fillWidth: true
-//                model: backend.devices
-//                onCurrentIndexChanged: {
-//                    backend.device = model[currentIndex]
-//                }
-//            }
-
-//        }
 
 
 
@@ -169,6 +159,13 @@ Pane{
                 id: ipv4
                 horizontalAlignment : TextInput.AlignRight
                 validator: RegExpValidator { regExp: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/}
+                Material.accent:  {
+                    if(!acceptableInput){
+                        return Material.Red;
+                    }else{
+                        return Material.Green;
+                    }
+                }
                 Layout.fillWidth: true
                 onEditingFinished: {
                     backend.ipv4 = text;
@@ -199,6 +196,13 @@ Pane{
                 id: sub4
                 horizontalAlignment : TextInput.AlignRight
                 validator: RegExpValidator { regExp: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/}
+                Material.accent:  {
+                    if(!acceptableInput){
+                        return Material.Red;
+                    }else{
+                        return Material.Green;
+                    }
+                }
                 Layout.fillWidth: true
                 enabled: {
                     if(ipv4Mode.currentText === "DHCP"){
@@ -260,6 +264,13 @@ Pane{
                 id: ipv6
                 horizontalAlignment : TextInput.AlignRight
                 validator: RegExpValidator { regExp: /([a-f0-9:]+:+)+[a-f0-9]+/}
+                Material.accent:  {
+                    if(!acceptableInput){
+                        return Material.Red;
+                    }else{
+                        return Material.Green;
+                    }
+                }
                 Layout.fillWidth: true
                 enabled: {
                     if(ipv6Mode.currentText === "DHCP"){
@@ -287,6 +298,13 @@ Pane{
                 id: sub6
                 horizontalAlignment : TextInput.AlignRight
                 validator: RegExpValidator { regExp: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/}
+                Material.accent:  {
+                    if(!acceptableInput){
+                        return Material.Red;
+                    }else{
+                        return Material.Green;
+                    }
+                }
                 Layout.fillWidth: true
                 enabled: {
                     if(ipv6Mode.currentText === "DHCP"){
@@ -337,9 +355,32 @@ Pane{
         text: "SAVE"
         onClicked: {
             var good = true;
+            var errorField;
+
+            if(!ipv6.acceptableInput && ipv6.enabled){
+                good = false;
+                errorField="IPV6 IP"
+            }else if(!sub6.acceptableInput && sub6.enabled){
+                good = false;
+                errorField="IPV6 SUBNETMASK"
+            }else if(!ipv4.acceptableInput &&ipv4.enabled){
+                good = false;
+                errorField="IPV4 IP"
+            }else if(!sub4.acceptableInput && sub4.enabled){
+                good = false;
+                errorField="IPV4 SUBNETMASK"
+            }else if(!name.acceptableInput){
+                good = false;
+                errorField="NAME"
+            }
+
+
+
             if(good){
                 backend.save();
                 rootItm.visible = false
+            }else{
+                notification("NM", "invalid settings in field: " + errorField)
             }
         }
     }

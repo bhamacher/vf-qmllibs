@@ -5,6 +5,7 @@ import QtQuick.Controls.Styles 1.4
 import SortFilterProxyModel 0.2
 import anmsettings 1.0
 import QtQml.Models 2.11
+import QtQuick.Controls.Material 2.12
 
 import "qrc:/src/qml/FontAwesome.js" as FA
 
@@ -13,6 +14,7 @@ Pane{
     padding: 0
     property string path : ""
 
+    signal notification(string title,string msg);
 
     function init() {
         if(path === ""){
@@ -76,6 +78,14 @@ Pane{
             TextField{
                 id: name
                 Layout.fillWidth: true
+                validator: RegExpValidator{ regExp: /.{3,}/}
+                Material.accent:  {
+                    if(!acceptableInput){
+                        return Material.Red;
+                    }else{
+                        return Material.Green;
+                    }
+                }
                 onEditingFinished: {
                     backend.conName = text;
                 }
@@ -100,6 +110,14 @@ Pane{
             TextField{
                 id: ssid
                 Layout.fillWidth: true
+                validator: RegExpValidator{ regExp: /.{1,}/}
+                Material.accent:  {
+                    if(!acceptableInput){
+                        return Material.Red;
+                    }else{
+                        return Material.Green;
+                    }
+                }
                 onEditingFinished: {
                     backend.ssid = text;
                 }
@@ -130,6 +148,14 @@ Pane{
                 id: pw
                 echoMode: TextInput.Password
                 Layout.fillWidth: true
+                validator: RegExpValidator{ regExp: /.{8,}/}
+                Material.accent:  {
+                    if(!acceptableInput){
+                        return Material.Red;
+                    }else{
+                        return Material.Green;
+                    }
+                }
                 onEditingFinished: {
                     backend.password = text;
                 }
@@ -212,16 +238,22 @@ Pane{
         text: "SAVE"
         onClicked: {
             var good=true;
-            if(name.text === ""){
+            var errorField="";
+            if(!name.acceptableInput){
                 good = false;
-            }else if(ssid.text === ""){
+                errorField="NAME"
+            }else if(!ssid.acceptableInput){
                 good = false;
-            }else if(pw.text === ""){
+                errorField="SSID"
+            }else if(!pw.acceptableInput){
                 good = false;
+                errorField="PASSWORD"
             }
             if(good){
                 backend.save();
                 rootItm.visible = false
+            }else{
+                notification("NM", "invalid settings in field: " + errorField)
             }
         }
     }

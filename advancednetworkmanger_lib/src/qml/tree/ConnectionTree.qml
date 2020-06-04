@@ -34,12 +34,13 @@ Pane{
             anchors.margins: 0
             visible: true
             z: 10
-
-
             onVisibleChanged: {
                 if(!visible){
                     ethLoader.active = false;
                 }
+            }
+            onNotification: {
+                rootItm.notification(title,msg);
             }
 
         }
@@ -58,6 +59,9 @@ Pane{
                 if(!visible){
                     wifiLoader.active = false;
                 }
+            }
+            onNotification: {
+                rootItm.notification(title,msg);
             }
 
         }
@@ -221,6 +225,7 @@ Pane{
         anchors.left: parent.left
         anchors.right: parent.right
         clip: true
+        spacing: 10
 
         model: SortFilterProxyModel{
             sourceModel: backend.dataList
@@ -284,7 +289,10 @@ Pane{
             groupe_: groupe
             connected_: connected
             nmPath_: nmPath
+            devices_: devices
+            deviceNames_: deviceNames
             stored_: stored
+
 
             anchors.left: parent.left
             anchors.right: parent.right
@@ -312,8 +320,8 @@ Pane{
             }
 
             onActivate: {
-                var Devices = backend.getDevices(type_)
-                var Device;
+               // var Devices = backend.getDevices(type_)
+                var Device = device;
                 //                if(Devices.length>1){
                 //                    if(stored){
                 //                        deviceDialogLoader.name=p_path;
@@ -325,14 +333,14 @@ Pane{
                 //                    deviceDialogLoader.devices=Devices;
                 //                    deviceDialogLoader.active=true;
                 //                }else
-                if(!stored_ && Devices.length>0){
-                    Device= Devices[0]
+                if(!stored_ && Device !== ""){
+                  //  Device= device
                     smartConnectLoader.ssid = name_;
                     smartConnectLoader.device = Device;
                     smartConnectLoader.active=true;
-                }else if(Devices.length>0){
+                }else if(Device !== ""){
                     //direct connect
-                    Device= Devices[0]
+                   // Device= device
                     backend.connect(p_path,Device);
                 }
 
