@@ -139,14 +139,6 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/anmlibConfig.cmake"
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/anmlib
     )
 
-
-# install library
-install(TARGETS anmlib
-    EXPORT anmlib
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
-    )
-
-
 # install targets cmake-files
 install(EXPORT anmlibExport
     FILE anmlibTargets.cmake
@@ -159,31 +151,6 @@ install(
     FILES ${APP_HEADERS}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/anmlib
     )
-
-
-#install(
-#    FILES ${OTHER_FILES}
-#    DESTINATION ${CMAKE_INSTALL_LIBDIR}/anmlib/anmlib
-#    )
-
-
-
-#This is probably not needed anymore
-
-# During plugin searching Qt will be looking for 'qmldir' file
-# So we should place it next to our plugin lib.
-#add_custom_command(
-#    TARGET anmlib
-#    POST_BUILD
-#    COMMAND
-#        ${CMAKE_COMMAND} -E copy
-#        ${CMAKE_CURRENT_LIST_DIR}/qmldir
-#        $<TARGET_FILE_DIR:anmlib>/qmldir
-#    COMMAND
-#        ${CMAKE_COMMAND} -E copy
-#        ${CMAKE_CURRENT_LIST_DIR}/plugins.qmltypes
-#        $<TARGET_FILE_DIR:anmlib>/plugins.qmltypes
-#)
 
 
 feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
