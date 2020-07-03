@@ -49,7 +49,7 @@ target_link_libraries(
         Qt5::Xml
         Qt5::Widgets
         vfnetworkmanager
-        zeracomplib
+        #zeracomplib
         anmlib
         notificationmanager
 )
