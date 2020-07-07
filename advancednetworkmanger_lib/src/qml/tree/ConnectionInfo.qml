@@ -11,9 +11,7 @@ id: rootItm
     Label{
         id: header
         text: "Connection Information"
-        font.bold: true
         font.pixelSize: 18
-        font.underline: true
         anchors.top: parent.top
         anchors.horizontalCenter: parent.horizontalCenter
     }

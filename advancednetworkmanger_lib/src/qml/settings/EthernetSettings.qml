@@ -12,6 +12,7 @@ import "qrc:/src/qml/FontAwesome.js" as FA
 Pane{
     id: rootItm
     padding: 0
+    topPadding: 5
     property string path : ""
 
     signal notification(string title,string msg);
@@ -68,9 +69,7 @@ Pane{
             id: header
             anchors.left: parent.left
             anchors.right: parent.right
-            font.bold: true
             font.pixelSize: 18
-            font.underline: true
             horizontalAlignment: Label.AlignHCenter
 
             text: "ETHERNET CONNECTION SETTINGS"

@@ -196,25 +196,6 @@ Pane{
                     Layout.fillWidth: true
                 }
 
-
-                Button{
-                    Layout.preferredHeight: 35
-                    Layout.preferredWidth: 35
-                    Layout.alignment: Qt.AlignVCenter
-                    text: "+"
-                    onClicked: {
-                        if(section === "ETHERNET"){
-                            ethLoader.active = true;
-                        } else if(section === "WIFI"){
-                            wifiLoader.active = true;
-                        } else if(section === "HOTSPOT"){
-                            wifiLoader.active = true;
-                        }
-
-
-
-                    }
-                }
             }
         }
     }
@@ -237,19 +218,20 @@ Pane{
                     roleName: "nmPath"
                     pattern: "[A-Za-z0-9,-_.\s]+"
                     caseSensitivity: Qt.CaseInsensitive
+                },
+                RegExpFilter{
+                    enabled: true
+                    inverted: false
+                    roleName: "name"
+                    pattern: ""
+                    caseSensitivity: Qt.CaseInsensitive
                 }
                 ,
-
                 ValueFilter{
                     enabled: !showall.checked
                     roleName: "available"
                     value: 1
                 },
-                //                RangeFilter{
-                //                  enabled: !showall.checked
-                //                  roleName: "signalStrength"
-                //                  minimumValue: 25
-                //                },
                 AnyOf{
                     RegExpFilter {
                         enabled: vpnshow.checked
