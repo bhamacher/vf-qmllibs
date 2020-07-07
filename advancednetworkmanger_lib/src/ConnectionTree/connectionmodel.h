@@ -9,6 +9,9 @@
 
 class ConnectionList;
 
+/**
+ * @brief The ConnectionModel class
+ */
 class ConnectionModel : public QAbstractListModel
 {
     Q_OBJECT

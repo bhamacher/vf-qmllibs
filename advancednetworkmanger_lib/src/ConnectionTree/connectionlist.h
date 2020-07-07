@@ -11,6 +11,12 @@
 
 class ConnectionList;
 
+
+/**
+ * @brief The connectionItem class
+ *
+ * stores all data available in qml
+ */
 class connectionItem{
 private:
     int uid;
@@ -27,7 +33,9 @@ public:
     friend class ConnectionList;
 };
 
-
+/**
+ * @brief The ConnectionList class
+ */
 
 class ConnectionList : public QObject
 {

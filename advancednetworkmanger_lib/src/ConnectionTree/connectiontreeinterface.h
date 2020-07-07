@@ -40,6 +40,12 @@ class StoredNetworks;
 class ActiveNetworks;
 class DeviceManager;
 
+/**
+ * @brief The ConnectionTreeInterface class
+ *
+ * This class connects the qml part with the C++ part.
+ * Offers the
+ */
 class ConnectionTreeInterface : public QObject
 {
     Q_OBJECT
