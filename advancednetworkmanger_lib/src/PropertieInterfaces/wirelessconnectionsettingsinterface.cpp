@@ -5,6 +5,15 @@ WirelessConnectionSettingsInterface::WirelessConnectionSettingsInterface(QObject
 
 }
 
+void WirelessConnectionSettingsInterface::saveAndActivate(const QString &p_devUni)
+{
+    if(m_connection == NULL){
+        NMVariantMapMap map = m_settings->toMap();
+        NetworkManager::addAndActivateConnection(map,p_devUni,m_smartConnectPath);
+        m_settings.clear();
+    }
+}
+
 void WirelessConnectionSettingsInterface::create()
 {
     m_settings= NetworkManager::ConnectionSettings::Ptr(new NetworkManager::ConnectionSettings(NetworkManager::ConnectionSettings::ConnectionType::Wireless));
@@ -22,20 +31,36 @@ void WirelessConnectionSettingsInterface::create()
 }
 
 QStringList WirelessConnectionSettingsInterface::getDevices()
-{
+{   
     NetworkManager::Device::List devList = NetworkManager::networkInterfaces();
     QStringList list;
     for(NetworkManager::Device::Ptr dev : devList){
         if(dev->type() == NetworkManager::Device::Type::Wifi){
-            list.append(dev->interfaceName());
+            if(NULL != dev.staticCast<NetworkManager::WirelessDevice>()->findNetwork(getSsid())){
+                list.append(dev->interfaceName());
+            }
         }
     }
     return list;
 }
 
+QString WirelessConnectionSettingsInterface::getDevicePath(const QString &p_interfaceName){
+    QString path="";
+        NetworkManager::Device::List devList = NetworkManager::networkInterfaces();
+        for(NetworkManager::Device::Ptr dev : devList){
+            if(dev->interfaceName() == p_interfaceName){
+                path=dev->uni();
+                m_smartConnectPath=dev.staticCast<NetworkManager::WirelessDevice>()->findNetwork(getSsid())->referenceAccessPoint()->uni();
+                break;
+            }
+        }
+    return path;
+
+}
+
 QString WirelessConnectionSettingsInterface::getSsid()
 {
-    if(m_connection == NULL) return "";
+    if(m_settings == NULL) return "";
     return m_settings->setting(NetworkManager::Setting::SettingType::Wireless).staticCast<NetworkManager::WirelessSetting>()->ssid();
     return "";
 }
@@ -43,6 +68,7 @@ QString WirelessConnectionSettingsInterface::getSsid()
 void WirelessConnectionSettingsInterface::setSsid(QString p_ssid)
 {
     m_settings->setting(NetworkManager::Setting::SettingType::Wireless).staticCast<NetworkManager::WirelessSetting>()->setSsid(QByteArray(p_ssid.toUtf8()));
+    emit devicesChanged();
     emit ssidChanged();
 }
 

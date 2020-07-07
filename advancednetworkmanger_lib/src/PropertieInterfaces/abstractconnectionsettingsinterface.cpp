@@ -24,7 +24,18 @@ void AbstractConnectionSettingsInterface::create()
 void AbstractConnectionSettingsInterface::save()
 {
     NMVariantMapMap map = m_settings->toMap();
-    map["connection"].remove("interface-name");
+    if(map.contains("connection")){
+
+        if(map["connection"].contains("interface-name")){
+            map["connection"].remove("interface-name");
+        }
+
+        if(map.contains("802-11-wireless")){
+            if(map["802-11-wireless"].contains("mac-address")){
+                map["802-11-wireless"].remove("mac-address");
+            }
+        }
+    }
 
     if(m_connection != NULL){
 
@@ -35,11 +46,11 @@ void AbstractConnectionSettingsInterface::save()
     }
 }
 
-void AbstractConnectionSettingsInterface::saveAndActivate(const QString &p_devUni)
+void AbstractConnectionSettingsInterface::saveAndActivate(const QString &p_devUni,const QString &p_apPath)
 {
     if(m_connection == NULL){
         NMVariantMapMap map = m_settings->toMap();
-        NetworkManager::addAndActivateConnection(map,p_devUni,"");
+        NetworkManager::addAndActivateConnection(map,p_devUni,p_apPath);
         m_settings.clear();
     }
 }
@@ -56,7 +67,12 @@ void AbstractConnectionSettingsInterface::discard()
 
 QStringList AbstractConnectionSettingsInterface::getDevices()
 {
+    return QStringList();
+}
 
+QString AbstractConnectionSettingsInterface::getDevicePath(const QString &p_interfaceName)
+{
+    return QString();
 }
 
 QString AbstractConnectionSettingsInterface::getDevice()

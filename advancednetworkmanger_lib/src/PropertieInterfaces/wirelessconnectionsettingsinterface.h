@@ -12,11 +12,15 @@ class WirelessConnectionSettingsInterface : public AbstractConnectionSettingsInt
     Q_PROPERTY(QString ssid READ getSsid WRITE setSsid NOTIFY ssidChanged)
     Q_PROPERTY(QString password READ getPassword WRITE setPassword NOTIFY passwordChanged)
     Q_PROPERTY(QString mode READ getMode WRITE setMode NOTIFY modeChanged)
+    Q_PROPERTY(QStringList devices READ getDevices NOTIFY devicesChanged)
 public:
     WirelessConnectionSettingsInterface(QObject *parent = nullptr);
 
+    Q_INVOKABLE void saveAndActivate(const QString &p_devUni);
+
     Q_INVOKABLE void create() override;
     QStringList getDevices() override;
+    Q_INVOKABLE QString getDevicePath(const QString &p_interfaceName) override;
 
     QString getSsid();
     void setSsid(QString p_ssid);
@@ -26,11 +30,13 @@ public:
 
     QString getMode();
     void setMode(QString p_mode);
-
+protected:
+    QString m_smartConnectPath;
 signals:
     void ssidChanged();
     void passwordChanged();
     void modeChanged();
+    void devicesChanged();
 
 };
 

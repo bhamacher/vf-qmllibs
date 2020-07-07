@@ -35,11 +35,12 @@ public:
     Q_INVOKABLE void load(QString p_path);
     Q_INVOKABLE virtual void create();
     Q_INVOKABLE void save();
-    Q_INVOKABLE void saveAndActivate(const QString &p_devUni);
+    Q_INVOKABLE void saveAndActivate(const QString &p_devUni, const QString &p_apPath);
     Q_INVOKABLE void discard();
 
 
     virtual QStringList getDevices();
+    Q_INVOKABLE virtual QString getDevicePath(const QString &p_interfaceName);
 
     virtual QString getDevice();
     virtual void setDevice(QString &device);

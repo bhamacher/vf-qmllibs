@@ -1,5 +1,5 @@
 import QtQuick 2.12
-import QtQuick.Controls 2.0
+import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Styles 1.4
 import SortFilterProxyModel 0.2
@@ -34,7 +34,9 @@ Pane{
         onLoadComplete: {
             name.text = backend.conName;
             ssid.text = backend.ssid;
+            backend.ssid = ssid.text;
             pw.text = backend.password;
+            device.text = backend.device;
             if(backend.mode === "CLIENT"){
                 mode.currentIndex = 0
             }else if(backend.mode === "HOTSPOT"){
@@ -202,7 +204,45 @@ Pane{
         }
 
 
+        RowLayout{
+            id: deviceBinding
+            anchors.left: parent.left
+            anchors.right: parent.right
+            Label{
+                id: deviceLabel
+                text: "Device"
+                Layout.preferredWidth: clientModel.labelWidth
+            }
 
+            TextField{
+                id: device
+                Layout.fillWidth: true
+                Material.accent:  {
+                    if(!acceptableInput){
+                        return Material.Red;
+                    }else{
+                        return Material.Green;
+                    }
+                }
+                Keys.onEscapePressed: {
+                  focus = false
+                }
+
+                onEditingFinished: {
+                    backend.device = text;
+                }
+            }
+            Button{
+                text: FA.icon(FA.fa_search_plus,null);
+                background: Rectangle{
+                    color: "transparent"
+                }
+                onClicked: {
+                    aDevDialog.visible = true;
+                }
+            }
+
+        }
 
     }
 
@@ -261,10 +301,25 @@ Pane{
     AvailableApDialog{
         id: aApDialog
         width: parent.width*0.9
-        anchors.centerIn: parent
+        parent: Overlay.overlay
+        x: 0
+        y: 0
         onOkPressed: {
             ssid.text = retSsid;
             backend.ssid = retSsid;
+        }
+    }
+
+    AvailableDevDialog{
+        id: aDevDialog
+        width: parent.width*0.9
+        devices: backend.devices;
+        parent: Overlay.overlay
+        x: 0
+        y: 0
+        onOkPressed: {
+            device.text = retDevice;
+            backend.device = retDevice;
         }
     }
 

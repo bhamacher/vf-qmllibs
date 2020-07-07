@@ -1,6 +1,7 @@
 import QtQuick 2.0
-import QtQuick.Controls 2.12
+import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
+import QtQuick.Controls.Material 2.12
 
 import anmsettings 1.0
 import "qrc:/src/qml/FontAwesome.js" as FA
@@ -9,14 +10,15 @@ Dialog {
     id: rootItm
     title: "WIFI PASSWORD"
     property string device: ""
+    property string path: ""
 
-    function init(ssid,device){
+    function init(ssid,device,path){
         backend.create();
         rootItm.device=device;
+        rootItm.path = path;
         backend.conName = ssid;
         backend.ssid = ssid;
         backend.mode = "CLIENT";
-       // backend.device = device;
     }
 
 
@@ -25,7 +27,8 @@ Dialog {
     }
 
 
-
+        Column{
+            anchors.fill: parent
         RowLayout{
             id: pwInput
             width: parent.width
@@ -38,6 +41,19 @@ Dialog {
                 id: pw
                 echoMode: TextInput.Password
                 Layout.fillWidth: true
+                validator: RegExpValidator{ regExp: /.{8,}/}
+                Material.accent:  {
+                    if(!acceptableInput){
+                        return Material.Red;
+                    }else{
+                        return Material.Green;
+                    }
+                }
+                focus: true
+                Keys.onEscapePressed: {
+                  focus = false
+                }
+
                 onEditingFinished: {
                     backend.password=text;
                 }
@@ -61,8 +77,29 @@ Dialog {
             }
         }
 
+        RowLayout{
+            id: devInput
+            width: parent.width
+            Label{
+                id: devLabel
+                text: "Device: "
+            }
+            ComboBox{
+                id: devBinding
+                Layout.fillWidth: true
+                model: backend.devices;
+                onCurrentIndexChanged: {
+                    rootItm.device=backend.getDevicePath(model[currentIndex]);
+                }
+            }
+
+        }
+        }
+
+
+
     onAccepted: {
-        backend.saveAndActivate(rootItm.device);
+        backend.saveAndActivate(rootItm.device,rootItm.path);
     }
 
     onDiscarded: {

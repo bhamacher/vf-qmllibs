@@ -5,33 +5,29 @@ import anmsettings 1.0
 
 Dialog {
     id: rootItm
-    title: "Wifi Password"
+    title: "Device Binding"
+    property var devices
 
-    signal okPressed(string retSsid)
-
-    NetworkmanagerAbstraction{
-        id: backend
-    }
-
+    signal okPressed(string retDevice)
 
     RowLayout{
         width: parent.width
         Label{
-            id: pwLabel
-            text: "NETWORKS: "
+            id: devLabel
+            text: "Devices: "
         }
 
         ComboBox{
-            id: ssidList
+            id: devList
             Layout.fillWidth: true
-            model: backend.aps
+            model: devices
         }
     }
 
     standardButtons: Dialog.Ok | Dialog.Cancel
 
     onAccepted: {
-        okPressed(ssidList.currentText)
+        okPressed(devList.currentText)
     }
 
 }
