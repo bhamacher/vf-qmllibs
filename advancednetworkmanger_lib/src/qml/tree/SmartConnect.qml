@@ -11,6 +11,7 @@ Dialog {
     title: "WIFI PASSWORD"
     property string device: ""
     property string path: ""
+    closePolicy: Popup.NoAutoClose
 
     function init(ssid,device,path){
         backend.create();
@@ -49,7 +50,7 @@ Dialog {
                         return Material.Green;
                     }
                 }
-                focus: true
+                //focus: true
                 Keys.onEscapePressed: {
                   focus = false
                 }
