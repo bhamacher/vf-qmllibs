@@ -102,6 +102,11 @@ Pane{
                 }
 
                 Layout.fillWidth: true
+
+                Keys.onEscapePressed: {
+                  focus = false
+                }
+
                 onEditingFinished: {
                     backend.conName = text;
                 }
@@ -167,6 +172,11 @@ Pane{
                     }
                 }
                 Layout.fillWidth: true
+
+                Keys.onEscapePressed: {
+                  focus = false
+                }
+
                 onEditingFinished: {
                     backend.ipv4 = text;
                 }
@@ -211,6 +221,11 @@ Pane{
                         return true;
                     }
                 }
+
+                Keys.onEscapePressed: {
+                  focus = false
+                }
+
                 onEditingFinished: {
                     backend.ipv4Sub = text;
                 }
@@ -279,6 +294,10 @@ Pane{
                         return true;
                     }
                 }
+                onEditingFinished: {
+                    backend.ipv6 = text;
+                }
+
             }
         }
 
@@ -312,6 +331,9 @@ Pane{
                     }else{
                         return true;
                     }
+                }
+                Keys.onEscapePressed: {
+                  focus = false
                 }
                 onEditingFinished: {
                     backend.ipv6Sub = text;

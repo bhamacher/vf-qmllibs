@@ -91,7 +91,6 @@ Pane{
         id: pwDialog
         SmartConnect{
             width: parent.width
-            anchors.centerIn: parent
             visible: true
             onVisibleChanged: {
                 if(!visible){
@@ -156,14 +155,17 @@ Pane{
     Loader {
         id: smartConnectLoader
         width: parent.width*0.9
-        anchors.centerIn: parent
+        anchors.top: parent.top
+        parent: Overlay.overlay
+        z: 10
         active : false
         visible: true
         sourceComponent: pwDialog
         property string ssid: ""
         property string device: ""
+        property string path: ""
         onLoaded: {
-            item.init(ssid,device)
+            item.init(ssid,device,path)
         }
     }
 
@@ -273,11 +275,11 @@ Pane{
                         pattern: "ETHERNET"
                         caseSensitivity: Qt.CaseInsensitive
                     }
+
                 }
 
 
             ]
-
 
             sorters: StringSorter { roleName: "groupe" }
         }
@@ -292,8 +294,6 @@ Pane{
             devices_: devices
             deviceNames_: deviceNames
             stored_: stored
-
-
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.leftMargin: parent.width/30

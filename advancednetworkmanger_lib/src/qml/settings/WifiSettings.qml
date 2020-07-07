@@ -88,6 +88,10 @@ Pane{
                         return Material.Green;
                     }
                 }
+                Keys.onEscapePressed: {
+                  focus = false
+                }
+
                 onEditingFinished: {
                     backend.conName = text;
                 }
@@ -120,6 +124,10 @@ Pane{
                         return Material.Green;
                     }
                 }
+                Keys.onEscapePressed: {
+                  focus = false
+                }
+
                 onEditingFinished: {
                     backend.ssid = text;
                 }
@@ -158,6 +166,10 @@ Pane{
                         return Material.Green;
                     }
                 }
+                Keys.onEscapePressed: {
+                  focus = false
+                }
+
                 onEditingFinished: {
                     backend.password = text;
                 }
