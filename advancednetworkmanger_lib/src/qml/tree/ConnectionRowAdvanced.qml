@@ -62,7 +62,6 @@ Item{
             }
         }
 
-//        Row{
             ComboBox{
                 id: devices
                 Layout.fillHeight: true
@@ -78,10 +77,6 @@ Item{
                 Layout.preferredWidth: rootItm.width/5
                 model: rootItm.deviceNames_
             }
-
-
-
-//        }
 
         Row{
             Layout.preferredWidth: rootItm.width/10

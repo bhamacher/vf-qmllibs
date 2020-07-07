@@ -302,27 +302,16 @@ Pane{
             }
 
             onActivate: {
-               // var Devices = backend.getDevices(type_)
+
                 var Device = device;
-                //                if(Devices.length>1){
-                //                    if(stored){
-                //                        deviceDialogLoader.name=p_path;
-                //                    }else{
-                //                        deviceDialogLoader.name=name_;
-                //                    }
-                //                    deviceDialogLoader.stored=stored;
-                //                    deviceDialogLoader.type=type_;
-                //                    deviceDialogLoader.devices=Devices;
-                //                    deviceDialogLoader.active=true;
-                //                }else
                 if(!stored_ && Device !== ""){
                   //  Device= device
                     smartConnectLoader.ssid = name_;
                     smartConnectLoader.device = Device;
+                    smartConnectLoader.path = p_path;
                     smartConnectLoader.active=true;
                 }else if(Device !== ""){
-                    //direct connect
-                   // Device= device
+
                     backend.connect(p_path,Device);
                 }
 
