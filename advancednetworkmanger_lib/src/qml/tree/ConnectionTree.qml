@@ -356,14 +356,14 @@ Pane{
             MenuItem {
                 text: "+ ETHERNET"
                 onClicked: {
-
+                    infoLoader.active = false;
                     ethLoader.active = true;
                 }
             }
             MenuItem {
                 text: "+ WIFI"
                 onClicked: {
-
+                    infoLoader.active = false;
                     wifiLoader.active = true;
                 }
             }
