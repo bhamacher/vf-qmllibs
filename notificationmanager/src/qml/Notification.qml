@@ -23,6 +23,7 @@ Popup {
         Column{
             id: col
         Label{
+            padding: 2
             width: popup.width
             id: tit
             font.pixelSize: txt.font.pixelSize+4
@@ -31,7 +32,7 @@ Popup {
 
         }
         Label {
-            //anchors.centerIn: popup
+            padding: 2
             width: popup.width
             id: txt
             wrapMode: Text.Wrap
