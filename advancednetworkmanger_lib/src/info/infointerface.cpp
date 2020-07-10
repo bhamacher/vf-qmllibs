@@ -8,10 +8,16 @@ InfoInterface::InfoInterface()
         const int index = m_activeCons.size();
         emit beginInsertRows(QModelIndex(), index, index);
         InfoStruct itm;
-        itm.ipv4 = acon->ipV4Config().addresses().at(0).ip().toString();
-        itm.subnetmask = acon->ipV4Config().addresses().at(0).netmask().toString();
-        itm.ipv6= acon->ipV6Config().addresses().at(0).ip().toString();
-        itm.device =  NetworkManager::findNetworkInterface(acon->devices().at(0))->interfaceName();
+        if(acon->ipV6Config().addresses().size()>0){
+            itm.ipv4 = acon->ipV4Config().addresses().at(0).ip().toString();
+            itm.subnetmask = acon->ipV4Config().addresses().at(0).netmask().toString();
+        }
+        if(acon->ipV6Config().addresses().size()>0){
+            itm.ipv6= acon->ipV6Config().addresses().at(0).ip().toString();
+        }
+        if(acon->devices().size() > 0){
+            itm.device =  NetworkManager::findNetworkInterface(acon->devices().at(0))->interfaceName();
+        }
         itm.path=acon->path();
         m_activeCons.append(itm);
         emit endInsertRows();
@@ -40,21 +46,21 @@ int InfoInterface::rowCount(const QModelIndex &parent) const
 
 QVariant InfoInterface::data(const QModelIndex &index, int role) const
 {
-    InfoStruct itm = m_activeCons.at(index.row());
-    switch(role){
-    case ipv4Role:
-        return itm.ipv4;
-        break;
-    case subnetmaskRole:
-        return itm.subnetmask;
-        break;
-    case ipv6Role:
-        return itm.ipv6;
-        break;
-    case deviceRole:
-        return itm.device;
-        break;
-    }
+        InfoStruct itm = m_activeCons.at(index.row());
+        switch(role){
+        case ipv4Role:
+            return itm.ipv4;
+            break;
+        case subnetmaskRole:
+            return itm.subnetmask;
+            break;
+        case ipv6Role:
+            return itm.ipv6;
+            break;
+        case deviceRole:
+            return itm.device;
+            break;
+        }
     return QVariant();
 }
 
