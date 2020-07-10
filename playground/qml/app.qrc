@@ -7,5 +7,6 @@
         <file>zeracomps.qml</file>
         <file>anmsettings.qml</file>
         <file>notifiManager.qml</file>
+        <file>uivectorgraph.qml</file>
     </qresource>
 </RCC>

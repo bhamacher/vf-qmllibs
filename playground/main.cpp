@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
 
     qDebug() << "Starting vf-qmllibs playground";
 
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
     QFont fon("Helvetica");
 
      QQmlDebuggingEnabler enabler;

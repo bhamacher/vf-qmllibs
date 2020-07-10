@@ -52,6 +52,7 @@ target_link_libraries(
         #zeracomplib
         anmlib
         notificationmanager
+        uivlib
 )
 
 install(TARGETS vf-qmllibs-examples
