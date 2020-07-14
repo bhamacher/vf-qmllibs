@@ -53,6 +53,12 @@ ApplicationWindow {
         anchors.top: mainWindow.top
     } //anmsettings Loader
 
+    Loader {
+        id: uivLoader
+        anchors.left: mainWindow.right
+        anchors.top: mainWindow.top
+    } //anmsettings Loader
+
     //Next Loader here
 
     GridLayout{
@@ -149,6 +155,29 @@ ApplicationWindow {
                     notifiLoader.source = "notifiManager.qml";
                 }else{
                     notifiLoader.active=false;
+                }
+            }
+        }
+
+        CheckBox{
+            id: shownuiv
+            checked: false;
+            Layout.fillWidth: true;
+            text: "Load uivector"
+            Component.onCompleted: {
+                if(checked){
+                    uivLoader.active=true;
+                    uivLoader.source = "uivectorgraph.qml";
+                }else{
+                    uivLoader.active=false;
+                }
+            }
+            onCheckStateChanged: {
+                if(checked){
+                    uivLoader.active=true;
+                    uivLoader.source = "uivectorgraph.qml";
+                }else{
+                    uivLoader.active=false;
                 }
             }
         }
