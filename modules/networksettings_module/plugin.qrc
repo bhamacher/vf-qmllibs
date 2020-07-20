@@ -11,7 +11,7 @@
         <file>src/qml/wifi/AvailableNetworks.qml</file>
         <file>src/qml/network/ConnectedSymbol.qml</file>
         <file>src/qml/network/ConnectButton.qml</file>
-        <file>../3rdparty/font-awesome-4.6.1/fonts/fontawesome-webfont.ttf</file>
+        <file>../../3rdparty/font-awesome-4.6.1/fonts/fontawesome-webfont.ttf</file>
         <file>src/qml/FontAwesome.js</file>
         <file>src/qml/network/DeviceList.qml</file>
         <file>src/qml/network/UniversalMsgPopup.qml</file>
