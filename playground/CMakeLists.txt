@@ -53,6 +53,7 @@ target_link_libraries(
         anmlib
         notificationmanager
         uivlib
+        zerafa
 )
 
 install(TARGETS vf-qmllibs-examples
