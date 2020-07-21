@@ -18,7 +18,7 @@ Item {
     }
 
     readonly property FontLoader fontAwesomeOld: FontLoader {
-        source: "qrc:/src/qml/fontawesome-webfont.ttf"
+        source: "qrc:/3rdParty/Font-Awesome_Old/fontawesome-webfont.ttf"
     }
 
     readonly property string old: fontAwesomeOld.name
