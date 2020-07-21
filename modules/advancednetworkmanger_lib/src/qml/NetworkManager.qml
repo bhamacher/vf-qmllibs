@@ -7,7 +7,7 @@ import anmsettings 1.0
 
 import "qrc:/src/qml/settings"
 import "qrc:/src/qml/tree"
-import "qrc:/src/qml/FontAwesome.js" as FA
+import ZeraFa 1.0
 
 
 

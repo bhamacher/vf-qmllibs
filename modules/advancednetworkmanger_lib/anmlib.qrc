@@ -3,14 +3,12 @@
         <file>src/qml/tree/ConnectionTree.qml</file>
         <file>src/qml/DummyModel.qml</file>
         <file>src/qml/tree/ConnectionRowAdvanced.qml</file>
-        <file>src/qml/FontAwesome.js</file>
         <file>src/qml/tree/SignalIcon.qml</file>
         <file>src/qml/settings/WifiSettings.qml</file>
         <file>src/qml/tree/SmartConnect.qml</file>
         <file>src/qml/settings/AvailableApDialog.qml</file>
         <file>src/qml/settings/EthernetSettings.qml</file>
         <file>src/qml/tree/ConnectionInfo.qml</file>
-        <file>../../3rdparty/font-awesome-4.6.1/fonts/fontawesome-webfont.ttf</file>
         <file>src/qml/tree/DeviceDialog.qml</file>
         <file>src/qml/NetworkManager.qml</file>
         <file>src/qml/tree/PasswordDialog.qml</file>

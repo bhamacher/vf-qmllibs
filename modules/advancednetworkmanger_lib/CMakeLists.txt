@@ -85,6 +85,7 @@ target_link_libraries(
     KF5::NetworkManagerQt
     KF5::ModemManagerQt
     ZeraQml::SortFilterProxyModelCmake
+    zerafa
     )
 
 

@@ -7,7 +7,7 @@ import QtQuick.Controls.Styles 1.4
 import QtQuick.Controls.Material 2.12
 import anmsettings 1.0
 
-import "qrc:/src/qml/FontAwesome.js" as FA
+import ZeraFa 1.0
 
 Pane{
     id: rootItm
@@ -406,11 +406,7 @@ Pane{
         }
     }
 
-    AvailableApDialog{
-        id: aApDialog
-        width: parent.width
-        anchors.centerIn: parent
-    }
+
 
 }
 
