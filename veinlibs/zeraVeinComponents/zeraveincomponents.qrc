@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>src/qml/VFComboBox.qml</file>
+        <file>src/qml/VFLineEdit.qml</file>
+        <file>src/qml/VFSpinBox.qml</file>
+        <file>src/qml/VFSwitch.qml</file>
+    </qresource>
+</RCC>
