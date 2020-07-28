@@ -1,0 +1,11 @@
+<RCC>
+    <qresource prefix="/">
+        <file>src/qml/ZButton.qml</file>
+        <file>src/qml/ZComboBox.qml</file>
+        <file>src/qml/ZDoubleValidator.qml</file>
+        <file>src/qml/ZLineEdit.qml</file>
+        <file>src/qml/ZSpinBox.qml</file>
+        <file>src/qml/ZUnitComboBox.qml</file>
+        <file>src/qml/ZVisualComboBox.qml</file>
+    </qresource>
+</RCC>
