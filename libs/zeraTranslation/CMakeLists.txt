@@ -50,7 +50,7 @@ set(OTHER_FILES qmldir plugins.qmltypes)
 HEADER_DIRECTORIES("src" header_dir_list)
 include_directories(${header_dir_list})
 
-#qt5_add_resources(PLUGIN_RESOURCES ${CMAKE_CURRENT_LIST_DIR}/zeratranslation.qrc)
+qt5_add_resources(PLUGIN_RESOURCES ${CMAKE_CURRENT_LIST_DIR}/zeratranslation.qrc)
 
 add_library(
     zeratranslation

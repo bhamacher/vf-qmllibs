@@ -72,6 +72,17 @@ void ZeraTranslation::changeLanguage(const QString &t_language)
   }
 }
 
+QVariant ZeraTranslation::TrValue(const QString &key)
+{
+    QVariant tmp = value(key);
+    if(tmp.isValid()){
+        return tmp;
+    }
+    return key;
+}
+
+
+
 void ZeraTranslation::setupTranslationFiles()
 {
 #ifdef QT_DEBUG
@@ -633,7 +644,7 @@ void ZeraTranslation::reloadStringTable()
 
 QVariant ZeraTranslation::updateValue(const QString &key, const QVariant &input)
 {
-  Q_ASSERT(false); //do not change the values from QML
+  Q_ASSERT(false); //do not change the values from QML    
   Q_UNUSED(input)
   return value(key);
 }

@@ -23,6 +23,7 @@ public:
 
   Q_INVOKABLE void changeLanguage(const QString &t_language);
 
+  QVariant TrValue(const QString &key);
 signals:
   void sigLanguageChanged();
 

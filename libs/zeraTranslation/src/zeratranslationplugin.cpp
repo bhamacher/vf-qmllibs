@@ -14,7 +14,8 @@ void ZeraTranslationPlugin::init()
 void ZeraTranslationPlugin::registerTypes(const char* uri) {
   ZeraTranslation* zeraTranslation=ZeraTranslation::getInstance();
   zeraTranslation->changeLanguage("C");
-  qmlRegisterSingletonType<ZeraTranslation>(uri, 1, 0, "ZTR", ZeraTranslation::getStaticInstance);
+  qmlRegisterSingletonType<ZeraTranslation>(QString().append(uri).append("backend").toLatin1(), 1, 0, "ZTR", ZeraTranslation::getStaticInstance);
+  qmlRegisterSingletonType(QUrl("qrc:/src/qml/TranslationHelper.qml"), uri, 1, 0, "Z");
 }
 
 
