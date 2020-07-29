@@ -7,7 +7,7 @@ import anmsettings 1.0
 import QtQml.Models 2.11
 import QtQuick.Controls.Material 2.12
 
-import "qrc:/src/qml/FontAwesome.js" as FA
+import ZeraFa 1.0
 
 Pane{
     id: rootItm
@@ -132,6 +132,7 @@ Pane{
                 }
             }
             Button{
+                font.family: FA.old
                 text: FA.icon(FA.fa_search_plus,null);
                 background: Rectangle{
                     color: "transparent"
@@ -175,6 +176,7 @@ Pane{
             }
             Button{
                 id: pwvisible
+                font.family: FA.old
                 text: FA.icon(FA.fa_eye_slash,null)
                 font.pixelSize: rootItm.fontPixelSize
                 background: Rectangle{
@@ -244,6 +246,7 @@ Pane{
                 }
             }
             Button{
+                font.family: FA.old
                 text: FA.icon(FA.fa_search_plus,null);
                 background: Rectangle{
                     color: "transparent"

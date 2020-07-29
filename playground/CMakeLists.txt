@@ -48,11 +48,12 @@ target_link_libraries(
         Qt5::DBus
         Qt5::Xml
         Qt5::Widgets
-        vfnetworkmanager
+        #vfnetworkmanager
         #zeracomplib
         anmlib
         notificationmanager
         uivlib
+        zerafa
 )
 
 install(TARGETS vf-qmllibs-examples

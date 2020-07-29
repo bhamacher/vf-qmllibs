@@ -3,7 +3,7 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import anmsettings 1.0
 
-import "qrc:/src/qml/FontAwesome.js" as FA
+import ZeraFa 1.0
 
 
 
@@ -156,6 +156,7 @@ Item{
                 id: edbutton
                 enabled: rootItm.stored_
                 font.pixelSize: 18
+                font.family: FA.old
                 text: FA.icon(FA.fa_edit,null)
                 background: Rectangle{
                     color: "transparent"
@@ -174,6 +175,7 @@ Item{
                 anchors.verticalCenter: parent.verticalCenter
                 enabled: rootItm.stored_
                 font.pixelSize: 18
+                font.family: FA.old
                 text: FA.icon(FA.fa_trash,null)
                 background: Rectangle{
                     color: "transparent"

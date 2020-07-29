@@ -4,7 +4,7 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.12
 
 import anmsettings 1.0
-import "qrc:/src/qml/FontAwesome.js" as FA
+import ZeraFa 1.0
 
 Dialog {
     id: rootItm
@@ -62,6 +62,7 @@ Dialog {
 
             Button{
                 id: pwvisible
+                font.family: FA.old
                 text: FA.icon(FA.fa_eye_slash,null)
                 font.pixelSize: rootItm.fontPixelSize
                 background: Rectangle{

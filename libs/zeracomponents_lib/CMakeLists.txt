@@ -1,4 +1,4 @@
-project(zeracompLib VERSION 1.0 LANGUAGES CXX C) 
+project(zeracomponents VERSION 1.0 LANGUAGES CXX C) 
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     message(STATUS "Debug type: " ${CMAKE_BUILD_TYPE})
@@ -7,10 +7,22 @@ endif()
 # Tell CMake to call moc automaticly
 set(CMAKE_AUTOMOC ON)
 
-find_package(Qt5 CONFIG REQUIRED COMPONENTS Core Gui Qml Quick)
+
+
+set(zeracomponents_VERSION_MAJOR "0")
+set(zeracomponents_VERSION_MINOR "0")
+set(zeracomponents_VERSION_PATCH "1")
+
+set(PROJECT_VERSION "${zeracomponents_VERSION_MAJOR}.${zeracomponents_VERSION_MINOR}.${zeracomponents_VERSION_PATCH}")
+
 
 include(FeatureSummary)
 include(GNUInstallDirs)
+
+
+find_package(Qt5 CONFIG REQUIRED COMPONENTS Quick)
+
+
 
 MACRO(HEADER_DIRECTORIES dir return_list)
     FILE(GLOB_RECURSE new_list ${dir}/*.h)
@@ -33,83 +45,105 @@ file(GLOB_RECURSE APP_SOURCES
     src/*.cpp
     )
 
-#set(OTHER_FILES qmldir plugins.qmltypes)
+set(OTHER_FILES qmldir plugins.qmltypes)
 
 HEADER_DIRECTORIES("src" header_dir_list)
 include_directories(${header_dir_list})
 
-qt5_add_resources(PLUGIN_RESOURCES ${CMAKE_CURRENT_LIST_DIR}/zeracomp.qrc)
+qt5_add_resources(PLUGIN_RESOURCES ${CMAKE_CURRENT_LIST_DIR}/zeracomponents.qrc)
 
 add_library(
-    zeracomplib
+    zeracomponents
     SHARED
 
     ${APP_HEADERS}
     ${APP_SOURCES}
-    ${OTHER_FILES}
+  #  ${OTHER_FILES}
 
     ${PLUGIN_RESOURCES}     # Plugin resources file
-)
+    )
 
 
 target_compile_features(
-    zeracomplib
+    zeracomponents
     PRIVATE
-        cxx_auto_type
-        cxx_generic_lambdas
-)
+    cxx_auto_type
+    cxx_generic_lambdas
+    )
 
 target_link_libraries(
-    zeracomplib
+    zeracomponents
+    PUBLIC
+    Qt5::Quick
     PRIVATE
-        Qt5::Core
-        Qt5::Quick
-        Qt5::Qml
-)
-
-# During plugin searching Qt will be looking for 'qmldir' file
-# So we should place it next to our plugin lib.
-#add_custom_command(
-#    TARGET vfnetworkmanager
-#    POST_BUILD
-#    COMMAND
-#        ${CMAKE_COMMAND} -E copy
-#        ${CMAKE_CURRENT_LIST_DIR}/qmldir
-#        $<TARGET_FILE_DIR:vfnetworkmanager>/qmldir
-#    COMMAND
-#        ${CMAKE_COMMAND} -E copy
-#        ${CMAKE_CURRENT_LIST_DIR}/plugins.qmltypes
-#        $<TARGET_FILE_DIR:vfnetworkmanager>/plugins.qmltypes
-#)
+    globalconfig
+    qmlhelpers
+    )
 
 
+target_include_directories(zeracomponents
+    PUBLIC
+    $<INSTALL_INTERFACE:include/zeracomponents>
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
+    PRIVATE
+    ${CMAKE_CURRENT_SOURCE_DIR}
+    ${header_dir_list}
+    )
 
-#target_include_directories(vfnetworkmanager
-#    PUBLIC
-#    $<INSTALL_INTERFACE:include/vfnetworkmanager>
-#    $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>
-#    PRIVATE
-#    ${CMAKE_CURRENT_SOURCE_DIR}
-#    )
+#set target Version
+set_target_properties(zeracomponents PROPERTIES VERSION ${PROJECT_VERSION})
+set_target_properties(zeracomponents PROPERTIES SOVERSION ${zeracomponents_VERSION_MAJOR})
 
-## install library
-#install(TARGETS vfnetworkmanager
-#    EXPORT vfnetworkmanager
-#    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-qml-modules/networksettings
-#    )
+#generate export header
+include(GenerateExportHeader)
+generate_export_header(zeracomponents)
 
-## configure *ConfigVersion.cmake
-#include(CMakePackageConfigHelpers)
-#write_basic_package_version_file(
-#    vfnetworkmanagerConfigVersion.cmake
-#    VERSION ${PACKAGE_VERSION}
-#    COMPATIBILITY SameMinorVersion
-#    )
-
-#install(
-#    FILES ${OTHER_FILES}
-#    DESTINATION ${CMAKE_INSTALL_LIBDIR}/zera-qml-modules/networksettings
-#    )
+#install export header
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/zeracomponents_export.h
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeracomponents
+    )
 
 
-#feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+# install library
+install(TARGETS zeracomponents
+    EXPORT zeracomponentsExport
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+    )
+
+
+
+# configure *ConfigVersion.cmake
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+    zeracomponentsConfigVersion.cmake
+    VERSION ${PACKAGE_VERSION}
+    COMPATIBILITY SameMinorVersion
+    )
+
+
+# configure *Config.cmake
+configure_file(zeracomponentsConfig.cmake.in zeracomponentsConfig.cmake @ONLY)
+
+
+# install *Config(Version).cmake
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/zeracomponentsConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/zeracomponentsConfigVersion.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeracomponents
+    )
+
+# install targets cmake-files
+install(EXPORT zeracomponentsExport
+    FILE zeracomponentsTargets.cmake
+    NAMESPACE ZeraQml::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/zeracomponents
+    )
+
+# install public headers
+install(
+    FILES ${APP_HEADERS}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/zeracomponents
+    )
+
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

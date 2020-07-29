@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.12
 import anmsettings 1.0
 
 import "qrc:/src/qml/settings"
-import "qrc:/src/qml/FontAwesome.js" as FA
+import ZeraFa 1.0
 
 Pane{
     id: rootItm
@@ -22,9 +22,7 @@ Pane{
 
 
 
-    FontLoader {
-        source: "qrc:../3rdparty/font-awesome-4.6.1/fonts/fontawesome-webfont.ttf"
-    }
+
 
     Component{
         id: ethtab
@@ -420,6 +418,7 @@ Pane{
         id: infoButton
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        font.family: FA.old
         text: FA.icon(FA.fa_info,null);
         font.pixelSize: 18
         background: Rectangle{
