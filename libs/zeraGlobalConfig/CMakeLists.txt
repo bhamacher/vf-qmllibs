@@ -21,6 +21,7 @@ include(GNUInstallDirs)
 
 
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Core Quick)
+find_package(JsonSettingsQml REQUIRED)
 
 
 
@@ -78,6 +79,7 @@ target_link_libraries(
     Qt5::Quick
     PRIVATE
     zeratranslation
+    ZeraQml::JsonSettingsQml
     )
 
 
