@@ -9,23 +9,25 @@ Item {
 
     id: root
     function tr(key) {
-        if(Array.isArray(key)){ //translating array e.g. text models
+        var translated = ""
+        if(Array.isArray(key)) { //translating array e.g. text models
             var newkey = [];
             for(var i = 0; i < key.length; i++) {
-                if(ZTR[key[i]] !== undefined){
+                if(ZTR[key[i]] !== undefined) {
                     newkey[i] = ZTR[key[i]];
-                } else{
-                    newkey[i]=key[i];
+                } else {
+                    newkey[i] = key[i];
                 }
             }
-            return newkey;
-        } else{ //translating normal text elements
+            translated = newkey;
+        } else { //translating normal text elements
             if(ZTR[key] !== undefined) {
-                return  ZTR[key];
+                translated = ZTR[key];
             } else {
-                return  key;
+                translated = key;
             }
         }
+        return translated
     }
     function changeLanguage(language) {
         ZTR.changeLanguage(language)

@@ -9,9 +9,8 @@ ZComboBox {
   property string controlPropertyName
   property bool entityIsIndex: false
 
-
-
-  function textProperty(text){
+  // override
+  function translateText(text){
       return Z.tr(text)
   }
 
