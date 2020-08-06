@@ -1,7 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Controls 2.0
 import QtQuick.Controls.Material 2.0
-
+import GlobalConfig 1.0
+import ZeraTranslation  1.0
 
 /**
   * @b A combo box implementation that can use JS arrays as model and is able to layout the content in a grid, displaying all items at once (if possible)
@@ -76,11 +77,6 @@ Rectangle {
     }
   }
 
-  //overrideable
-  function textProperty(text){
-      return text;
-  }
-
   onFocusChanged: {
     if(!focus) {
       expanded = false
@@ -96,18 +92,13 @@ Rectangle {
     targetIndex = currentIndex;
   }
   onTargetIndexChanged: {
-    updateFakeModel();
     updateCurrentText()
-
     root.expanded = false
   }
   onModelChanged: {
     if(model)
     {
-      targetIndex = currentIndex;
       updateFakeModel();
-      updateCurrentText();
-
     }
     root.expanded=false
   }
@@ -123,7 +114,7 @@ Rectangle {
       anchors.left: parent.left
       anchors.leftMargin: 8
       anchors.verticalCenter: parent.verticalCenter
-      text:  textProperty(root.currentText)
+      text:  ZTR[root.currentText] !== undefined ? ZTR[root.currentText] : root.currentText
       textFormat: Text.PlainText
       font.pixelSize: root.fontSize
     }
@@ -232,7 +223,14 @@ Rectangle {
 
           Label {
             anchors.centerIn: parent
-            text: textProperty(model.text)
+            text: {
+              var retVal = "";
+              if(model.text !== undefined)
+              {
+                retVal = ZTR[model.text] !== undefined ? ZTR[model.text] : model.text
+              }
+              return retVal;
+            }
 
             textFormat: Text.PlainText
             font.pixelSize: root.fontSize
