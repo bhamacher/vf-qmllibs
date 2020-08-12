@@ -37,6 +37,29 @@ void AbstractConnectionSettingsInterface::save()
         }
     }
 
+    if(m_settings->setting(NetworkManager::Setting::SettingType::Ipv4).staticCast<NetworkManager::Ipv4Setting>()->method() == NetworkManager::Ipv4Setting::ConfigMethod::Automatic){
+        if(map.contains("ipv4")){
+            if(map["ipv4"].contains("addresses")){
+                map["ipv4"].remove("addresses");
+            }
+            if(map["ipv4"].contains("address-data")){
+                map["ipv4"].remove("address-data");
+            }
+        }
+    }
+
+    if(m_settings->setting(NetworkManager::Setting::SettingType::Ipv6).staticCast<NetworkManager::Ipv6Setting>()->method() == NetworkManager::Ipv6Setting::ConfigMethod::Automatic){
+        if(map.contains("ipv6")){
+            if(map["ipv6"].contains("addresses")){
+                map["ipv6"].remove("addresses");
+            }
+            if(map["ipv6"].contains("address-data")){
+                map["ipv6"].remove("address-data");
+            }
+        }
+    }
+
+
     if(m_connection != NULL){
 
         m_connection->update(map);
