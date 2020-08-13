@@ -17,7 +17,7 @@ Pane {
     topPadding: 5
     property string path : ""
 
-    signal notification(string title,string msg);
+    signal notification(string title, string msg);
 
     function init() {
         if(path === "") {

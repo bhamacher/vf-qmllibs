@@ -48,7 +48,6 @@ Pane {
             }
         }
     }
-
     Component{
         id: infotab
         ConnectionInfo {
@@ -61,7 +60,6 @@ Pane {
             z: 10
         }
     }
-
     Component{
         id: pwDialog
         SmartConnect{
@@ -74,7 +72,6 @@ Pane {
             }
         }
     }
-
     Loader {
         id: ethLoader
         anchors.fill: parent
@@ -93,7 +90,6 @@ Pane {
             }
         }
     }
-
     Loader{
         id: wifiLoader
         anchors.fill: parent
@@ -113,7 +109,6 @@ Pane {
             }
         }
     }
-
     Loader{
         id: infoLoader
         anchors.top: parent.top
@@ -126,7 +121,6 @@ Pane {
         z: 10
         sourceComponent: infotab
     }
-
     Loader {
         id: smartConnectLoader
         width: parent.width*0.9
@@ -143,10 +137,9 @@ Pane {
             item.init(ssid,device,path)
         }
     }
-
     Component {
         id: sectionHeading
-        Item{
+        Item {
             id: rect
             width: list.width
             height: 15
@@ -165,11 +158,10 @@ Pane {
                     font.pixelSize: 14
                     Layout.fillWidth: true
                 }
-
             }
         }
     }
-    ListView{
+    ListView {
         id: list
         anchors.top: parent.top
         anchors.bottom: showall.top
@@ -186,20 +178,19 @@ Pane {
                     roleName: "nmPath"
                     pattern: "[A-Za-z0-9,-_.\s]+"
                     caseSensitivity: Qt.CaseInsensitive
-                },
+                } ,
                 RegExpFilter{
                     enabled: true
                     inverted: false
                     roleName: "name"
                     pattern: ""
                     caseSensitivity: Qt.CaseInsensitive
-                }
-                ,
+                } ,
                 ValueFilter{
                     enabled: !showall.checked
                     roleName: "available"
                     value: 1
-                },
+                } ,
                 AnyOf{
                     RegExpFilter {
                         enabled: vpnshow.checked
@@ -259,11 +250,9 @@ Pane {
                     wifiLoader.active = true;
                 }
             }
-
             onRemove: {
                 backend.removeConnection(p_path)
             }
-
             onActivate: {
                 var Device = device;
                 if(!stored_ && Device !== "") {
@@ -273,17 +262,14 @@ Pane {
                     smartConnectLoader.path = p_path;
                     smartConnectLoader.active=true;
                 } else if(Device !== "") {
-
-                    backend.connect(p_path,Device);
+                    backend.connect(p_path, Device);
                 }
-
             }
             onDeactivate: {
                 backend.disconnect(p_path)
             }
-
             onNotification: {
-                rootItm.notification(title,msg);
+                rootItm.notification(title, msg);
             }
         }
 
@@ -296,14 +282,12 @@ Pane {
             id: scroller
             active: true
             onActiveChanged: {
-                if(active !== true)
-                {
+                if(active !== true) {
                     active = true;
                 }
             }
         }
     }
-
     Button {
         id: addbutton
         text: "+"
@@ -330,7 +314,7 @@ Pane {
             }
         }
     }
-    CheckBox{
+    CheckBox {
         id: showall
         anchors.bottom: parent.bottom
         anchors.left: addbutton.right
@@ -343,24 +327,21 @@ Pane {
         checked: true
         text: "ETHERNET"
     }
-
-    CheckBox{
+    CheckBox {
         anchors.right: apshow.left
         anchors.bottom: parent.bottom
         id: wifishow
         checked: true
         text: "WIFI"
     }
-
-    CheckBox{
+    CheckBox {
         anchors.right: infoButton.left
         anchors.bottom: parent.bottom
         id: apshow
         checked: true
         text: "HOTSPOT"
     }
-
-    CheckBox{
+    CheckBox {
         anchors.right: blueshow.left
         anchors.bottom: parent.bottom
         id: vpnshow
@@ -368,8 +349,7 @@ Pane {
         visible: false
         text: "VPN"
     }
-
-    CheckBox{
+    CheckBox {
         anchors.right: infoButton.left
         anchors.bottom: parent.bottom
         id: blueshow
@@ -377,7 +357,7 @@ Pane {
         visible: false
         text: "BLUETOOTH"
     }
-    Button{
+    Button {
         id: infoButton
         anchors.right: parent.right
         anchors.bottom: parent.bottom

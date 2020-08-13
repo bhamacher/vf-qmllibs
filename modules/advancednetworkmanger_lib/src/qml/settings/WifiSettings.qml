@@ -2,35 +2,31 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Styles 1.4
-import SortFilterProxyModel 0.2
-import anmsettings 1.0
 import QtQml.Models 2.11
 import QtQuick.Controls.Material 2.12
-
+import SortFilterProxyModel 0.2
+import anmsettings 1.0
 import ZeraFa 1.0
 
-Pane{
+Pane {
     id: rootItm
     padding: 0
     topPadding: 5
     property string path : ""
 
-    signal notification(string title,string msg);
+    signal notification(string title, string msg);
 
     function init() {
-        if(path === ""){
+        if(path === "") {
             backend.create();
-        }else{
+        } else {
             backend.load(path);
         }
     }
-
-    NetworkmanagerAbstraction{
+    NetworkmanagerAbstraction {
         id: generalbackend
     }
-
-
-    WirelessConnectionSettingsInterface{
+    WirelessConnectionSettingsInterface {
         id: backend
         onLoadComplete: {
             name.text = backend.conName;
@@ -38,95 +34,75 @@ Pane{
             backend.ssid = ssid.text;
             pw.text = backend.password;
             device.text = backend.device;
-            if(backend.mode === "CLIENT"){
+            if(backend.mode === "CLIENT") {
                 mode.currentIndex = 0
-            }else if(backend.mode === "HOTSPOT"){
+            } else if(backend.mode === "HOTSPOT") {
                 mode.currentIndex = 1
             }
-
         }
     }
-
-
-    ObjectModel{
+    ObjectModel {
         id: clientModel
         property int labelWidth : rootItm.width/4
-
-        Label{
+        Label {
             id: header
             anchors.left: parent.left
             anchors.right: parent.right
             font.pixelSize: 18
             horizontalAlignment: Label.AlignHCenter
-
             text: "WIFI CONNECTION SETTINGS"
         }
-
-
-
-        RowLayout{
+        RowLayout {
             id: conName
             anchors.left: parent.left
             anchors.right: parent.right
-
-
-            Label{
+            Label {
                 id: nameLabel
                 text: "CONNECTION NAME"
                 Layout.preferredWidth: clientModel.labelWidth
             }
-
-            TextField{
+            TextField {
                 id: name
                 Layout.fillWidth: true
                 validator: RegExpValidator{ regExp: /.{3,}/}
-                Material.accent:  {
-                    if(!acceptableInput){
+                Material.accent: {
+                    if(!acceptableInput) {
                         return Material.Red;
-                    }else{
+                    } else {
                         return Material.Green;
                     }
                 }
                 Keys.onEscapePressed: {
                   focus = false
                 }
-
                 onEditingFinished: {
                     backend.conName = text;
                 }
             }
-
-
         }
-
-
-
-
-        RowLayout{
+        RowLayout {
             id: conSsid
             anchors.left: parent.left
             anchors.right: parent.right
-
-            Label{
+            Label {
                 id: ssidLabel
                 text: "SSID"
                 Layout.preferredWidth: clientModel.labelWidth
             }
-            TextField{
+            TextField {
                 id: ssid
                 Layout.fillWidth: true
                 validator: RegExpValidator{ regExp: /.{1,}/}
                 Material.accent:  {
                     if(!acceptableInput){
                         return Material.Red;
-                    }else{
+                    } else {
                         return Material.Green;
                     }
                 }
                 Keys.onEscapePressed: {
-                  focus = false
+                    focus = false
                 }
-
                 onEditingFinished: {
                     backend.ssid = text;
                 }
@@ -141,35 +117,31 @@ Pane{
                     aApDialog.visible = true;
                 }
             }
-
         }
-
         RowLayout{
             id: conPassword
             anchors.left: parent.left
             anchors.right: parent.right
-
-            Label{
+            Label {
                 id: passwordLabel
                 text: "PASSWORD"
                 Layout.preferredWidth: clientModel.labelWidth
             }
-            TextField{
+            TextField {
                 id: pw
                 echoMode: TextInput.Password
                 Layout.fillWidth: true
                 validator: RegExpValidator{ regExp: /.{8,}/}
                 Material.accent:  {
-                    if(!acceptableInput){
+                    if(!acceptableInput) {
                         return Material.Red;
-                    }else{
+                    } else {
                         return Material.Green;
                     }
                 }
                 Keys.onEscapePressed: {
-                  focus = false
+                    focus = false
                 }
-
                 onEditingFinished: {
                     backend.password = text;
                 }
@@ -191,14 +163,11 @@ Pane{
                     pwvisible.text= FA.icon(FA.fa_eye_slash,null)
                 }
             }
-
         }
-
         RowLayout{
             id: conMode
             anchors.left: parent.left
             anchors.right: parent.right
-
             Label{
                 id: modeLabel
                 text: "MODE"
@@ -215,37 +184,33 @@ Pane{
                 }
             }
         }
-
-
         RowLayout{
             id: deviceBinding
             anchors.left: parent.left
             anchors.right: parent.right
-            Label{
+            Label {
                 id: deviceLabel
                 text: "Device"
                 Layout.preferredWidth: clientModel.labelWidth
             }
-
             TextField{
                 id: device
                 Layout.fillWidth: true
                 Material.accent:  {
-                    if(!acceptableInput){
+                    if(!acceptableInput) {
                         return Material.Red;
-                    }else{
+                    } else{
                         return Material.Green;
                     }
                 }
                 Keys.onEscapePressed: {
                   focus = false
                 }
-
                 onEditingFinished: {
                     backend.device = text;
                 }
             }
-            Button{
+            Button {
                 font.family: FA.old
                 text: FA.icon(FA.fa_search_plus,null);
                 background: Rectangle{
@@ -255,14 +220,8 @@ Pane{
                     aDevDialog.visible = true;
                 }
             }
-
         }
-
     }
-
-
-
-
     ListView{
         id: list
         anchors.top: parent.top
@@ -271,9 +230,7 @@ Pane{
         anchors.right: parent.right
         model: clientModel
     }
-
-
-    Button{
+    Button {
         id: abort
         text: "CANCEL"
         anchors.left: parent.left
@@ -281,11 +238,9 @@ Pane{
         onClicked: {
             backend.discard();
             rootItm.visible = false
-
         }
     }
-
-    Button{
+    Button {
         id: save
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -293,26 +248,25 @@ Pane{
         onClicked: {
             var good=true;
             var errorField="";
-            if(!name.acceptableInput){
+            if(!name.acceptableInput) {
                 good = false;
-                errorField="NAME"
-            }else if(!ssid.acceptableInput){
+                errorField = "NAME"
+            } else if(!ssid.acceptableInput) {
                 good = false;
-                errorField="SSID"
-            }else if(!pw.acceptableInput){
+                errorField = "SSID"
+            } else if(!pw.acceptableInput) {
                 good = false;
-                errorField="PASSWORD"
+                errorField = "PASSWORD"
             }
-            if(good){
+            if(good) {
                 backend.save();
                 rootItm.visible = false
-            }else{
+            } else {
                 notification("NM", "invalid settings in field: " + errorField)
             }
         }
     }
-
-    AvailableApDialog{
+    AvailableApDialog {
         id: aApDialog
         width: parent.width*0.9
         parent: Overlay.overlay
@@ -323,8 +277,7 @@ Pane{
             backend.ssid = retSsid;
         }
     }
-
-    AvailableDevDialog{
+    AvailableDevDialog {
         id: aDevDialog
         width: parent.width*0.9
         devices: backend.devices;
@@ -336,7 +289,6 @@ Pane{
             backend.device = retDevice;
         }
     }
-
 }
 
 

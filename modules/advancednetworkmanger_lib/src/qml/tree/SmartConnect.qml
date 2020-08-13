@@ -12,15 +12,14 @@ Dialog {
     property string path: ""
     closePolicy: Popup.NoAutoClose
 
-    function init(ssid,device,path){
+    function init(ssid, device,path) {
         backend.create();
-        rootItm.device=device;
+        rootItm.device = device;
         rootItm.path = path;
         backend.conName = ssid;
         backend.ssid = ssid;
         backend.mode = "CLIENT";
     }
-
     WirelessConnectionSettingsInterface{
         id: backend
     }
@@ -53,12 +52,12 @@ Dialog {
                     backend.password=text;
                 }
             }
-            Button{
+            Button {
                 id: pwvisible
                 font.family: FA.old
                 text: FA.icon(FA.fa_eye_slash,null)
                 font.pixelSize: rootItm.fontPixelSize
-                background: Rectangle{
+                background: Rectangle {
                     color: "transparent"
                 }
                 onPressed: {
