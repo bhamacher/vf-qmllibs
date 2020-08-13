@@ -10,6 +10,7 @@ import anmsettings 1.0
 import ZeraFa 1.0
 import ZeraLocale 1.0
 import ZeraComponents 1.0
+import ZeraTranslation 1.0
 
 Pane {
     id: rootItm
@@ -70,7 +71,7 @@ Pane {
             font.pointSize: clientModel.pointSize
             font.bold: true
             horizontalAlignment: Label.AlignHCenter
-            text: "Ethernet Connection Settings"
+            text: Z.tr("Ethernet Connection Settings")
         }
         //--------------------------
         // Connection name area
@@ -80,7 +81,7 @@ Pane {
             anchors.right: parent.right
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
-            description.text: "Connection name"
+            description.text: Z.tr("Connection name")
             description.width: clientModel.labelWidth
             validator: RegExpValidator{ regExp: /.{3,}/ }
             function doApplyInput(newText) {
@@ -97,7 +98,7 @@ Pane {
             height: clientModel.rowHeight
             font.pointSize: clientModel.pointSize
             font.bold: true
-            text: "IPv4"
+            text: Z.tr("IPv4")
         }
         RowLayout {
             id: ipv4ModeL
@@ -106,7 +107,7 @@ Pane {
             anchors.leftMargin: 20
             Label {
                 id: ipv4ModeLabel
-                text: "Mode"
+                text: Z.tr("Mode")
                 Layout.preferredWidth: clientModel.labelWidth
                 font.pointSize: clientModel.pointSize
             }
@@ -126,7 +127,7 @@ Pane {
             anchors.left: parent.left
             anchors.leftMargin: 20
             anchors.right: parent.right
-            description.text: "IP"
+            description.text: Z.tr("IP")
             description.width: clientModel.labelWidth
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
@@ -149,7 +150,7 @@ Pane {
             anchors.left: parent.left
             anchors.leftMargin: 20
             anchors.right: parent.right
-            description.text: "Subnetmask"
+            description.text: Z.tr("Subnetmask")
             description.width: clientModel.labelWidth
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
@@ -177,7 +178,7 @@ Pane {
             height: clientModel.rowHeight
             font.pointSize: clientModel.pointSize
             font.bold: true
-            text: "IPv6"
+            text: Z.tr("IPv6")
         }
         RowLayout {
             id: ipv6ModeL
@@ -186,7 +187,7 @@ Pane {
             anchors.leftMargin: 20
             Label {
                 id: ipv6ModeLabel
-                text: "Mode"
+                text: Z.tr("Mode")
                 Layout.preferredWidth: clientModel.labelWidth
                 font.pointSize: clientModel.pointSize
             }
@@ -206,7 +207,7 @@ Pane {
             anchors.left: parent.left
             anchors.leftMargin: 20
             anchors.right: parent.right
-            description.text: "IP"
+            description.text: Z.tr("IP")
             description.width: clientModel.labelWidth
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
@@ -223,7 +224,7 @@ Pane {
             anchors.left: parent.left
             anchors.leftMargin: 20
             anchors.right: parent.right
-            description.text: "Subnetmask"
+            description.text: Z.tr("Subnetmask")
             description.width: clientModel.labelWidth
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
@@ -242,7 +243,7 @@ Pane {
     ListView {
         id: list
         anchors.top: parent.top
-        anchors.bottom: save.top
+        anchors.bottom: okButton.top
         anchors.left: parent.left
         anchors.right: parent.right
         model: clientModel
@@ -251,45 +252,45 @@ Pane {
     //--------------------------
     // Cancel / OK buttons
     ZButton{
-        id: save
+        id: okButton
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         height: clientModel.rowHeight
-        text: "OK"
+        text: Z.tr("OK")
         onClicked: {
             var good = true;
             var errorField;
 
             if(!ipv6.acceptableInput && ipv6.enabled) {
                 good = false;
-                errorField="IPV6 IP"
+                errorField = Z.tr("IPV6 IP")
             } else if(!sub6.acceptableInput && sub6.enabled) {
                 good = false;
-                errorField="IPV6 Subnetmask"
+                errorField = Z.tr("IPV6 Subnetmask")
             } else if(!ipv4.acceptableInput &&ipv4.enabled) {
                 good = false;
-                errorField="IPV4 IP"
+                errorField = Z.tr("IPV4 IP")
             } else if(!sub4.acceptableInput && sub4.enabled) {
                 good = false;
-                errorField="IPV4 Subnetmask"
+                errorField = Z.tr("IPV4 Subnetmask")
             } else if(!name.acceptableInput){
                 good = false;
-                errorField="Name"
+                errorField = Z.tr("Connection name")
             }
             if(good) {
                 backend.save();
                 rootItm.visible = false
             } else {
-                notification("NM", "invalid settings in field: " + errorField)
+                notification(Z.tr("Network settings"), Z.tr("invalid settings in field: ") + errorField)
             }
         }
     }
     ZButton{
-        id: cancel
+        id: cancelButton
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         height: clientModel.rowHeight
-        text: "Cancel"
+        text: Z.tr("Cancel")
         onClicked: {
             backend.discard();
             rootItm.visible = false

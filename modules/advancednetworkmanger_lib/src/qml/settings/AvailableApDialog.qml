@@ -2,10 +2,11 @@ import QtQuick 2.0
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import anmsettings 1.0
+import ZeraTranslation 1.0
 
 Dialog {
     id: rootItm
-    title: "Wifi Password"
+    title: Z.tr("Wifi Password")
 
     signal okPressed(string retSsid)
 
@@ -16,7 +17,7 @@ Dialog {
         width: parent.width
         Label{
             id: pwLabel
-            text: "NETWORKS: "
+            text: Z.tr("Networks:")
         }
         ComboBox{
             id: ssidList

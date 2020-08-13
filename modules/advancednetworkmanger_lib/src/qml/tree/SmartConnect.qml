@@ -4,10 +4,11 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.12
 import anmsettings 1.0
 import ZeraFa 1.0
+import ZeraTranslation 1.0
 
 Dialog {
     id: rootItm
-    title: "WIFI PASSWORD"
+    title: Z.tr("Wifi password")
     property string device: ""
     property string path: ""
     closePolicy: Popup.NoAutoClose
@@ -30,7 +31,7 @@ Dialog {
             width: parent.width
             Label {
                 id: pwLabel
-                text: "Password: "
+                text: Z.tr("Password:")
             }
             TextField {
                 id: pw
@@ -75,7 +76,7 @@ Dialog {
             width: parent.width
             Label {
                 id: devLabel
-                text: "Device: "
+                text: Z.tr("Device:")
             }
             ComboBox {
                 id: devBinding
