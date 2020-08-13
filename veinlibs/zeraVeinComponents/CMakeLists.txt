@@ -22,6 +22,7 @@ include(GNUInstallDirs)
 
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Quick)
 
+find_package(ZeraTranslation REQUIRED)
 
 
 MACRO(HEADER_DIRECTORIES dir return_list)
@@ -77,7 +78,7 @@ target_link_libraries(
     Qt5::Quick
     PRIVATE
     zeracomponents
-    zeratranslation
+    ZeraTranslation::ZeraTranslation
     )
 
 
