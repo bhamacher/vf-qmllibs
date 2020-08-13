@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>src/qml/tree/ConnectionTree.qml</file>
-        <file>src/qml/DummyModel.qml</file>
         <file>src/qml/tree/ConnectionRowAdvanced.qml</file>
         <file>src/qml/tree/SignalIcon.qml</file>
         <file>src/qml/settings/WifiSettings.qml</file>
