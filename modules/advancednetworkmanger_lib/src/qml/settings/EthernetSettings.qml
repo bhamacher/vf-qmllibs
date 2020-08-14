@@ -10,6 +10,7 @@ import anmsettings 1.0
 import ZeraFa 1.0
 import ZeraLocale 1.0
 import ZeraComponents 1.0
+import ZeraComponentsConfig 1.0
 import ZeraTranslation 1.0
 
 Pane {
@@ -78,10 +79,11 @@ Pane {
         ZLineEdit {
             id: name
             anchors.left: parent.left
+            anchors.leftMargin: 20
             anchors.right: parent.right
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
-            description.text: Z.tr("Connection name")
+            description.text: Z.tr("Connection name:")
             description.width: clientModel.labelWidth
             validator: RegExpValidator{ regExp: /.{3,}/ }
             function doApplyInput(newText) {
@@ -105,10 +107,11 @@ Pane {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.leftMargin: 20
+            anchors.rightMargin: ZCC.standardTextHorizMargin // same as ZLineEdit
             Label {
                 id: ipv4ModeLabel
-                text: Z.tr("Mode")
-                Layout.preferredWidth: clientModel.labelWidth
+                text: Z.tr("Mode:")
+                Layout.preferredWidth: clientModel.labelWidth - ZCC.standardTextHorizMargin
                 font.pointSize: clientModel.pointSize
             }
             ComboBox {
@@ -127,7 +130,7 @@ Pane {
             anchors.left: parent.left
             anchors.leftMargin: 20
             anchors.right: parent.right
-            description.text: Z.tr("IP")
+            description.text: Z.tr("IP:")
             description.width: clientModel.labelWidth
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
@@ -150,7 +153,7 @@ Pane {
             anchors.left: parent.left
             anchors.leftMargin: 20
             anchors.right: parent.right
-            description.text: Z.tr("Subnetmask")
+            description.text: Z.tr("Subnetmask:")
             description.width: clientModel.labelWidth
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
@@ -185,10 +188,11 @@ Pane {
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.leftMargin: 20
+            anchors.rightMargin: ZCC.standardTextHorizMargin // same as ZLineEdit
             Label {
                 id: ipv6ModeLabel
-                text: Z.tr("Mode")
-                Layout.preferredWidth: clientModel.labelWidth
+                text: Z.tr("Mode:")
+                Layout.preferredWidth: clientModel.labelWidth - ZCC.standardTextHorizMargin
                 font.pointSize: clientModel.pointSize
             }
             ComboBox {
@@ -207,7 +211,7 @@ Pane {
             anchors.left: parent.left
             anchors.leftMargin: 20
             anchors.right: parent.right
-            description.text: Z.tr("IP")
+            description.text: Z.tr("IP:")
             description.width: clientModel.labelWidth
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
@@ -224,7 +228,7 @@ Pane {
             anchors.left: parent.left
             anchors.leftMargin: 20
             anchors.right: parent.right
-            description.text: Z.tr("Subnetmask")
+            description.text: Z.tr("Subnetmask:")
             description.width: clientModel.labelWidth
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
@@ -250,12 +254,13 @@ Pane {
         clip: true
     }
     //--------------------------
-    // Cancel / OK buttons
+    // OK / Cancel buttons
     ZButton{
         id: okButton
         anchors.left: parent.left
         anchors.bottom: parent.bottom
         height: clientModel.rowHeight
+        width: cancelButton.width
         text: Z.tr("OK")
         onClicked: {
             var good = true;
