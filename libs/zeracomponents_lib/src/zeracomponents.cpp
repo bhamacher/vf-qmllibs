@@ -8,8 +8,6 @@ void ZeraComponents::init()
     obj->registerTypes("ZeraComponents");
 }
 
-
-
 void ZeraComponents::registerTypes(const char* uri) {
     // Register config interface
     qmlRegisterSingletonType(QUrl("qrc:/src/qml/ZeraComponentsConfig.qml"), "ZeraComponentsConfig", 1, 0, "ZCC");
@@ -22,7 +20,6 @@ void ZeraComponents::registerTypes(const char* uri) {
     qmlRegisterType(QUrl("qrc:/src/qml/ZUnitComboBox.qml"),uri,1,0,"ZUnitComboBox");
     qmlRegisterType(QUrl("qrc:/src/qml/ZVisualComboBox.qml"),uri,1,0,"ZVisualComboBox");
 }
-
 
 static void init(){
     ZeraComponents::init();

@@ -2,35 +2,34 @@ import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Styles 1.4
-import SortFilterProxyModel 0.2
-import anmsettings 1.0
 import QtQml.Models 2.11
 import QtQuick.Controls.Material 2.12
-
+import SortFilterProxyModel 0.2
+import anmsettings 1.0
 import ZeraFa 1.0
+import ZeraComponents 1.0
+import ZeraComponentsConfig 1.0
+import ZeraTranslation 1.0
 
-Pane{
+Pane {
     id: rootItm
     padding: 0
     topPadding: 5
     property string path : ""
 
-    signal notification(string title,string msg);
+    signal notification(string title, string msg);
 
     function init() {
-        if(path === ""){
+        if(path === "") {
             backend.create();
-        }else{
+        } else {
             backend.load(path);
         }
     }
-
-    NetworkmanagerAbstraction{
+    NetworkmanagerAbstraction {
         id: generalbackend
     }
-
-
-    WirelessConnectionSettingsInterface{
+    WirelessConnectionSettingsInterface {
         id: backend
         onLoadComplete: {
             name.text = backend.conName;
@@ -38,175 +37,129 @@ Pane{
             backend.ssid = ssid.text;
             pw.text = backend.password;
             device.text = backend.device;
-            if(backend.mode === "CLIENT"){
+            if(backend.mode === "CLIENT") {
                 mode.currentIndex = 0
-            }else if(backend.mode === "HOTSPOT"){
+            } else if(backend.mode === "HOTSPOT") {
                 mode.currentIndex = 1
             }
-
         }
     }
-
-
-    ObjectModel{
+    ObjectModel {
         id: clientModel
         property int labelWidth : rootItm.width/4
-
-        Label{
+        readonly property int rowHeight : rootItm.height/12
+        property real pointSize: clientModel.rowHeight / 2.8 // reduce ZLineEdit default slightly
+        Label {
             id: header
             anchors.left: parent.left
             anchors.right: parent.right
             font.pixelSize: 18
+            font.bold: true
             horizontalAlignment: Label.AlignHCenter
-
-            text: "WIFI CONNECTION SETTINGS"
+            text: Z.tr("Wifi Connection Settings")
         }
-
-
-
-        RowLayout{
-            id: conName
+        ZLineEdit {
+            id: name
+            anchors.left: parent.left
+            width: parent.width - clientModel.rowHeight
+            height: clientModel.rowHeight
+            pointSize: clientModel.pointSize
+            description.text: Z.tr("Connection name:")
+            description.width: clientModel.labelWidth
+            validator: RegExpValidator{ regExp: /.{3,}/ }
+            function doApplyInput(newText) {
+                backend.conName = newText;
+                return true
+            }
+        }
+        Item {
             anchors.left: parent.left
             anchors.right: parent.right
-
-
-            Label{
-                id: nameLabel
-                text: "CONNECTION NAME"
-                Layout.preferredWidth: clientModel.labelWidth
-            }
-
-            TextField{
-                id: name
-                Layout.fillWidth: true
-                validator: RegExpValidator{ regExp: /.{3,}/}
-                Material.accent:  {
-                    if(!acceptableInput){
-                        return Material.Red;
-                    }else{
-                        return Material.Green;
-                    }
-                }
-                Keys.onEscapePressed: {
-                  focus = false
-                }
-
-                onEditingFinished: {
-                    backend.conName = text;
-                }
-            }
-
-
-        }
-
-
-
-
-        RowLayout{
-            id: conSsid
-            anchors.left: parent.left
-            anchors.right: parent.right
-
-            Label{
-                id: ssidLabel
-                text: "SSID"
-                Layout.preferredWidth: clientModel.labelWidth
-            }
-            TextField{
+            height: clientModel.rowHeight
+            ZLineEdit {
                 id: ssid
-                Layout.fillWidth: true
+                anchors.left: parent.left
+                anchors.right: ssidButton.left
+                height: clientModel.rowHeight
+                pointSize: clientModel.pointSize
+                description.text: Z.tr("SSID:")
+                description.width: clientModel.labelWidth
                 validator: RegExpValidator{ regExp: /.{1,}/}
-                Material.accent:  {
-                    if(!acceptableInput){
-                        return Material.Red;
-                    }else{
-                        return Material.Green;
-                    }
-                }
-                Keys.onEscapePressed: {
-                  focus = false
-                }
-
-                onEditingFinished: {
-                    backend.ssid = text;
+                function doApplyInput(newText) {
+                    backend.ssid = newText;
+                    return true
                 }
             }
-            Button{
+            Button {
+                id: ssidButton
+                anchors.right: parent.right
                 font.family: FA.old
-                text: FA.icon(FA.fa_search_plus,null);
-                background: Rectangle{
+                font.pointSize: clientModel.pointSize
+                width: clientModel.rowHeight
+                height: clientModel.rowHeight
+                text: FA.fa_search_plus
+                /*background: Rectangle{
                     color: "transparent"
-                }
+                }*/
                 onClicked: {
                     aApDialog.visible = true;
                 }
             }
-
         }
-
-        RowLayout{
-            id: conPassword
+        Item {
             anchors.left: parent.left
             anchors.right: parent.right
-
-            Label{
-                id: passwordLabel
-                text: "PASSWORD"
-                Layout.preferredWidth: clientModel.labelWidth
-            }
-            TextField{
+            height: clientModel.rowHeight
+            ZLineEdit {
                 id: pw
-                echoMode: TextInput.Password
-                Layout.fillWidth: true
+                textField.echoMode: TextInput.Password
+                anchors.left: parent.left
+                anchors.right: pwvisible.left
+                height: clientModel.rowHeight
+                pointSize: clientModel.pointSize
+                description.text: Z.tr("Password:")
+                description.width: clientModel.labelWidth
                 validator: RegExpValidator{ regExp: /.{8,}/}
-                Material.accent:  {
-                    if(!acceptableInput){
-                        return Material.Red;
-                    }else{
-                        return Material.Green;
-                    }
-                }
-                Keys.onEscapePressed: {
-                  focus = false
-                }
-
-                onEditingFinished: {
-                    backend.password = text;
+                function doApplyInput(newText) {
+                    backend.password = newText;
+                    return true
                 }
             }
-            Button{
+            Button {
                 id: pwvisible
+                anchors.right: parent.right
                 font.family: FA.old
-                text: FA.icon(FA.fa_eye_slash,null)
-                font.pixelSize: rootItm.fontPixelSize
-                background: Rectangle{
+                font.pointSize: clientModel.pointSize
+                width: clientModel.rowHeight
+                height: clientModel.rowHeight
+                text: FA.fa_eye_slash
+                /*background: Rectangle{
                     color: "transparent"
-                }
+                }*/
                 onPressed: {
-                    pw.echoMode = TextInput.Normal
-                    pwvisible.text= FA.icon(FA.fa_eye,null)
+                    pw.textField.echoMode = TextInput.Normal
+                    pwvisible.text= FA.fa_eye
                 }
                 onReleased: {
-                    pw.echoMode = TextInput.Password
-                    pwvisible.text= FA.icon(FA.fa_eye_slash,null)
+                    pw.textField.echoMode = TextInput.Password
+                    pwvisible.text= FA.fa_eye_slash
                 }
             }
-
         }
-
-        RowLayout{
+        RowLayout {
             id: conMode
             anchors.left: parent.left
-            anchors.right: parent.right
-
-            Label{
+            width: parent.width// - clientModel.rowHeight - ZCC.standardTextHorizMargin
+            Label {
                 id: modeLabel
-                text: "MODE"
-                Layout.preferredWidth: clientModel.labelWidth
+                font.pointSize: clientModel.pointSize
+                text: Z.tr("Mode:")
+                Layout.preferredWidth: clientModel.labelWidth - ZCC.standardTextHorizMargin
             }
             ComboBox{
                 id: mode
                 Layout.fillWidth: true
+                font.pointSize: clientModel.pointSize
                 model: ["CLIENT", "HOTSPOT"]
                 onCurrentIndexChanged: {
                     if(currentIndex<count && currentIndex>=0){
@@ -215,104 +168,95 @@ Pane{
                 }
             }
         }
-
-
-        RowLayout{
-            id: deviceBinding
+        Item {
             anchors.left: parent.left
             anchors.right: parent.right
-            Label{
-                id: deviceLabel
-                text: "Device"
-                Layout.preferredWidth: clientModel.labelWidth
-            }
-
-            TextField{
+            height: clientModel.rowHeight
+            ZLineEdit {
                 id: device
-                Layout.fillWidth: true
-                Material.accent:  {
-                    if(!acceptableInput){
-                        return Material.Red;
-                    }else{
-                        return Material.Green;
-                    }
-                }
-                Keys.onEscapePressed: {
-                  focus = false
-                }
-
-                onEditingFinished: {
-                    backend.device = text;
+                // it does not make sense to enter device
+                readOnly: true
+                anchors.left: parent.left
+                anchors.right: selectDev.left
+                height: clientModel.rowHeight
+                pointSize: clientModel.pointSize
+                description.text: Z.tr("Device:")
+                description.width: clientModel.labelWidth
+                function doApplyInput(newText) {
+                    backend.device = newText;
+                    return true
                 }
             }
-            Button{
+            Button {
+                id: selectDev
+                anchors.right: parent.right
                 font.family: FA.old
-                text: FA.icon(FA.fa_search_plus,null);
-                background: Rectangle{
+                font.pointSize: clientModel.pointSize
+                width: clientModel.rowHeight
+                height: clientModel.rowHeight
+                text: FA.fa_search_plus
+                /*background: Rectangle{
                     color: "transparent"
-                }
+                }*/
                 onClicked: {
                     aDevDialog.visible = true;
                 }
             }
-
         }
-
     }
-
-
-
-
     ListView{
         id: list
         anchors.top: parent.top
-        anchors.bottom: save.top
+        anchors.bottom: okButton.top
         anchors.left: parent.left
         anchors.right: parent.right
         model: clientModel
     }
-
-
-    Button{
-        id: abort
-        text: "CANCEL"
+    //--------------------------
+    // OK / Cancel buttons
+    ZButton {
+        id: okButton
         anchors.left: parent.left
         anchors.bottom: parent.bottom
-        onClicked: {
-            backend.discard();
-            rootItm.visible = false
-
-        }
-    }
-
-    Button{
-        id: save
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        text: "SAVE"
+        height: clientModel.rowHeight
+        width: cancelButton.width
+        text: Z.tr("OK")
         onClicked: {
             var good=true;
             var errorField="";
-            if(!name.acceptableInput){
+            if(!name.acceptableInput) {
                 good = false;
-                errorField="NAME"
-            }else if(!ssid.acceptableInput){
+                errorField = Z.tr("Connection name")
+            } else if(!ssid.acceptableInput) {
                 good = false;
-                errorField="SSID"
-            }else if(!pw.acceptableInput){
+                errorField = Z.tr("SSID")
+            } else if(!pw.acceptableInput) {
                 good = false;
-                errorField="PASSWORD"
+                errorField = Z.tr("Password")
             }
-            if(good){
+            if(good) {
                 backend.save();
                 rootItm.visible = false
-            }else{
-                notification("NM", "invalid settings in field: " + errorField)
+            } else {
+                notification(Z.tr("Network settings"), Z.tr("invalid settings in field: ") + errorField)
             }
         }
     }
+    ZButton{
+        id: cancelButton
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: clientModel.rowHeight
+        text: Z.tr("Cancel")
+        onClicked: {
+            backend.discard();
+            rootItm.visible = false
+        }
+    }
 
-    AvailableApDialog{
+    //--------------------------
+    // Dialogs
+    AvailableApDialog {
         id: aApDialog
         width: parent.width*0.9
         parent: Overlay.overlay
@@ -323,8 +267,7 @@ Pane{
             backend.ssid = retSsid;
         }
     }
-
-    AvailableDevDialog{
+    AvailableDevDialog {
         id: aDevDialog
         width: parent.width*0.9
         devices: backend.devices;
@@ -336,7 +279,6 @@ Pane{
             backend.device = retDevice;
         }
     }
-
 }
 
 

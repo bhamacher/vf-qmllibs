@@ -23,7 +23,6 @@ include(GNUInstallDirs)
 find_package(Qt5 CONFIG REQUIRED COMPONENTS Quick)
 
 
-
 MACRO(HEADER_DIRECTORIES dir return_list)
     FILE(GLOB_RECURSE new_list ${dir}/*.h)
     SET(dir_list "")

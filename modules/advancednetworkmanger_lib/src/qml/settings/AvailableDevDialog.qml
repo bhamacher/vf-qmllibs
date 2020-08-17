@@ -2,10 +2,11 @@ import QtQuick 2.0
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import anmsettings 1.0
+import ZeraTranslation 1.0
 
 Dialog {
     id: rootItm
-    title: "Device Binding"
+    title: Z.tr("Device Binding")
     property var devices
 
     signal okPressed(string retDevice)
@@ -14,7 +15,7 @@ Dialog {
         width: parent.width
         Label{
             id: devLabel
-            text: "Devices: "
+            text: Z.tr("Devices:")
         }
 
         ComboBox{

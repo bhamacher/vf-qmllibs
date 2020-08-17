@@ -1,4 +1,4 @@
-project(notificatiomanager VERSION 1.0 LANGUAGES CXX C) 
+project(notificationmanager VERSION 1.0 LANGUAGES CXX C)
 
 if(${CMAKE_BUILD_TYPE} STREQUAL "Debug")
     message(STATUS "Debug type: " ${CMAKE_BUILD_TYPE})
@@ -93,7 +93,7 @@ target_include_directories(notificationmanager
 
 #set target Version
 set_target_properties(notificationmanager PROPERTIES VERSION ${PROJECT_VERSION})
-set_target_properties(notificationmanager PROPERTIES SOVERSION ${notificatiomanager_VERSION_MAJOR})
+set_target_properties(notificationmanager PROPERTIES SOVERSION ${notificationmanager_VERSION_MAJOR})
 
 #generate export header
 include(GenerateExportHeader)
@@ -143,21 +143,21 @@ install(TARGETS notificationmanager
 
 # install targets cmake-files
 install(EXPORT notificationmanagerExport
-    FILE notificatiomanagerTargets.cmake
+    FILE notificationmanagerTargets.cmake
     NAMESPACE ZeraQml::
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/notificatiomanager
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/notificationmanager
     )
 
 # install public headers
 install(
     FILES ${APP_HEADERS}
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/notificatiomanager
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/notificationmanager
     )
 
 
 #install(
 #    FILES ${OTHER_FILES}
-#    DESTINATION ${CMAKE_INSTALL_LIBDIR}/notificatiomanager/notificatiomanager
+#    DESTINATION ${CMAKE_INSTALL_LIBDIR}/notificationmanager/notificationmanager
 #    )
 
 
@@ -167,16 +167,16 @@ install(
 # During plugin searching Qt will be looking for 'qmldir' file
 # So we should place it next to our plugin lib.
 #add_custom_command(
-#    TARGET notificatiomanager
+#    TARGET notificationmanager
 #    POST_BUILD
 #    COMMAND
 #        ${CMAKE_COMMAND} -E copy
 #        ${CMAKE_CURRENT_LIST_DIR}/qmldir
-#        $<TARGET_FILE_DIR:notificatiomanager>/qmldir
+#        $<TARGET_FILE_DIR:notificationmanager>/qmldir
 #    COMMAND
 #        ${CMAKE_COMMAND} -E copy
 #        ${CMAKE_CURRENT_LIST_DIR}/plugins.qmltypes
-#        $<TARGET_FILE_DIR:notificatiomanager>/plugins.qmltypes
+#        $<TARGET_FILE_DIR:notificationmanager>/plugins.qmltypes
 #)
 
 

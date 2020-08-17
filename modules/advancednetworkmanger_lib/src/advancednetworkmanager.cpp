@@ -1,12 +1,8 @@
 #include "advancednetworkmanager.h"
-
-
-
-
 #include <NetworkManagerQt/Device>
-
 #include <QCoreApplication>
 #include <QtQml/QtQml>
+#include <zeratranslationplugin.h>
 
 void AdvancedNetworkmanager::init()
 {
@@ -14,9 +10,11 @@ void AdvancedNetworkmanager::init()
     obj->registerTypes("anmsettings");
 }
 
-
-
-void AdvancedNetworkmanager::registerTypes(const char* uri) {
+void AdvancedNetworkmanager::registerTypes(const char* uri)
+{
+    // Dependencies
+    ZeraTranslationPlugin::registerQml();
+    // Own
     qmlRegisterType<AbstractConnectionSettingsInterface>(uri, 1, 0, "AbstractConnectionSettingsInterface");
     qmlRegisterType<ConnectionModel>(uri, 1, 0, "ConnectionModel");
     qmlRegisterType<ConnectionTreeInterface>(uri, 1, 0, "ConnectionTreeInterface");

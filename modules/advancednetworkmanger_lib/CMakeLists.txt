@@ -24,7 +24,7 @@ find_package(Qt5 CONFIG REQUIRED COMPONENTS Core DBus Xml Gui Qml Quick)
 find_package(SortFilterProxyModelCmake REQUIRED)
 find_package(KF5NetworkManagerQt REQUIRED)
 find_package(KF5ModemManagerQt REQUIRED)
-
+find_package(ZeraTranslation REQUIRED)
 
 
 MACRO(HEADER_DIRECTORIES dir return_list)
@@ -84,6 +84,7 @@ target_link_libraries(
     Qt5::Xml
     KF5::NetworkManagerQt
     KF5::ModemManagerQt
+    ZeraTranslation::ZeraTranslation
     ZeraQml::SortFilterProxyModelCmake
     zerafa
     )

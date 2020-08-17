@@ -4,23 +4,23 @@ import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.12
 import anmsettings 1.0
 import ZeraFa 1.0
+import ZeraTranslation 1.0
 
 Dialog {
     id: rootItm
-    title: "WIFI PASSWORD"
+    title: Z.tr("Wifi password")
     property string device: ""
     property string path: ""
     closePolicy: Popup.NoAutoClose
 
-    function init(ssid,device,path){
+    function init(ssid, device,path) {
         backend.create();
-        rootItm.device=device;
+        rootItm.device = device;
         rootItm.path = path;
         backend.conName = ssid;
         backend.ssid = ssid;
         backend.mode = "CLIENT";
     }
-
     WirelessConnectionSettingsInterface{
         id: backend
     }
@@ -31,7 +31,7 @@ Dialog {
             width: parent.width
             Label {
                 id: pwLabel
-                text: "Password: "
+                text: Z.tr("Password:")
             }
             TextField {
                 id: pw
@@ -53,12 +53,12 @@ Dialog {
                     backend.password=text;
                 }
             }
-            Button{
+            Button {
                 id: pwvisible
                 font.family: FA.old
                 text: FA.icon(FA.fa_eye_slash,null)
                 font.pixelSize: rootItm.fontPixelSize
-                background: Rectangle{
+                background: Rectangle {
                     color: "transparent"
                 }
                 onPressed: {
@@ -76,7 +76,7 @@ Dialog {
             width: parent.width
             Label {
                 id: devLabel
-                text: "Device: "
+                text: Z.tr("Device:")
             }
             ComboBox {
                 id: devBinding

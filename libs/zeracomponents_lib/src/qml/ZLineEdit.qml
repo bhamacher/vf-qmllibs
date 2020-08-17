@@ -6,8 +6,6 @@ import QmlHelpers 1.0
 import ZeraLocale 1.0
 
 Item {
-    Layout.alignment: Qt.AlignVCenter
-    Layout.minimumWidth: tField.width
     id: root
 
     // public interface
@@ -104,21 +102,22 @@ Item {
     Label { // compatibility - see comment above
         id: descriptionText
         height: parent.height
+        visible: text !== ""
         verticalAlignment: Text.AlignVCenter
         font.pointSize: root.pointSize
         anchors.left: parent.left
     }
     TextField {
         id: tField
-        anchors.left: descriptionText.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
+        anchors.left: descriptionText.right
         anchors.right: unitLabel.left
-        anchors.leftMargin: ZCC.standardTextHorizMargin
         anchors.rightMargin: ZCC.standardTextHorizMargin
         horizontalAlignment: Text.AlignRight
         bottomPadding: ZCC.standardTextBottomMargin
         font.pointSize: root.pointSize
+        width: root.width - (descriptionText.width + unitLabel.width)
 
         mouseSelectionMode: TextInput.SelectWords
         selectByMouse: true
@@ -165,6 +164,7 @@ Item {
     Label { // compatibility - see comment above
         id: unitLabel
         height: parent.height
+        visible: text !== ""
         font.pointSize: root.pointSize
         anchors.right: parent.right
         verticalAlignment: Text.AlignVCenter

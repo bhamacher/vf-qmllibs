@@ -6,7 +6,7 @@
 
 class HelpersPlugin : public QQmlExtensionPlugin {
     Q_OBJECT
-    Q_PLUGIN_METADATA(IID "zeratranslation/1.0")
+    Q_PLUGIN_METADATA(IID "helperplugin/1.0")
 
 public:
     /**

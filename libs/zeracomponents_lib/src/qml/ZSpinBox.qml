@@ -5,6 +5,7 @@ import QmlHelpers 1.0
 import ZeraLocale 1.0
 
 Item {
+    // TODO: introduce description/unit as in ZLineEdit?
     Layout.alignment: Qt.AlignVCenter
     Layout.minimumWidth: sBox.width
     height: parent.height
