@@ -6,7 +6,7 @@ import ZeraTranslation 1.0
 
 Dialog {
     id: rootItm
-    title: Z.tr("Wifi Password")
+    title: Z.tr("Wifi SSID")
 
     signal okPressed(string retSsid)
 
