@@ -33,15 +33,26 @@ Pane {
     }
     WiredConnectionSettingsInterface {
         id: backend
+        // Add models here once for all where all backend magic happens. Wanted
+        // to use ListModel but that complained "cannot use script for property
+        // value" due to Z.tr() - and handling of arrays is much simpler anyway...
+        readonly property var modeModelBackend:      ["MANUAL", "AUTOMATIC"]
+        readonly property var modeModelDisplay: Z.tr(["Manual", "Automatic (DHCP)"])
+        // plausibitity helper(s)
+        function ipFieldsEnabled(modeIndex) {
+            var ret = false
+            if(modeIndex >= 0) {
+                // we might need changes here in the future...
+                ret = modeModelBackend[modeIndex] !== "AUTOMATIC"
+            }
+            return ret
+        }
         onLoadComplete: {
             name.text = backend.conName;
-            if(backend.ipv4Mode === "DHCP") {
-                ipv4Mode.currentIndex = 0
-            } else if(backend.ipv4Mode === "MANUAL"){
-                ipv4Mode.currentIndex = 1
-            }
+            ipv4Mode.currentIndex = backend.modeModelBackend.indexOf(backend.ipv4Mode)
             ipv4.text = backend.ipv4;
             sub4.text = backend.ipv4Sub;
+            ipv6Mode.currentIndex = backend.modeModelBackend.indexOf(backend.ipv6Mode)
             ipv6.text = backend.ipv6;
             sub6.text = backend.ipv6Sub;
             var index = devices.find(backend.device,Qt.MatchExactly);
@@ -51,12 +62,6 @@ Pane {
                 devices.currentIndex = 0;
             }
             backend.device = devices.model[devices.currentIndex]
-
-            if(backend.ipv6Mode === "DHCP"){
-                ipv6Mode.currentIndex = 0
-            } else if(backend.ipv6Mode === "MANUAL"){
-                ipv6Mode.currentIndex = 1
-            }
         }
     }
     VisualItemModel {
@@ -119,9 +124,9 @@ Pane {
                 height: clientModel.rowHeight
                 Layout.fillWidth: true
                 font.pointSize: clientModel.pointSize
-                model: ["DHCP", "MANUAL"]
+                model: backend.modeModelDisplay
                 onCurrentIndexChanged: {
-                    backend.ipv4Mode = model[currentIndex]
+                    backend.ipv4Mode = backend.modeModelBackend[currentIndex]
                 }
             }
         }
@@ -135,7 +140,7 @@ Pane {
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
             validator: RegExpValidator { regExp: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/}
-            enabled: ipv4Mode.currentText !== "DHCP"
+            enabled: backend.ipFieldsEnabled(ipv4Mode.currentIndex)
             // overrides
             function doApplyInput(newText) {
                 backend.ipv4 = newText;
@@ -158,7 +163,7 @@ Pane {
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
             validator: RegExpValidator { regExp: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/}
-            enabled: ipv4Mode.currentText !== "DHCP"
+            enabled: backend.ipFieldsEnabled(ipv4Mode.currentIndex)
             // overrides
             function doApplyInput(newText) {
                 backend.ipv4Sub = newText;
@@ -200,9 +205,9 @@ Pane {
                 height: clientModel.rowHeight
                 Layout.fillWidth: true
                 font.pointSize: clientModel.pointSize
-                model: ["DHCP", "MANUAL"]
+                model: backend.modeModelDisplay
                 onCurrentIndexChanged: {
-                    backend.ipv6Mode = model[currentIndex]
+                    backend.ipv6Mode = backend.modeModelBackend[currentIndex]
                 }
             }
         }
@@ -216,7 +221,7 @@ Pane {
             height: clientModel.rowHeight
             pointSize: clientModel.pointSize
             validator: RegExpValidator { regExp: /([a-f0-9:]+:+)+[a-f0-9]+/}
-            enabled: ipv6Mode.currentText !== "DHCP"
+            enabled: backend.ipFieldsEnabled(ipv6Mode.currentIndex)
             // overrides
             function doApplyInput(newText) {
                 backend.ipv6 = newText;
@@ -234,7 +239,7 @@ Pane {
             pointSize: clientModel.pointSize
             // TODO: This looks like a copy & paste from IPv4
             validator: RegExpValidator { regExp: /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/}
-            enabled: ipv6Mode.currentText !== "DHCP"
+            enabled: backend.ipFieldsEnabled(ipv6Mode.currentIndex)
             // overrides
             function doApplyInput(newText) {
                 backend.ipv6Sub = newText;

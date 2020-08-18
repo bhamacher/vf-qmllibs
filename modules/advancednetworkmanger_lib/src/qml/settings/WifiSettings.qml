@@ -31,17 +31,18 @@ Pane {
     }
     WirelessConnectionSettingsInterface {
         id: backend
+        // Add models here once for all where all backend magic happens. Wanted
+        // to use ListModel but that complained "cannot use script for property
+        // value" due to Z.tr() - and handling of arrays is much simpler anyway...
+        readonly property var modeModelBackend:      ["CLIENT", "HOTSPOT"]
+        readonly property var modeModelDisplay: Z.tr(["Client", "Hotspot"])
         onLoadComplete: {
             name.text = backend.conName;
             ssid.text = backend.ssid;
             backend.ssid = ssid.text;
             pw.text = backend.password;
             device.text = backend.device;
-            if(backend.mode === "CLIENT") {
-                mode.currentIndex = 0
-            } else if(backend.mode === "HOTSPOT") {
-                mode.currentIndex = 1
-            }
+            mode.currentIndex = backend.modeModelBackend.indexOf(backend.mode)
         }
     }
     ObjectModel {
@@ -160,11 +161,9 @@ Pane {
                 id: mode
                 Layout.fillWidth: true
                 font.pointSize: clientModel.pointSize
-                model: ["CLIENT", "HOTSPOT"]
+                model: backend.modeModelDisplay
                 onCurrentIndexChanged: {
-                    if(currentIndex<count && currentIndex>=0){
-                        backend.mode=model[currentIndex];
-                    }
+                    backend.mode = backend.modeModelBackend[currentIndex];
                 }
             }
         }
