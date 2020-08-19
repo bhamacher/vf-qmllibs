@@ -14,6 +14,7 @@ Pane {
     ConnectionTreeInterface{
         id: backend;
     }
+    // Ethernet settings component - ethLoader is consumer
     Component{
         id: ethtab
         EthernetSettings{
@@ -31,6 +32,7 @@ Pane {
             }
         }
     }
+    // Wifi settings component - wifiLoader is consumer
     Component{
         id: wifitab
         WifiSettings {
@@ -48,6 +50,7 @@ Pane {
             }
         }
     }
+    // Connection info component - infoLoader is consumer
     Component{
         id: infotab
         ConnectionInfo {
@@ -60,6 +63,7 @@ Pane {
             z: 10
         }
     }
+    // Password input component - smartConnectLoader is consumer
     Component{
         id: pwDialog
         SmartConnect{
@@ -72,6 +76,7 @@ Pane {
             }
         }
     }
+    // Ethernet settings tab loader
     Loader {
         id: ethLoader
         anchors.fill: parent
@@ -90,6 +95,7 @@ Pane {
             }
         }
     }
+    // Wifi settings tab loader
     Loader{
         id: wifiLoader
         anchors.fill: parent
@@ -109,6 +115,7 @@ Pane {
             }
         }
     }
+    // Info tab loader
     Loader{
         id: infoLoader
         anchors.top: parent.top
@@ -121,6 +128,7 @@ Pane {
         z: 10
         sourceComponent: infotab
     }
+    // Password tab loader (SmartConnect: connect to an unsaved SSID)
     Loader {
         id: smartConnectLoader
         width: parent.width*0.9
@@ -137,6 +145,8 @@ Pane {
             item.init(ssid,device,path)
         }
     }
+    // Section heading component (Ethernet/Wifi/Hotspot...) see ListView
+    // section bindings below
     Component {
         id: sectionHeading
         Item {
@@ -153,6 +163,17 @@ Pane {
                     Layout.fillHeight: true
                     Layout.alignment: Qt.AlignVCenter
                     id: secLab
+                    // Notes on translation:
+                    // * Strings are bound to groupe role (see ListView section bindings below).
+                    // * groupe role is mapped to C++ ConnectionModel role GroupeRole (see ConnectionModel::roleNames).
+                    // * GroupeRole role is mapped to connectionItem::Groupe member
+                    // * connectionItem::Groupe are finally set in ::CreateConItem overrides.
+                    //
+                    // Long talk short result:
+                    // * The possible contents are in capital letters (to avoid double translation efforts matching texts
+                    //   are kept in all captal letters)
+                    // * Supported values are at the time of writing: ETHERNET/HOTSPOT/WIFI
+                    //   Since there were some preparations for VPN/BLUETOOOTH done let our translation be prepped
                     text: section
                     font.bold: true
                     font.pixelSize: 14
@@ -161,6 +182,7 @@ Pane {
             }
         }
     }
+    // THE list of connections with separated sections
     ListView {
         id: list
         anchors.top: parent.top
@@ -193,7 +215,7 @@ Pane {
                 } ,
                 AnyOf{
                     RegExpFilter {
-                        enabled: vpnshow.checked
+                        enabled: vpnshow.checked // checkbox not visible yet - TODO?
                         roleName: "groupe"
                         pattern: "VPN"
                         caseSensitivity: Qt.CaseInsensitive
@@ -216,12 +238,12 @@ Pane {
                         pattern: "ETHERNET"
                         caseSensitivity: Qt.CaseInsensitive
                     }
-
+                    // Bluetoooth - TODO?
                 }
             ]
             sorters: StringSorter { roleName: "groupe" }
         }
-        delegate: ConnectionRowAdvanced{
+        delegate: ConnectionRowAdvanced {
             name_: name
             available_: available
             type_: type
@@ -237,6 +259,7 @@ Pane {
             anchors.leftMargin: parent.width/30
             height: 30
 
+            // Action handlers
             onEdit: {
                 if(groupe_ == "ETHERNET") {
                     ethLoader.path = p_path;
@@ -272,7 +295,7 @@ Pane {
                 rootItm.notification(title, msg);
             }
         }
-
+        // ListView section bindings
         section.delegate: sectionHeading
         section.property: "groupe"
         section.criteria: ViewSection.FullString
