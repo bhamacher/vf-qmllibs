@@ -13,13 +13,7 @@ Item{
     property int signals_
     property var devices_
     property var deviceNames_
-    property bool stored_ : {
-        if(nmPath === "") {
-            return false;
-        } else {
-            return true;
-        }
-    }
+    property bool stored_: nmPath !== ""
 
     property bool connected_
     property string nmPath_
@@ -60,14 +54,7 @@ Item{
         ComboBox{
             id: devices
             Layout.fillHeight: true
-            visible: {
-                if(count < 2){
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
+            visible: count >= 2
             Layout.preferredWidth: rootItm.width/5
             model: rootItm.deviceNames_
         }
@@ -80,14 +67,7 @@ Item{
                 anchors.verticalCenter: parent.verticalCenter
                 enabled: rootItm.available_
                 id: actswitch
-                position: {
-                    if (rootItm.connected_ === true){
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-
+                position: rootItm.connected_ ? 1 : 0
                 checked : rootItm.connected_
                 onClicked: {
                     if(position === 1){
@@ -112,13 +92,7 @@ Item{
                 signals: rootItm.signals_
                 width: 20
                 height: 20
-                visible: {
-                    if(type_ === 1 && available_) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
+                visible: type_ === 1 && available_
             }
 
             Rectangle{
@@ -126,13 +100,7 @@ Item{
                 width: 20
                 height: 20
                 color: "transparent"
-                visible: {
-                    if(type_ !== 1 || !available_){
-                        return true;
-                    } else{
-                        return false;
-                    }
-                }
+                visible: type_ !== 1 || !available_
             }
         }
 

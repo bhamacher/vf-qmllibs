@@ -368,12 +368,7 @@ Pane {
             color: "transparent"
         }
         onClicked: {
-            if(infoLoader.active === false){
-                infoLoader.active = true;
-            } else {
-                infoLoader.active = false;
-            }
-
+            infoLoader.active = !infoLoader.active
         }
     }
 }
