@@ -36,11 +36,10 @@ Item{
 
         }
     }
-
     RowLayout{
         anchors.fill: parent
-
-        Row{
+        // connection name
+        Row {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -50,7 +49,7 @@ Item{
                 text: rootItm.name_
             }
         }
-
+        // select-device-combo (visible only if more than one device is available)
         ComboBox{
             id: devices
             Layout.fillHeight: true
@@ -58,8 +57,8 @@ Item{
             Layout.preferredWidth: rootItm.width/5
             model: rootItm.deviceNames_
         }
-
-        Row{
+        // switch to activate/deactivae connection
+        Row {
             Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
@@ -70,7 +69,7 @@ Item{
                 position: rootItm.connected_ ? 1 : 0
                 checked : rootItm.connected_
                 onClicked: {
-                    if(position === 1){
+                    if(position === 1) {
                         activate(rootItm.nmPath_,rootItm.devices_[devices.model[devices.currentIndex]]);
                         //position = 0;
                         checked = rootItm.connected_
@@ -82,19 +81,18 @@ Item{
                 }
             }
         }
+        // Signal strenght indicator
         Row {
             Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
-
-            SignalIcon{
+            SignalIcon {
                 anchors.verticalCenter: parent.verticalCenter
                 signals: rootItm.signals_
                 width: 20
                 height: 20
                 visible: type_ === 1 && available_
             }
-
             Rectangle{
                 anchors.verticalCenter: parent.verticalCenter
                 width: 20
@@ -103,19 +101,19 @@ Item{
                 visible: type_ !== 1 || !available_
             }
         }
-
+        // edit connection button
         Row {
             Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
-            Button{
+            Button {
                 anchors.verticalCenter: parent.verticalCenter
                 id: edbutton
                 enabled: rootItm.stored_
                 font.pixelSize: 18
                 font.family: FA.old
                 text: FA.fa_edit
-                background: Rectangle{
+                background: Rectangle {
                     color: "transparent"
                 }
                 onClicked: {
@@ -123,12 +121,12 @@ Item{
                 }
             }
         }
-
+        // delete connection button
         Row {
             Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
-            Button{
+            Button {
                 anchors.verticalCenter: parent.verticalCenter
                 enabled: rootItm.stored_
                 font.pixelSize: 18
