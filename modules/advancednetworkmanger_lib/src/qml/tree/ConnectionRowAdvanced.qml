@@ -147,7 +147,7 @@ Item{
                 enabled: rootItm.stored_
                 font.pixelSize: 18
                 font.family: FA.old
-                text: FA.icon(FA.fa_edit,null)
+                text: FA.fa_edit
                 background: Rectangle{
                     color: "transparent"
                 }
@@ -166,7 +166,7 @@ Item{
                 enabled: rootItm.stored_
                 font.pixelSize: 18
                 font.family: FA.old
-                text: FA.icon(FA.fa_trash,null)
+                text: FA.fa_trash
                 background: Rectangle{
                     color: "transparent"
                 }

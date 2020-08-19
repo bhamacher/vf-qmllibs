@@ -362,7 +362,7 @@ Pane {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         font.family: FA.old
-        text: FA.icon(FA.fa_info,null);
+        text: FA.fa_info
         font.pixelSize: 18
         background: Rectangle{
             color: "transparent"
