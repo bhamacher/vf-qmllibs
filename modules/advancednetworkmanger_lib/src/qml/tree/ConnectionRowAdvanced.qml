@@ -3,6 +3,7 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import anmsettings 1.0
 import ZeraFa 1.0
+import ZeraComponentsConfig 1.0
 
 Item{
     id: rootItm
@@ -108,9 +109,9 @@ Item{
             Layout.alignment: Qt.AlignVCenter
             Button {
                 anchors.verticalCenter: parent.verticalCenter
-                id: edbutton
+                bottomPadding: ZCC.standardTextBottomMargin
                 enabled: rootItm.stored_
-                font.pixelSize: 18
+                font.pixelSize: 22
                 font.family: FA.old
                 text: FA.fa_edit
                 background: Rectangle {
@@ -128,8 +129,9 @@ Item{
             Layout.alignment: Qt.AlignVCenter
             Button {
                 anchors.verticalCenter: parent.verticalCenter
+                bottomPadding: ZCC.standardTextBottomMargin
                 enabled: rootItm.stored_
-                font.pixelSize: 18
+                font.pixelSize: 22
                 font.family: FA.old
                 text: FA.fa_trash
                 background: Rectangle{
