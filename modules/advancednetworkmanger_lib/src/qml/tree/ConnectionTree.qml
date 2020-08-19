@@ -4,6 +4,7 @@ import SortFilterProxyModel 0.2
 import QtQuick.Layouts 1.12
 import ZeraFa 1.0
 import anmsettings 1.0
+import ZeraTranslation 1.0
 import "qrc:/src/qml/settings"
 
 Pane {
@@ -174,7 +175,7 @@ Pane {
                     //   are kept in all captal letters)
                     // * Supported values are at the time of writing: ETHERNET/HOTSPOT/WIFI
                     //   Since there were some preparations for VPN/BLUETOOOTH done let our translation be prepped
-                    text: section
+                    text: Z.tr(section)
                     font.bold: true
                     font.pixelSize: 14
                     Layout.fillWidth: true
@@ -322,14 +323,14 @@ Pane {
             id: menu
             title: "+"
             MenuItem {
-                text: "+ ETHERNET"
+                text: "+ " + Z.tr("ETHERNET")
                 onClicked: {
                     infoLoader.active = false;
                     ethLoader.active = true;
                 }
             }
             MenuItem {
-                text: "+ WIFI"
+                text: "+ "+ Z.tr("WIFI")
                 onClicked: {
                     infoLoader.active = false;
                     wifiLoader.active = true;
@@ -341,28 +342,28 @@ Pane {
         id: showall
         anchors.bottom: parent.bottom
         anchors.left: addbutton.right
-        text: "SHOW ALL"
+        text: Z.tr("Show all")
     }
     CheckBox{
         anchors.right: wifishow.left
         anchors.bottom: parent.bottom
         id: ethshow
         checked: true
-        text: "ETHERNET"
+        text: Z.tr("ETHERNET")
     }
     CheckBox {
         anchors.right: apshow.left
         anchors.bottom: parent.bottom
         id: wifishow
         checked: true
-        text: "WIFI"
+        text: Z.tr("WIFI")
     }
     CheckBox {
         anchors.right: infoButton.left
         anchors.bottom: parent.bottom
         id: apshow
         checked: true
-        text: "HOTSPOT"
+        text: Z.tr("HOTSPOT")
     }
     CheckBox {
         anchors.right: blueshow.left
@@ -370,7 +371,7 @@ Pane {
         id: vpnshow
         checked: false
         visible: false
-        text: "VPN"
+        text: Z.tr("VPN")
     }
     CheckBox {
         anchors.right: infoButton.left
@@ -378,7 +379,7 @@ Pane {
         id: blueshow
         checked: false
         visible: false
-        text: "BLUETOOTH"
+        text: Z.tr("BLUETOOTH")
     }
     Button {
         id: infoButton
