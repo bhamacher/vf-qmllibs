@@ -60,7 +60,6 @@ Item{
         ComboBox{
             id: devices
             Layout.fillHeight: true
-            property string dev : model[currentIndex]
             visible: {
                 if(count < 2){
                     return false;
