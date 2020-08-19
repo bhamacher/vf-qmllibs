@@ -362,8 +362,8 @@ Pane {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         font.family: FA.old
-        text: FA.fa_info
-        font.pixelSize: 18
+        text: FA.fa_info_circle
+        font.pixelSize: 22
         background: Rectangle{
             color: "transparent"
         }
