@@ -39,7 +39,6 @@ Pane {
         onLoadComplete: {
             name.text = backend.conName;
             ssid.text = backend.ssid;
-            backend.ssid = ssid.text;
             pw.text = backend.password;
             device.text = backend.device;
             mode.currentIndex = backend.modeModelBackend.indexOf(backend.mode)
