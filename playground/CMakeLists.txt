@@ -11,6 +11,8 @@ include(GNUInstallDirs)
 
 find_package(Qt5 REQUIRED COMPONENTS Quick Core Qml Widgets DBus Xml)
 
+find_package(ZeraTranslation REQUIRED)
+
 # Telling CMake location of our app .qrc file
 qt5_add_resources(APP_RESOURCES ${CMAKE_CURRENT_LIST_DIR}/qml/app.qrc)
 
@@ -48,9 +50,11 @@ target_link_libraries(
         Qt5::DBus
         Qt5::Xml
         Qt5::Widgets
+        ZeraTranslation::ZeraTranslation
         #vfnetworkmanager
         #zeracomplib
         anmlib
+        zeracomponents
         notificationmanager
         uivlib
         zerafa
