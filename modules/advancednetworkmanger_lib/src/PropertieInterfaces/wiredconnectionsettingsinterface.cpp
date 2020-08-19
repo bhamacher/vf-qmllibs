@@ -40,7 +40,7 @@ QString WiredConnectionSettingsInterface::getIpv4Mode()
             ret= "MANUAL";
             break;
         case NetworkManager::Ipv4Setting::ConfigMethod::Automatic:
-            ret= "DHCP";
+            ret= "AUTOMATIC";
             break;
         case NetworkManager::Ipv4Setting::ConfigMethod::LinkLocal:
             ret= "";
@@ -61,7 +61,7 @@ void WiredConnectionSettingsInterface::setIpv4Mode(QString p_ipv4Mode)
 {
     if(m_settings != nullptr) {
         NetworkManager::Ipv4Setting::Ptr set = m_settings->setting(NetworkManager::Setting::SettingType::Ipv4).staticCast<NetworkManager::Ipv4Setting>();
-        if(p_ipv4Mode == "DHCP") {
+        if(p_ipv4Mode == "AUTOMATIC") {
             set->setMethod(NetworkManager::Ipv4Setting::ConfigMethod::Automatic);
         } else if(p_ipv4Mode == "MANUAL"){
             set->setMethod(NetworkManager::Ipv4Setting::ConfigMethod::Manual);
@@ -146,7 +146,7 @@ QString WiredConnectionSettingsInterface::getIpv6Mode()
             ret= "MANUAL";
             break;
         case NetworkManager::Ipv6Setting::ConfigMethod::Automatic:
-            ret= "DHCP";
+            ret= "AUTOMATIC";
             break;
         case NetworkManager::Ipv6Setting::ConfigMethod::LinkLocal:
             ret= "";
@@ -160,7 +160,7 @@ void WiredConnectionSettingsInterface::setIpv6Mode(QString p_ipv6Mode)
 {
     if(m_settings != nullptr) {
         NetworkManager::Ipv6Setting::Ptr set = m_settings->setting(NetworkManager::Setting::SettingType::Ipv6).staticCast<NetworkManager::Ipv6Setting>();;
-        if(p_ipv6Mode == "DHCP"){
+        if(p_ipv6Mode == "AUTOMATIC"){
             set->setMethod(NetworkManager::Ipv6Setting::ConfigMethod::Automatic);
         } else if(p_ipv6Mode == "MANUAL") {
             set->setMethod(NetworkManager::Ipv6Setting::ConfigMethod::Manual);

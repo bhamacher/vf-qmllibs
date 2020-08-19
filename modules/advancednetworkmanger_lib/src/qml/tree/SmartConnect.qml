@@ -56,18 +56,18 @@ Dialog {
             Button {
                 id: pwvisible
                 font.family: FA.old
-                text: FA.icon(FA.fa_eye_slash,null)
+                text: FA.fa_eye_slash
                 font.pixelSize: rootItm.fontPixelSize
                 background: Rectangle {
                     color: "transparent"
                 }
                 onPressed: {
                     pw.echoMode = TextInput.Normal
-                    pwvisible.text= FA.icon(FA.fa_eye,null)
+                    pwvisible.text = FA.fa_eye
                 }
                 onReleased: {
                     pw.echoMode = TextInput.Password
-                    pwvisible.text= FA.icon(FA.fa_eye_slash,null)
+                    pwvisible.text = FA.fa_eye_slash
                 }
             }
         }

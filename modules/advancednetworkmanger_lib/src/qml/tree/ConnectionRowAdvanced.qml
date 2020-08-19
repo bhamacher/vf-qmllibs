@@ -3,6 +3,7 @@ import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import anmsettings 1.0
 import ZeraFa 1.0
+import ZeraComponentsConfig 1.0
 
 Item{
     id: rootItm
@@ -13,13 +14,7 @@ Item{
     property int signals_
     property var devices_
     property var deviceNames_
-    property bool stored_ : {
-        if(nmPath === "") {
-            return false;
-        } else {
-            return true;
-        }
-    }
+    property bool stored_: nmPath !== ""
 
     property bool connected_
     property string nmPath_
@@ -42,11 +37,10 @@ Item{
 
         }
     }
-
     RowLayout{
         anchors.fill: parent
-
-        Row{
+        // connection name
+        Row {
             Layout.alignment: Qt.AlignVCenter
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -56,24 +50,16 @@ Item{
                 text: rootItm.name_
             }
         }
-
+        // select-device-combo (visible only if more than one device is available)
         ComboBox{
             id: devices
             Layout.fillHeight: true
-            property string dev : model[currentIndex]
-            visible: {
-                if(count < 2){
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
+            visible: count >= 2
             Layout.preferredWidth: rootItm.width/5
             model: rootItm.deviceNames_
         }
-
-        Row{
+        // switch to activate/deactivae connection
+        Row {
             Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
@@ -81,17 +67,10 @@ Item{
                 anchors.verticalCenter: parent.verticalCenter
                 enabled: rootItm.available_
                 id: actswitch
-                position: {
-                    if (rootItm.connected_ === true){
-                        return 1;
-                    } else {
-                        return 0;
-                    }
-                }
-
+                position: rootItm.connected_ ? 1 : 0
                 checked : rootItm.connected_
                 onClicked: {
-                    if(position === 1){
+                    if(position === 1) {
                         activate(rootItm.nmPath_,rootItm.devices_[devices.model[devices.currentIndex]]);
                         //position = 0;
                         checked = rootItm.connected_
@@ -103,52 +82,39 @@ Item{
                 }
             }
         }
+        // Signal strenght indicator
         Row {
             Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
-
-            SignalIcon{
+            SignalIcon {
                 anchors.verticalCenter: parent.verticalCenter
                 signals: rootItm.signals_
                 width: 20
                 height: 20
-                visible: {
-                    if(type_ === 1 && available_) {
-                        return true;
-                    } else {
-                        return false;
-                    }
-                }
+                visible: type_ === 1 && available_
             }
-
             Rectangle{
                 anchors.verticalCenter: parent.verticalCenter
                 width: 20
                 height: 20
                 color: "transparent"
-                visible: {
-                    if(type_ !== 1 || !available_){
-                        return true;
-                    } else{
-                        return false;
-                    }
-                }
+                visible: type_ !== 1 || !available_
             }
         }
-
+        // edit connection button
         Row {
             Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
-            Button{
+            Button {
                 anchors.verticalCenter: parent.verticalCenter
-                id: edbutton
+                bottomPadding: ZCC.standardTextBottomMargin
                 enabled: rootItm.stored_
-                font.pixelSize: 18
+                font.pixelSize: 22
                 font.family: FA.old
-                text: FA.icon(FA.fa_edit,null)
-                background: Rectangle{
+                text: FA.fa_edit
+                background: Rectangle {
                     color: "transparent"
                 }
                 onClicked: {
@@ -156,17 +122,18 @@ Item{
                 }
             }
         }
-
+        // delete connection button
         Row {
             Layout.preferredWidth: rootItm.width/10
             Layout.fillHeight: true
             Layout.alignment: Qt.AlignVCenter
-            Button{
+            Button {
                 anchors.verticalCenter: parent.verticalCenter
+                bottomPadding: ZCC.standardTextBottomMargin
                 enabled: rootItm.stored_
-                font.pixelSize: 18
+                font.pixelSize: 22
                 font.family: FA.old
-                text: FA.icon(FA.fa_trash,null)
+                text: FA.fa_trash
                 background: Rectangle{
                     color: "transparent"
                 }

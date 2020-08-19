@@ -31,17 +31,27 @@ Pane {
     }
     WirelessConnectionSettingsInterface {
         id: backend
+        // Add models here once for all where all backend magic happens. Wanted
+        // to use ListModel but that complained "cannot use script for property
+        // value" due to Z.tr() - and handling of arrays is much simpler anyway...
+        readonly property var modeModelBackend:      ["CLIENT", "HOTSPOT"]
+        readonly property var modeModelDisplay: Z.tr(["Client", "Hotspot"])
+        // plausibitity helper(s)
+        function ssidEditableOnly(modeIndex) {
+            // For hotspot we should not select from list (we would open a
+            // hotpot with same ssid as available in our network)
+            var ret = false
+            if(modeIndex >= 0) {
+                ret = modeModelBackend[modeIndex] === "HOTSPOT"
+            }
+            return ret
+        }
         onLoadComplete: {
             name.text = backend.conName;
             ssid.text = backend.ssid;
-            backend.ssid = ssid.text;
             pw.text = backend.password;
             device.text = backend.device;
-            if(backend.mode === "CLIENT") {
-                mode.currentIndex = 0
-            } else if(backend.mode === "HOTSPOT") {
-                mode.currentIndex = 1
-            }
+            mode.currentIndex = backend.modeModelBackend.indexOf(backend.mode)
         }
     }
     ObjectModel {
@@ -76,6 +86,8 @@ Pane {
             anchors.left: parent.left
             anchors.right: parent.right
             height: clientModel.rowHeight
+            // Just for the record: this remains enabled for hotpot AND CLIENT
+            // -> we might want to create a client for a hidden SSID
             ZLineEdit {
                 id: ssid
                 anchors.left: parent.left
@@ -98,6 +110,7 @@ Pane {
                 width: clientModel.rowHeight
                 height: clientModel.rowHeight
                 text: FA.fa_search_plus
+                visible: !backend.ssidEditableOnly(mode.currentIndex)
                 /*background: Rectangle{
                     color: "transparent"
                 }*/
@@ -160,11 +173,9 @@ Pane {
                 id: mode
                 Layout.fillWidth: true
                 font.pointSize: clientModel.pointSize
-                model: ["CLIENT", "HOTSPOT"]
+                model: backend.modeModelDisplay
                 onCurrentIndexChanged: {
-                    if(currentIndex<count && currentIndex>=0){
-                        backend.mode=model[currentIndex];
-                    }
+                    backend.mode = backend.modeModelBackend[currentIndex];
                 }
             }
         }
