@@ -14,10 +14,10 @@ void ZeraVeinComponents::registerTypes(const char* uri)
     // Dependencies
     ZeraTranslationPlugin::registerQml();
     // Own
-    qmlRegisterType(QUrl("qrc:/src/qml/VFComboBox.qml"),uri,1,0,"VFComboBox");
-    qmlRegisterType(QUrl("qrc:/src/qml/VFLineEdit.qml"),uri,1,0,"VFLineEdit");
-    qmlRegisterType(QUrl("qrc:/src/qml/VFSpinBox.qml"),uri,1,0,"VFSpinBox");
-    qmlRegisterType(QUrl("qrc:/src/qml/VFSwitch.qml"),uri,1,0,"VFSwitch");
+//    qmlRegisterType(QUrl("qrc:/src/qml/VFComboBox.qml"),uri,1,0,"VFComboBox");
+//    qmlRegisterType(QUrl("qrc:/src/qml/VFLineEdit.qml"),uri,1,0,"VFLineEdit");
+//    qmlRegisterType(QUrl("qrc:/src/qml/VFSpinBox.qml"),uri,1,0,"VFSpinBox");
+//    qmlRegisterType(QUrl("qrc:/src/qml/VFSwitch.qml"),uri,1,0,"VFSwitch");
 }
 
 static void init(){
