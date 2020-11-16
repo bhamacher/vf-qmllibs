@@ -1,25 +1,33 @@
-import QtQuick 2.0
+
+import QtQuick 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Layouts 1.12
 import QtQuick.Controls.Material 2.12
+import ZeraTranslation 1.0
 import anmsettings 1.0
 import ZeraFa 1.0
-import ZeraTranslation 1.0
 
 Dialog {
     id: rootItm
     title: Z.tr("Wifi password: ")+backend.ssid
     property string device: ""
     property string path: ""
+    property bool newCon: true
     closePolicy: Popup.NoAutoClose
 
-    function init(ssid, device,path) {
-        backend.create();
-        rootItm.device = device;
-        rootItm.path = path;
-        backend.conName = ssid;
-        backend.ssid = ssid;
-        backend.mode = "CLIENT";
+    function init(ssid, device,path,newCon) {
+        rootItm.newCon=newCon;
+        if(newCon){
+            backend.create();
+            rootItm.device = device;
+            rootItm.path = path;
+            backend.conName = ssid;
+            backend.ssid = ssid;
+            backend.mode = "CLIENT";
+        }else{
+            backend.load(rootItm.path)
+        }
+
     }
     WirelessConnectionSettingsInterface{
         id: backend
