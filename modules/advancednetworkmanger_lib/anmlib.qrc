@@ -10,7 +10,6 @@
         <file>src/qml/tree/ConnectionInfo.qml</file>
         <file>src/qml/tree/DeviceDialog.qml</file>
         <file>src/qml/NetworkManager.qml</file>
-        <file>src/qml/tree/PasswordDialog.qml</file>
         <file>src/qml/settings/AvailableDevDialog.qml</file>
     </qresource>
 </RCC>
