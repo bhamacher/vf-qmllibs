@@ -29,6 +29,9 @@ public slots:
     void removeConnection(const QString &connection) override;
     void addDevice(NetworkManager::Device::Type p_type, QString p_device) override;
     void updateSignal();
+    void stateChanged(NetworkManager::Device::Ptr dev,NetworkManager::Device::State newstate, NetworkManager::Device::State oldstate, NetworkManager::Device::StateChangeReason reason);
+signals:
+    void authFailed(const QString &name,const QString &path,const QString &device);
 };
 
 Q_DECLARE_METATYPE(ConClassType)
