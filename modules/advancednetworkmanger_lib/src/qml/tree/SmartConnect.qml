@@ -65,10 +65,10 @@ Dialog {
                 id: pwvisible
                 font.family: FA.old
                 text: FA.fa_eye_slash
-                font.pixelSize: rootItm.fontPixelSize
-                background: Rectangle {
-                    color: "transparent"
-                }
+                font.pixelSize: 22
+//                background: Rectangle {
+//                    color: "transparent"
+//                }
                 onPressed: {
                     pw.echoMode = TextInput.Normal
                     pwvisible.text = FA.fa_eye
