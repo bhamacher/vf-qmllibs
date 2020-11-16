@@ -285,6 +285,9 @@ Pane {
                     smartConnectLoader.device = Device;
                     smartConnectLoader.path = p_path;
                     smartConnectLoader.active=true;
+                    //Workaround: setting true then false to make sure it is false and onChanged is called
+                    connected_=true;
+                    connected_=false;
                 } else if(Device !== "") {
                     backend.connect(p_path, Device);
                 }
