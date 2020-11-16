@@ -1,4 +1,5 @@
 #include "wifinetworks.h"
+#include "nmcppnotification.h"
 #include <NetworkManagerQt/WirelessDevice>
 #include <NetworkManagerQt/WirelessSetting>
 
@@ -32,8 +33,12 @@ bool WifiNetworks::init(ConnectionList  &p_list, DeviceManager &p_devManager)
 
     for(QString uni : m_devManager->getDevices(NetworkManager::Device::Type::Wifi)){
         DevStruct device;
-        device.dev=m_devManager->getDevice(uni).dynamicCast<NetworkManager::WirelessDevice>();
+        NetworkManager::Device::Ptr dev = m_devManager->getDevice(uni).dynamicCast<NetworkManager::WirelessDevice>();
+        device.dev=dev;
         m_devList[uni]=device;
+        device.qtCons.append(connect(device.dev.get(),&NetworkManager::WirelessDevice::stateChanged,this,[dev,this](NetworkManager::Device::State newstate, NetworkManager::Device::State oldstate, NetworkManager::Device::StateChangeReason reason){stateChanged(dev,newstate,oldstate,reason);
+        }));
+
         device.qtCons.append(connect(device.dev.dynamicCast<NetworkManager::WirelessDevice>().data(),&NetworkManager::WirelessDevice::accessPointAppeared,this,[uni,this](const QString &p_apPath){addAccessPoint(uni,p_apPath);
         }));
         device.qtCons.append(connect(device.dev.dynamicCast<NetworkManager::WirelessDevice>().data(),&NetworkManager::WirelessDevice::accessPointDisappeared,this,[uni,this](const QString &p_apPath){removeAccessPoint(uni,p_apPath);
@@ -52,6 +57,7 @@ bool WifiNetworks::init(ConnectionList  &p_list, DeviceManager &p_devManager)
 
     connect(NetworkManager::notifier(),&NetworkManager::Notifier::activeConnectionAdded,this,&WifiNetworks::connectionActivated);
     connect(NetworkManager::notifier(),&NetworkManager::Notifier::activeConnectionRemoved,this,&WifiNetworks::connectionDeactivate);
+
 
     m_timer = new QTimer(this);
     connect(m_timer, &QTimer::timeout, this,&WifiNetworks::updateSignal);
@@ -350,6 +356,30 @@ void WifiNetworks::updateSignal()
         }
     }
 
+}
+
+void WifiNetworks::stateChanged(NetworkManager::Device::Ptr dev, NetworkManager::Device::State newstate, NetworkManager::Device::State oldstate, NetworkManager::Device::StateChangeReason reason)
+{
+    if(oldstate==NetworkManager::Device::State::NeedAuth && newstate==NetworkManager::Device::State::Failed){
+        QString device=dev->uni();
+
+        NetworkManager::AccessPoint::Ptr acPoint = dev.dynamicCast<NetworkManager::WirelessDevice>()->activeAccessPoint();
+
+        QString path;
+        QString ssid;
+        if(acPoint!=NULL){
+            ssid=acPoint->ssid();
+        }
+
+        NetworkManager::ActiveConnection::Ptr actCon = dev->activeConnection();
+        if(actCon != NULL){
+            path=dev->activeConnection()->connection()->path();
+            ssid=dev->activeConnection()->connection()->settings()->setting(m_setType).dynamicCast<NetworkManager::WirelessSetting>()->ssid();
+            emit authFailed(ssid,path,device);
+        }else{
+            NmCppNotification::sendNotifiaction(ssid,"Wrong password");
+        }
+    }
 }
 
 

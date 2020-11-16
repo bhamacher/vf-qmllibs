@@ -19,8 +19,9 @@ void ConnectionTreeInterface::init()
     ConnectionList* list =new ConnectionList();
     m_model->setList(list);
     m_networkTypeList.append(new EthernetNetworks());
-    m_networkTypeList.append(new WifiNetworks());
-
+    WifiNetworks *wtmpPtr=new WifiNetworks();
+    m_networkTypeList.append(wtmpPtr);
+    QObject::connect(wtmpPtr,&WifiNetworks::authFailed,this,&ConnectionTreeInterface::authFailed);
     m_devManager->init();
 
     for(auto it=m_networkTypeList.begin(); it != m_networkTypeList.end(); ++it){
@@ -72,7 +73,6 @@ void ConnectionTreeInterface::connect(QString p_conPath, QString p_devPath, bool
     if(devPath == "" || force){
         devPath = p_devPath;
     }
-
     NetworkManager::activateConnection(p_conPath,p_devPath,"");
 }
 
@@ -92,7 +92,6 @@ void ConnectionTreeInterface::disconnect(QString p_conPath)
 
 QAbstractListModel* ConnectionTreeInterface::getDataListQml() const
 {
-
     return m_model;
 }
 

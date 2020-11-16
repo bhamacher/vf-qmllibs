@@ -80,7 +80,7 @@ private:
     ConnectionModel* m_model;
 signals:
     void dataListChanged();
-
+    void authFailed(const QString &name,const QString &path,const QString &device);
 };
 
 #endif // CONNECTIONTREEINTERFACE_H
