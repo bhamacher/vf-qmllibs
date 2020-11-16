@@ -53,6 +53,12 @@ Item{
         // select-device-combo (visible only if more than one device is available)
         ComboBox{
             id: devices
+            enabled:{
+                if(rootItm.connected_ === true){
+                    return false;
+                }
+                return true
+            }
             Layout.fillHeight: true
             visible: count >= 2
             Layout.preferredWidth: rootItm.width/5
