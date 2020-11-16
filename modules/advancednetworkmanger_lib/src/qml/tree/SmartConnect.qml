@@ -8,7 +8,7 @@ import ZeraTranslation 1.0
 
 Dialog {
     id: rootItm
-    title: Z.tr("Wifi password")
+    title: Z.tr("Wifi password: ")+backend.ssid
     property string device: ""
     property string path: ""
     closePolicy: Popup.NoAutoClose
