@@ -16,7 +16,7 @@ class WirelessConnectionSettingsInterface : public AbstractConnectionSettingsInt
 public:
     WirelessConnectionSettingsInterface(QObject *parent = nullptr);
 
-    Q_INVOKABLE void saveAndActivate(const QString &p_devUni);
+    Q_INVOKABLE void saveAndActivate(const QString &p_devUni,const QString &p_apPath) override;
 
     Q_INVOKABLE void create() override;
     QStringList getDevices() override;

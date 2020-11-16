@@ -5,12 +5,18 @@ WirelessConnectionSettingsInterface::WirelessConnectionSettingsInterface(QObject
 
 }
 
-void WirelessConnectionSettingsInterface::saveAndActivate(const QString &p_devUni)
+void WirelessConnectionSettingsInterface::saveAndActivate(const QString &p_devUni,const QString &p_apPath)
 {
     if(m_connection == NULL){
         NMVariantMapMap map = m_settings->toMap();
-        NetworkManager::addAndActivateConnection(map,p_devUni,m_smartConnectPath);
+        NetworkManager::Connection::Ptr con = NetworkManager::findConnection(p_apPath);
+        if(con==NULL){
+            NetworkManager::addAndActivateConnection(map,p_devUni,m_smartConnectPath);
+        }else{
+            NetworkManager::addAndActivateConnection(map,p_devUni,"");
+        }
         m_settings.clear();
+        con->remove();
     }
 }
 

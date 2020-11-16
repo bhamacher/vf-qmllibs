@@ -73,7 +73,7 @@ void AbstractConnectionSettingsInterface::saveAndActivate(const QString &p_devUn
 {
     if(m_connection == NULL){
         NMVariantMapMap map = m_settings->toMap();
-        NetworkManager::addAndActivateConnection(map,p_devUni,p_apPath);
+        NetworkManager::addAndActivateConnection(map,p_devUni,"");
         m_settings.clear();
     }
 }

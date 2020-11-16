@@ -35,7 +35,7 @@ public:
     Q_INVOKABLE void load(QString p_path);
     Q_INVOKABLE virtual void create();
     Q_INVOKABLE void save();
-    Q_INVOKABLE void saveAndActivate(const QString &p_devUni, const QString &p_apPath);
+    Q_INVOKABLE virtual void saveAndActivate(const QString &p_devUni, const QString &p_apPath);
     Q_INVOKABLE void discard();
 
 
