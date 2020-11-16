@@ -14,6 +14,15 @@ Pane {
     signal notification(string title,string msg);
     ConnectionTreeInterface{
         id: backend;
+        onAuthFailed: {
+            smartConnectLoader.ssid = name;
+            smartConnectLoader.device = device;
+            smartConnectLoader.path = path;
+            smartConnectLoader.active=false;
+            smartConnectLoader.newCon=false;
+            smartConnectLoader.active=true;
+
+        }
     }
     // Ethernet settings component - ethLoader is consumer
     Component{
@@ -142,8 +151,9 @@ Pane {
         property string ssid: ""
         property string device: ""
         property string path: ""
+        property string newCon: ""
         onLoaded: {
-            item.init(ssid,device,path)
+            item.init(ssid,device,path,newCon)
         }
     }
     // Section heading component (Ethernet/Wifi/Hotspot...) see ListView
@@ -280,10 +290,10 @@ Pane {
             onActivate: {
                 var Device = device;
                 if(!stored_ && Device !== "") {
-                  //  Device= device
                     smartConnectLoader.ssid = name_;
                     smartConnectLoader.device = Device;
                     smartConnectLoader.path = p_path;
+                    smartConnectLoader.newCon=true;
                     smartConnectLoader.active=true;
                     //Workaround: setting true then false to make sure it is false and onChanged is called
                     connected_=true;
