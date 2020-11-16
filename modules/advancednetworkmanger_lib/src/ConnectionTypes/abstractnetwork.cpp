@@ -21,7 +21,6 @@ void AbstractNetwork::connectionActivated(const QString &p_path)
         }));
         m_aConList[p_path]=acons;
         if(itm.NmPath == path){
-            itm.Connected=true;
             itm.Available=true;
             m_list->setItemByPath(path,itm);
         }
@@ -219,11 +218,25 @@ void AbstractNetwork::stateChangeReason(QString path, NetworkManager::ActiveConn
        // NmCppNotification::sendNotifiaction("NM","Can not etablish connection. Wrong password!");
         break;
     }
+
+    connectionItem itm;
+    if(m_conList.contains(path)){
+         itm = m_list->itemByPath(path);
+    }
+
     switch(state){
     case NetworkManager::ActiveConnection::State::Activated :
+        if(itm.NmPath == path){
+            itm.Connected=true;
+            m_list->setItemByPath(path,itm);
+        }
         NmCppNotification::sendNotifiaction("NM",QString("Connection ") + con->name() + QString(" etablished"));
         break;
     case NetworkManager::ActiveConnection::State::Deactivated:
+        if(itm.NmPath == path){
+            itm.Connected=false;
+            m_list->setItemByPath(path,itm);
+        }
         NmCppNotification::sendNotifiaction("NM",QString("Connection ") + con->name() + QString(" deactivated"));
         break;
     }

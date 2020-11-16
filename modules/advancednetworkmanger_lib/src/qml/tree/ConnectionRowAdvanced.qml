@@ -19,8 +19,14 @@ Item{
     property bool connected_
     property string nmPath_
 
+
     onConnected_Changed: {
         actswitch.checked = connected_;
+        if(connected_){
+            actswitch.position=1
+        }else{
+            actswitch.position=0
+        }
     }
 
     signal edit(string p_path)
@@ -73,17 +79,13 @@ Item{
                 anchors.verticalCenter: parent.verticalCenter
                 enabled: rootItm.available_
                 id: actswitch
-                position: rootItm.connected_ ? 1 : 0
-                checked : rootItm.connected_
                 onClicked: {
                     if(position === 1) {
+                        position=0.5
                         activate(rootItm.nmPath_,rootItm.devices_[devices.model[devices.currentIndex]]);
-                        //position = 0;
-                        checked = rootItm.connected_
                     } else {
+                        position=0.5
                         deactivate(rootItm.nmPath_);
-                        //position = 1;
-                        checked = rootItm.connected_
                     }
                 }
             }
