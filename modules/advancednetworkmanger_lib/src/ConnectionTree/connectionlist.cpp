@@ -1,19 +1,23 @@
 #include "connectionlist.h"
 #include <QException>
 
-ConnectionList::ConnectionList()
+ConnectionList::ConnectionList():
+    m_uidCounter(1)
 {
 
 }
 
 int ConnectionList::addItem(connectionItem Item)
 {
-    emit preItemAppended();
-    m_uidCounter++;
-    Item.uid = m_uidCounter;
-    m_list.append(Item);
-    emit postItemAppended();
-    return m_uidCounter;
+    if(Item.Name != ""){
+        emit preItemAppended();
+        m_uidCounter++;
+        Item.uid = m_uidCounter;
+        m_list.append(Item);
+        emit postItemAppended();
+        return m_uidCounter;
+    }
+    return 0;
 }
 
 bool ConnectionList::removeItem(int index)
