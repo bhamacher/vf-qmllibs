@@ -179,41 +179,6 @@ Pane {
                 }
             }
         }
-        Item {
-            anchors.left: parent.left
-            anchors.right: parent.right
-            height: clientModel.rowHeight
-            ZLineEdit {
-                id: device
-                // it does not make sense to enter device
-                readOnly: true
-                anchors.left: parent.left
-                anchors.right: selectDev.left
-                height: clientModel.rowHeight
-                pointSize: clientModel.pointSize
-                description.text: Z.tr("Device:")
-                description.width: clientModel.labelWidth
-                function doApplyInput(newText) {
-                    backend.device = newText;
-                    return true
-                }
-            }
-            Button {
-                id: selectDev
-                anchors.right: parent.right
-                font.family: FA.old
-                font.pointSize: clientModel.pointSize
-                width: clientModel.rowHeight
-                height: clientModel.rowHeight
-                text: FA.fa_search_plus
-                /*background: Rectangle{
-                    color: "transparent"
-                }*/
-                onClicked: {
-                    aDevDialog.visible = true;
-                }
-            }
-        }
     }
     ListView{
         id: list
