@@ -74,6 +74,13 @@ Dialog {
         RowLayout {
             id: devInput
             width: parent.width
+            visible: {
+                if(backend.devices.length>1){
+                    return true;
+                }
+                return false;
+            }
+
             Label {
                 id: devLabel
                 text: Z.tr("Device:")
