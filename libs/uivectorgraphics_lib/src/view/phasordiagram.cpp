@@ -5,12 +5,10 @@
 //used for atan2 and math constants like M_PI
 #include <math.h>
 
-static constexpr float MAX_VECTOR_OVERSHOOT = 1.25;
-
 static constexpr float LABEL_ROTATE_ANGLE =  -6.0 * M_PI / 180;
 // 3ph display has longer texts (e.g 'UL1-UL2') so needs to rotate more
-static constexpr float LABEL_ROTATE_ANGLE_3PH_U =  -10.0 * M_PI/180;
-static constexpr float LABEL_ROTATE_ANGLE_3PH_I =  -4.0 * M_PI/180;
+static constexpr float LABEL_ROTATE_ANGLE_3PH_U =  -30.0 * M_PI/180;
+static constexpr float LABEL_ROTATE_ANGLE_3PH_I =  -5.0 * M_PI/180;
 
 
 float PhasorDiagram::pixelScale(float t_base)
@@ -22,6 +20,15 @@ void PhasorDiagram::drawLabel(QPainter *t_painter, const QString &t_label, float
 {
     float xOffset = t_label.length()*5;
     const float tmpPhi = t_vectorPhi - m_phiOrigin;
+    constexpr float maxPhi = 0.25;
+    if(fabs(t_labelPhiOffset) > maxPhi) {
+        if(t_labelPhiOffset > 0) {
+            t_labelPhiOffset = maxPhi;
+        }
+        else {
+            t_labelPhiOffset = -maxPhi;
+        }
+    }
     float xPos = m_fromX - xOffset + t_scale * m_gridScale * m_circleValue * 1.2 * cos(tmpPhi + t_labelPhiOffset);
     float yPos = m_fromY + 5 + 0.9 * t_scale * m_gridScale * m_circleValue * 1.2 * sin(tmpPhi + t_labelPhiOffset);
 
@@ -81,7 +88,6 @@ void PhasorDiagram::drawVectors(QPainter *t_painter, bool drawVoltages, bool dra
                     QColor colour,
                     float maxVal,
                     float factorVal,
-                    bool drawLabel,
                     QString label,
                     float labelPositionScale,
                     float labelPhiOffset) {
@@ -89,7 +95,6 @@ void PhasorDiagram::drawVectors(QPainter *t_painter, bool drawVoltages, bool dra
             this->colour = colour;
             this->maxVal = maxVal;
             this->factorVal = factorVal;
-            this->drawLabel = drawLabel;
             this->label = label;
             this->labelPositionScale = labelPositionScale;
             this->labelPhiOffset = labelPhiOffset;
@@ -99,7 +104,6 @@ void PhasorDiagram::drawVectors(QPainter *t_painter, bool drawVoltages, bool dra
         QColor colour;
         float maxVal;
         float factorVal;
-        bool drawLabel;
         QString label;
         float labelPositionScale;
         float labelPhiOffset;
@@ -121,7 +125,6 @@ void PhasorDiagram::drawVectors(QPainter *t_painter, bool drawVoltages, bool dra
                                            colors[idx],
                                            m_maxVoltage,
                                            t_voltageFactor,
-                                           !label.isEmpty() && vector.length() > m_maxVoltage * t_voltageFactor / 10,
                                            label,
                                            labelVectorLen(screenLenVector),
                                            (1/screenLenVector)*m_currLabelRotateAngleU*detectCollision(idx));
@@ -140,7 +143,6 @@ void PhasorDiagram::drawVectors(QPainter *t_painter, bool drawVoltages, bool dra
             QVector2D vectorIScreen = vector / m_maxCurrent;
             QString label = labels[idx];
             if(vector.length() > m_minCurrent) {
-                bool drawLabel = !label.isEmpty() && vector.length() > m_maxCurrent / 10;
                 float screenLenVectorI = vectorIScreen.length();
                 float angleIRotate = (-1/screenLenVectorI)*m_currLabelRotateAngleI;
                 if(m_SetUCollisions.contains(idx)) {
@@ -150,7 +152,6 @@ void PhasorDiagram::drawVectors(QPainter *t_painter, bool drawVoltages, bool dra
                                            colors[idx],
                                            m_maxCurrent,
                                            1.0,
-                                           drawLabel,
                                            label,
                                            labelVectorLen(screenLenVectorI),
                                            angleIRotate);
@@ -175,9 +176,7 @@ void PhasorDiagram::drawVectors(QPainter *t_painter, bool drawVoltages, bool dra
     for(auto vData : sortedVectors) {
         drawArrowHead(t_painter, vData.vector, vData.colour, vData.maxVal * vData.factorVal);
         drawVectorLine(t_painter, vData.vector, vData.colour, vData.maxVal * vData.factorVal);
-        if(vData.drawLabel) {
-            drawLabel(t_painter, vData.label, atan2(vData.vector.y(), vData.vector.x()), vData.colour, vData.labelPositionScale, vData.labelPhiOffset);
-        }
+        drawLabel(t_painter, vData.label, atan2(vData.vector.y(), vData.vector.x()), vData.colour, vData.labelPositionScale, vData.labelPhiOffset);
     }
 
     // do not leave center on random colour
@@ -292,7 +291,16 @@ void PhasorDiagram::drawCenterPoint(QPainter *t_painter)
 
 float PhasorDiagram::labelVectorLen(float screenLen)
 {
-    return screenLen*MAX_VECTOR_OVERSHOOT > 1.1 ? 1.1 : screenLen*MAX_VECTOR_OVERSHOOT;
+    // limit labels out of range
+    float labelLen = screenLen * 1.25;
+    if(labelLen > 1.1) {
+        return 1.1;
+    }
+    // avoid crowded center
+    if(labelLen < 0.4)  {
+        return 0.4;
+    }
+    return labelLen;
 }
 
 float PhasorDiagram::detectCollision(int uPhase)
@@ -303,18 +311,15 @@ float PhasorDiagram::detectCollision(int uPhase)
 
     for(int idx = 0; idx<COUNT_PHASES; ++idx) {
         QVector2D vectorI = vectors[idx];
-        bool drawLabelI = !labels[idx].isEmpty() && vectorI.length() > m_maxCurrent / 10;
-        if(drawLabelI) {
-            // compare angles
-            QVector2D vectorIScreen = vectorI / m_maxCurrent;
-            QVector2D vectorUScreen = m_vectorUScreen[uPhase];
-            float angleI = atan2(vectorIScreen.y() , vectorIScreen.x());
-            float angleU = atan2(vectorUScreen.y() , vectorUScreen.x());
-            float diffAngle = fabs(angleU - angleI);
-            if(angleU > angleI && diffAngle < 0.5) {
-                m_SetUCollisions.insert(idx);
-                return -1.0;
-            }
+        // compare angles
+        QVector2D vectorIScreen = vectorI / m_maxCurrent;
+        QVector2D vectorUScreen = m_vectorUScreen[uPhase];
+        float angleI = atan2(vectorIScreen.y() , vectorIScreen.x());
+        float angleU = atan2(vectorUScreen.y() , vectorUScreen.x());
+        float diffAngle = fabs(angleU - angleI);
+        if(angleU > angleI && diffAngle < 0.7) {
+            m_SetUCollisions.insert(idx);
+            return -1.0;
         }
     }
     return 1.0;
