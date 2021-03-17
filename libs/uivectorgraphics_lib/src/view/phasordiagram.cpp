@@ -5,12 +5,13 @@
 //used for atan2 and math constants like M_PI
 #include <math.h>
 
-// HelloItemPainter contains the painting code
+static constexpr float MAX_VECTOR_OVERSHOOT = 1.25;
 
-static constexpr float LABEL_ROTATE_ANGLE =  -25.0 * M_PI/180;
+static constexpr float LABEL_ROTATE_ANGLE =  -6.0 * M_PI / 180;
 // 3ph display has longer texts (e.g 'UL1-UL2') so needs to rotate more
-static constexpr float LABEL_ROTATE_ANGLE_3PH_U =  -45.0 * M_PI/180;
-static constexpr float LABEL_ROTATE_ANGLE_3PH_I =  -30.0 * M_PI/180;
+static constexpr float LABEL_ROTATE_ANGLE_3PH_U =  -10.0 * M_PI/180;
+static constexpr float LABEL_ROTATE_ANGLE_3PH_I =  -4.0 * M_PI/180;
+
 
 float PhasorDiagram::pixelScale(float t_base)
 {
@@ -123,7 +124,7 @@ void PhasorDiagram::drawVectors(QPainter *t_painter, bool drawVoltages, bool dra
                                            !label.isEmpty() && vector.length() > m_maxVoltage * t_voltageFactor / 10,
                                            label,
                                            labelVectorLen(screenLenVector),
-                                           (1-screenLenVector)*m_currLabelRotateAngleU*detectCollision(idx));
+                                           (1/screenLenVector)*m_currLabelRotateAngleU*detectCollision(idx));
                 // negative len for long -> short order
                 sortedVectors.insert(-screenLenVector, currVectorData);
             }
@@ -141,7 +142,7 @@ void PhasorDiagram::drawVectors(QPainter *t_painter, bool drawVoltages, bool dra
             if(vector.length() > m_minCurrent) {
                 bool drawLabel = !label.isEmpty() && vector.length() > m_maxCurrent / 10;
                 float screenLenVectorI = vectorIScreen.length();
-                float angleIRotate = (screenLenVectorI-1)*m_currLabelRotateAngleI;
+                float angleIRotate = (-1/screenLenVectorI)*m_currLabelRotateAngleI;
                 if(m_SetUCollisions.contains(idx)) {
                     angleIRotate = -angleIRotate;
                 }
@@ -236,7 +237,7 @@ void PhasorDiagram::drawTriangle(QPainter *t_painter)
         float screenLenLabel = m_vectorUScreen[0].length();
         drawLabel(t_painter, m_vector1Label, atan2(m_vector1.y(), m_vector1.x()), m_vector1Color,
                   labelVectorLen(screenLenLabel),
-                  (1-screenLenLabel)*m_currLabelRotateAngleU*detectCollision(0));
+                  (1/screenLenLabel)*m_currLabelRotateAngleU*detectCollision(0));
     }
 
     if(m_vector2Label.isEmpty() == false && m_vector2.length() > m_maxVoltage / 10) {
@@ -244,7 +245,7 @@ void PhasorDiagram::drawTriangle(QPainter *t_painter)
         float screenLenLabel = m_vectorUScreen[1].length();
         drawLabel(t_painter, m_vector2Label, atan2(m_vector2.y(), m_vector2.x()), m_vector2Color,
                   labelVectorLen(screenLenLabel),
-                  (1-screenLenLabel)*m_currLabelRotateAngleU*detectCollision(1));
+                  (1/screenLenLabel)*m_currLabelRotateAngleU*detectCollision(1));
     }
 
     if(m_vector3Label.isEmpty() == false && m_vector3.length() > m_maxVoltage / 10) {
@@ -252,7 +253,7 @@ void PhasorDiagram::drawTriangle(QPainter *t_painter)
         float screenLenLabel = m_vectorUScreen[2].length();
         drawLabel(t_painter, m_vector3Label, atan2(m_vector3.y(), m_vector3.x()), m_vector3Color,
                   labelVectorLen(screenLenLabel),
-                  (1-screenLenLabel)*m_currLabelRotateAngleU*detectCollision(2));
+                  (1/screenLenLabel)*m_currLabelRotateAngleU*detectCollision(2));
     }
 }
 
@@ -291,7 +292,7 @@ void PhasorDiagram::drawCenterPoint(QPainter *t_painter)
 
 float PhasorDiagram::labelVectorLen(float screenLen)
 {
-    return screenLen*1.25 > 1.1 ? 1.1 : screenLen*1.25;
+    return screenLen*MAX_VECTOR_OVERSHOOT > 1.1 ? 1.1 : screenLen*MAX_VECTOR_OVERSHOOT;
 }
 
 float PhasorDiagram::detectCollision(int uPhase)
@@ -304,22 +305,15 @@ float PhasorDiagram::detectCollision(int uPhase)
         QVector2D vectorI = vectors[idx];
         bool drawLabelI = !labels[idx].isEmpty() && vectorI.length() > m_maxCurrent / 10;
         if(drawLabelI) {
-            // similar len
+            // compare angles
             QVector2D vectorIScreen = vectorI / m_maxCurrent;
             QVector2D vectorUScreen = m_vectorUScreen[uPhase];
-            float diffLen = vectorUScreen.length() - vectorIScreen.length();
-            if(fabs(diffLen) < 0.1) {
-                // close position
-                float distance = vectorUScreen.distanceToPoint(vectorIScreen);
-                if(distance < 0.3) {
-                    // compare angles
-                    float angleI = atan2(vectorIScreen.y() , vectorIScreen.x());
-                    float angleU = atan2(vectorUScreen.y() , vectorUScreen.x());
-                    if(angleU > angleI && fabs(angleU - angleI) > 0.01) { // fabs: avoid zero crossing dance
-                        m_SetUCollisions.insert(idx);
-                        return -1.0;
-                    }
-                }
+            float angleI = atan2(vectorIScreen.y() , vectorIScreen.x());
+            float angleU = atan2(vectorUScreen.y() , vectorUScreen.x());
+            float diffAngle = fabs(angleU - angleI);
+            if(angleU > angleI && diffAngle < 0.5) {
+                m_SetUCollisions.insert(idx);
+                return -1.0;
             }
         }
     }
