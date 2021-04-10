@@ -24,10 +24,9 @@ Rectangle {
     property var model: [];
     property var modelLength;
     property var imageModel: [];
-    property int contentRowWidth: width;
-    property int contentRowHeight: height;
+    property real contentRowWidth: width;
+    property real contentRowHeight: height;
     property int contentMaxRows: 0
-    property alias contentFlow: comboView.flow
     property real fontSize: 18;
     property bool centerVertical: false
     property real centerVerticalOffset: 0;
@@ -47,15 +46,8 @@ Rectangle {
         modelLength = model.length;
     }
 
-
-    function getMaxRows() {
-        if(contentMaxRows <= 0 || contentMaxRows > count) {
-            return count;
-        }
-        else {
-            return contentMaxRows
-        }
-    }
+    readonly property int displayRows: contentMaxRows <= 0 || contentMaxRows > count ? count : contentMaxRows
+    readonly property int displayColums: Math.ceil(count/displayRows)
 
     function updateCurrentText() {
         if(root.arrayMode) {
@@ -132,7 +124,7 @@ Rectangle {
         id: selectionDialog
 
         property int heightOffset: (root.centerVertical ? -popupElement.height/2 : 0) + root.centerVerticalOffset
-        property int widthOffset: (root.contentMaxRows > 0) ? -(root.contentRowWidth / (1+Math.floor(root.model.length / root.contentMaxRows))) : 0
+        property int widthOffset: - contentRowWidth * (displayColums - 1)
         background: Item {} //remove background rectangle
         closePolicy: Popup.CloseOnPressOutside
         onVisibleChanged: {
@@ -143,8 +135,8 @@ Rectangle {
 
         Rectangle {
             id: popupElement
-            width: root.contentRowWidth * Math.ceil(root.count/root.getMaxRows()) + comboView.anchors.margins*2
-            height: root.contentRowHeight * root.getMaxRows() + comboView.anchors.margins*2
+            width: root.contentRowWidth * displayColums + comboView.anchors.margins*2
+            height: root.contentRowHeight * displayRows + comboView.anchors.margins*2
             color: Material.backgroundColor //used to prevent opacity leak from Material.dropShadowColor of the delegates
             Rectangle {
                 anchors.fill: parent
@@ -163,7 +155,7 @@ Rectangle {
                 cellHeight: root.contentRowHeight
                 cellWidth: root.contentRowWidth
 
-                flow: GridView.FlowLeftToRight
+                flow: GridView.FlowTopToBottom
 
                 //need to convert the array to a model
                 model: (root.arrayMode===true) ? fakeModel : root.model;

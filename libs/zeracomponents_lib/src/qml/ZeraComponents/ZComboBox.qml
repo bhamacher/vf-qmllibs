@@ -17,10 +17,9 @@ Rectangle {
     property int targetIndex;
     property string currentText;
     property string selectedText;
-    property int contentRowWidth: width;
-    property int contentRowHeight: height;
+    property real contentRowWidth: width;
+    property real contentRowHeight: height;
     property int contentMaxRows: 0
-    property alias contentFlow: comboView.flow
     property real fontSize: 18;
     property bool centerVertical: false
     property real centerVerticalOffset: 0;
@@ -31,6 +30,8 @@ Rectangle {
     property var model: [];
     property var modelLength;
     readonly property bool modelInitialized: arrayMode === true && model.length>0;
+    property int displayRows: contentMaxRows <= 0 || contentMaxRows > count ? count : contentMaxRows
+    property int displayColums: Math.ceil(count/displayRows)
     onModelInitializedChanged: updateFakeModel();
 
     color: Qt.darker(Material.frameColor, (activeFocus ? 1.25 : 2.0)) //buttonPressColor
@@ -49,14 +50,7 @@ Rectangle {
         modelLength = model.length;
     }
 
-    function getMaxRows() {
-        if(contentMaxRows <= 0 || contentMaxRows > count) {
-            return count;
-        }
-        else {
-            return contentMaxRows
-        }
-    }
+
     function updateCurrentText() {
         if(root.arrayMode) {
             if(root.count> targetIndex && targetIndex >= 0) {
@@ -144,7 +138,7 @@ Rectangle {
         id: selectionDialog
         background: Item {} //remove background rectangle
         property int heightOffset: (root.centerVertical ? -popupElement.height/2 : 0) + root.centerVerticalOffset
-        property int widthOffset: (root.count > root.contentMaxRows) ? -(root.contentRowWidth / (Math.ceil(root.count / root.contentMaxRows))) : 0
+        property int widthOffset: - 0.5 * contentRowWidth * (displayColums - 1)
 
         closePolicy: Popup.CloseOnPressOutside | Popup.CloseOnEscape
 
@@ -157,8 +151,9 @@ Rectangle {
 
         Rectangle {
             id: popupElement
-            width: root.contentRowWidth * Math.ceil(root.count/root.getMaxRows()) + comboView.anchors.margins*2
-            height: root.contentRowHeight * root.getMaxRows() + comboView.anchors.margins*2 +
+            width: contentRowWidth * displayColums + comboView.anchors.margins*2
+            // note: additional 0.1 avoids GridView startin next column in some cases
+            height: contentRowHeight * displayRows + comboView.anchors.margins*2 + 0.1 +
                     (headerLoader.sourceComponent ? headerLoader.height + headerLoader.anchors.margins : 0)
             color: Material.backgroundColor //used to prevent opacity leak from Material.dropShadowColor of the delegates
             Rectangle {
@@ -189,7 +184,7 @@ Rectangle {
                 cellHeight: root.contentRowHeight
                 cellWidth: root.contentRowWidth
 
-                flow: GridView.FlowLeftToRight
+                flow: GridView.FlowTopToBottom
 
                 //need to convert the array to a model
                 model: (root.arrayMode===true) ? fakeModel : root.model;
