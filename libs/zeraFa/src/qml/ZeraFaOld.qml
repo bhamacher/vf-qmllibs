@@ -24,6 +24,7 @@ Item {
     }
 
     readonly property FontLoader fontAwesomeOld: FontLoader {
+        name: "FAOld"
         source: "qrc:/3rdParty/Font-Awesome_Old/fontawesome-webfont.ttf"
     }
 
