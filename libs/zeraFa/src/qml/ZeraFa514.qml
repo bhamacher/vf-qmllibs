@@ -10,9 +10,11 @@ Item {
     property alias icons: variables
 
     readonly property FontLoader fontAwesomeRegular: FontLoader {
+        name: "FARegular"
         source: "qrc:/3rdParty/Font-Awesome/webfonts/fa-regular-400.ttf"
     }
     readonly property FontLoader fontAwesomeSolid: FontLoader {
+        name: "FASolid"
         source: "qrc:/3rdParty/Font-Awesome/webfonts/fa-solid-900.ttf"
     }
     readonly property FontLoader fontAwesomeBrands: FontLoader {
