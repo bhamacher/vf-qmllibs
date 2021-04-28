@@ -43,13 +43,15 @@ public:
 
 
 private:
-
     QList<InfoStruct> m_activeCons;
 
 public slots:
 
     void addActiveConnection(const QString &p_path);
     void removeActiveConnection(const QString &p_path);
+private slots:
+    void ipv4Change();
+    void ipv6Change();
 
 signals:
     void aconsChanged();
